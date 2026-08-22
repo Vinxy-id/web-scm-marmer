@@ -5,13 +5,105 @@
 @section('page-subtitle', 'Klaster IKM Marmer Kabupaten Tulungagung')
 
 @section('topbar-actions')
-    <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
-    </a>
+    @php $role = auth()->user()->role ?? 'owner'; @endphp
+    @if(in_array($role, ['owner', 'admin']))
+        <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+        </a>
+    @elseif($role === 'gudang')
+        <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="arrow-down-up" class="w-4 h-4"></i> Catat Mutasi Stok
+        </a>
+    @elseif($role === 'produksi')
+        <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+        </a>
+    @elseif($role === 'qc')
+        <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> Form Inspeksi QC
+        </a>
+    @elseif($role === 'distribusi')
+        <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="truck" class="w-4 h-4"></i> Buat Surat Jalan
+        </a>
+    @endif
 @endsection
 
 @section('content')
 <div class="space-y-6">
+
+    <!-- ROLE WORKFLOW & QUICK SHORTCUTS -->
+    <div class="bg-gradient-to-r from-slate-900 to-blue-950 p-4 rounded-xl text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 border border-slate-800">
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                    Akses Peran: {{ ucfirst(auth()->user()->role ?? 'owner') }}
+                </span>
+                <span class="text-xs text-slate-400 font-medium">{{ auth()->user()->ikm_name ?? 'UD Cahaya Onix' }}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-white">
+                @if(($role ?? 'owner') === 'owner' || ($role ?? 'owner') === 'admin')
+                    Pusat Kendali Eksekutif Rantai Pasok IKM Marmer
+                @elseif(($role ?? '') === 'gudang')
+                    Pusat Operasional Logistik & Bahan Baku Tambang
+                @elseif(($role ?? '') === 'produksi')
+                    Pusat Monitoring Lantai Kerja Bubut & Stasiun Mesin
+                @elseif(($role ?? '') === 'qc')
+                    Pusat Pengujian Kualitas 2-Tahap & Hilirisasi Residu
+                @elseif(($role ?? '') === 'distribusi')
+                    Pusat Pengiriman & Verifikasi Packing Krat Kayu
+                @endif
+            </h3>
+            <p class="text-xs text-slate-300">
+                @if(($role ?? 'owner') === 'owner' || ($role ?? 'owner') === 'admin')
+                    Pantau nilai aset, efisiensi siklus proses (PCE 64,58%), dan peramalan kebutuhan bahan baku.
+                @elseif(($role ?? '') === 'gudang')
+                    Catat penerimaan balok marmer/batu kali dan keluarkan bahan ke mesin slep.
+                @elseif(($role ?? '') === 'produksi')
+                    Pantau progres SPK dari stasiun Slep $\rightarrow$ Bubut 1-4 $\rightarrow$ Poles.
+                @elseif(($role ?? '') === 'qc')
+                    Inspeksi tahap 1 (bentuk mentah) dan tahap 2 (kehalusan poles & lubang afur).
+                @elseif(($role ?? '') === 'distribusi')
+                    Cek produk ready-stock dan terbitkan surat jalan ekspedisi pesanan pelanggan.
+                @endif
+            </p>
+        </div>
+
+        <!-- Role Quick Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+            @if(in_array($role ?? '', ['owner', 'admin']))
+                <a href="{{ route('supply-chain-flow') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
+                    <i data-lucide="git-merge" class="w-3.5 h-3.5 text-emerald-400"></i> Alur SCM
+                </a>
+                <a href="{{ route('forecasting.index') }}" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-yellow-300"></i> AI Forecast
+                </a>
+            @elseif(($role ?? '') === 'gudang')
+                <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="boxes" class="w-3.5 h-3.5"></i> Kelola Stok Bahan
+                </a>
+            @elseif(($role ?? '') === 'produksi')
+                <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="kanban-square" class="w-3.5 h-3.5"></i> Buka Kanban SPK
+                </a>
+                <a href="{{ route('production.wip') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
+                    <i data-lucide="activity" class="w-3.5 h-3.5 text-cyan-400"></i> WIP Mesin
+                </a>
+            @elseif(($role ?? '') === 'qc')
+                <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Form QC 2-Tahap
+                </a>
+                <a href="{{ route('waste.index') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
+                    <i data-lucide="recycle" class="w-3.5 h-3.5 text-teal-400"></i> Hilirisasi Residu
+                </a>
+            @elseif(($role ?? '') === 'distribusi')
+                <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="truck" class="w-3.5 h-3.5"></i> Surat Jalan & Resi
+                </a>
+            @endif
+        </div>
+    </div>
+
 
     <!-- ALERT BANNER: CRITICAL STOCK -->
     @if($criticalMaterials->isNotEmpty())
