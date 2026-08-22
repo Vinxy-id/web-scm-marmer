@@ -73,11 +73,12 @@ Fokus: Coding modul inti aplikasi web dan deployment server.
   - [x] Implementasi Modul QC 2-Tahap & Pencatatan Limbah/Sisa Potongan.
   - [x] Implementasi Modul Distribusi & Checklist Packing.
   - [x] Pembuatan Halaman Dashboard Monitoring Interaktif (KPI Card, Pie, Column, Line Chart).
-- [ ] **Kegiatan 8: Integrasi Algoritma ke Sistem & Deployment ke Cloud Server**
-  - [ ] Integrasi REST API forecasting Python dengan backend Laravel.
-  - [ ] Setup cloud server / VPS (Ubuntu, Nginx, PHP-FPM, MySQL, SSL LetsEncrypt).
-  - [ ] Konfigurasi cron job backup database otomatis.
-  - [ ] Uji coba akses multi-device (Mobile Android & Desktop).
+- [x] **Kegiatan 8: Integrasi Algoritma ke Sistem & Deployment ke Cloud Server**
+  - [x] Integrasi REST API forecasting Python dengan backend Laravel.
+  - [x] Setup cloud server / VPS (Ubuntu, Nginx, PHP-FPM, MySQL, SSL LetsEncrypt).
+  - [x] Konfigurasi cron job backup database otomatis.
+  - [x] Uji coba akses multi-device (Mobile Android & Desktop).
+  - [x] Penyusunan dokumen laporan output ([`Docs/laporan_kegiatan/Kegiatan_8_Integrasi_Algoritma_dan_Deployment_Cloud.md`](file:///d:/Project%20Coding/Web%20SCM/Docs/laporan_kegiatan/Kegiatan_8_Integrasi_Algoritma_dan_Deployment_Cloud.md)).
 
 ---
 
@@ -87,7 +88,7 @@ Fokus: Memastikan keandalan sistem dan pengujian kelayakan.
 - [x] **Kegiatan 9: Uji Fungsionalitas (Black-Box Testing)**
   - [x] Eksekusi Test Case (Equivalence Partitioning & Boundary Value Analysis).
   - [x] Pencatatan log bug & siklus *regression testing*.
-  - [x] Penyusunan Test Summary Report ([`TEST_REPORT.md`](./TEST_REPORT.md)).
+  - [x] Penyusunan Test Summary Report ([`TEST_REPORT.md`](file:///d:/Project%20Coding/Web%20SCM/TEST_REPORT.md)) & Laporan Kegiatan 9 ([`Docs/laporan_kegiatan/Kegiatan_9_Uji_Fungsionalitas_Black_Box_Testing.md`](file:///d:/Project%20Coding/Web%20SCM/Docs/laporan_kegiatan/Kegiatan_9_Uji_Fungsionalitas_Black_Box_Testing.md)).
 - [ ] **Kegiatan 10: Validasi Pakar (Sistem & Industri) serta Revisi**
   - [ ] Demo sistem ke Pakar Sistem Informasi (standar ISO/IEC 25010).
   - [ ] Demo sistem ke Pakar Rantai Pasok / Perwakilan Klaster IKM Marmer.
