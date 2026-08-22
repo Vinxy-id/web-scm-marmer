@@ -84,10 +84,10 @@ Fokus: Coding modul inti aplikasi web dan deployment server.
 ### Sprint 4: Pengujian, Validasi Pakar & Evaluasi Lapangan (Bulan 4)
 Fokus: Memastikan keandalan sistem dan pengujian kelayakan.
 
-- [ ] **Kegiatan 9: Uji Fungsionalitas (Black-Box Testing)**
-  - [ ] Eksekusi Test Case (Equivalence Partitioning & Boundary Value Analysis).
-  - [ ] Pencatatan log bug & siklus *regression testing*.
-  - [ ] Penyusunan Test Summary Report.
+- [x] **Kegiatan 9: Uji Fungsionalitas (Black-Box Testing)**
+  - [x] Eksekusi Test Case (Equivalence Partitioning & Boundary Value Analysis).
+  - [x] Pencatatan log bug & siklus *regression testing*.
+  - [x] Penyusunan Test Summary Report ([`TEST_REPORT.md`](./TEST_REPORT.md)).
 - [ ] **Kegiatan 10: Validasi Pakar (Sistem & Industri) serta Revisi**
   - [ ] Demo sistem ke Pakar Sistem Informasi (standar ISO/IEC 25010).
   - [ ] Demo sistem ke Pakar Rantai Pasok / Perwakilan Klaster IKM Marmer.
