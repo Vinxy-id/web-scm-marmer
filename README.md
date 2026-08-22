@@ -23,11 +23,11 @@ Proyek ini dibangun untuk mengatasi kendala kesenjangan informasi (*information 
 
 | Lapisan | Teknologi yang Digunakan |
 | :--- | :--- |
-| **Backend Utama** | PHP 8.2+ / Laravel 10 (Arsitektur MVC) |
+| **Backend Utama** | PHP 8.2+ / 8.3+ / Laravel 11+ (Latest MVC Architecture) |
 | **Database** | MySQL 8.0+ / MariaDB |
-| **Frontend UI** | Blade Template, Bootstrap 5, AdminLTE / Tabler, Chart.js / ApexCharts |
-| **Microservice Forecasting** | Python 3.10+ (FastAPI / Flask, Pandas, Statsmodels, Scikit-Learn) |
-| **Web Server & Tools** | Nginx / Apache, XAMPP, Git, Composer, NPM |
+| **Frontend UI** | Blade Template, Bootstrap 5.3+ (Latest), AdminLTE / Tabler, Chart.js / ApexCharts |
+| **Microservice Forecasting** | Python 3.10+ (FastAPI Latest, Pandas, Statsmodels, Scikit-Learn) |
+| **Web Server & Tools** | Nginx / Apache, XAMPP, Git, Composer (Latest), NPM (Latest) |
 
 ---
 
@@ -91,6 +91,9 @@ uvicorn main:app --host 127.0.0.1 --port 8001 --reload
 
 ## 📋 Riwayat Perubahan (Changelog)
 
+- **v1.1.0 (2026-08-22):**
+  - Pembaruan acuan arsitektur backend ke Laravel 11+ (Versi Terbaru/Latest) dan PHP 8.2+/8.3+.
+  - Pembaruan dependensi library Python microservice peramalan (FastAPI, PyDantic v2, Pandas, Statsmodels, Scikit-learn) dan library frontend ke versi terbaru.
 - **v1.0.0 (2026-08-22):** 
   - Inisialisasi struktur dokumentasi terintegrasi (5 file inti).
   - Penyusunan baseline data gap informasi & VSM current state berdasarkan survei lapangan UD Cahaya Onix & UD Putra Abadi.

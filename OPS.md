@@ -21,8 +21,8 @@ Dokumen ini memuat panduan teknis operasional lengkap: setup lingkungan lokal, p
 # 1. Masuk ke direktori proyek
 cd "d:/Project Coding/Web SCM"
 
-# 2. Setup dependensi Laravel
-composer install
+# 2. Setup dependensi Laravel (Versi Terbaru - Laravel 11+)
+composer install --prefer-dist
 cp .env.example .env
 
 # 3. Generate Application Encryption Key

@@ -43,15 +43,15 @@ Proyek ini menggunakan arsitektur modular yang menggabungkan web monolit MVC den
 [ Web Browser (Desktop / HP Operator) ]
                    │
                    ▼ (HTTPS)
-   [ Backend Laravel 10 (PHP 8.2+) ]  ◀─── Eloquent ───▶  [ Database MySQL 8.0 ]
+   [ Backend Laravel 11+ (PHP 8.2+/8.3+) ]  ◀─── Eloquent ───▶  [ Database MySQL 8.0 ]
                    │                                     (db_escm_marmer)
                    ▼ (REST JSON API)
 [ Python FastAPI Service (Port 8001) ] ── (Peramalan: Moving Average & Holt-Winters)
 ```
 
-- **Backend Utama:** PHP 8.2+ / Laravel 10 (MVC Framework)
+- **Backend Utama:** PHP 8.2+ / 8.3+ / Laravel 11+ (Latest MVC Framework)
 - **Database:** MySQL 8.0+ / MariaDB (`database/schema.sql`)
-- **Frontend:** Blade Templates, Bootstrap 5, Chart.js / ApexCharts
+- **Frontend:** Blade Templates, Bootstrap 5.3+ (Latest), Chart.js / ApexCharts
 - **Microservice Peramalan:** Python 3.10+ (FastAPI, Pandas, Statsmodels)
 
 ---

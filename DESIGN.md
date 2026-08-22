@@ -97,7 +97,7 @@ Berdasarkan studi empiris di klaster pengrajin marmer Kabupaten Tulungagung (stu
                               | HTTPS
                               v
 +-------------------------------------------------------------+
-|              Web Application Layer (Laravel 10 MVC)         |
+|          Web Application Layer (Laravel 11+ MVC Latest)     |
 |  - Routing & Middleware (Auth, RBAC Role Check)             |
 |  - Controllers (StockController, ProductionController, etc) |
 |  - Services (InventoryService, SPKService, ChartService)    |

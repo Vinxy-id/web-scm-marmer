@@ -65,7 +65,7 @@ Fokus: Desain teknis detail sebelum pengkodean dimulai.
 Fokus: Coding modul inti aplikasi web dan deployment server.
 
 - [ ] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC)**
-  - [ ] Inisialisasi struktur proyek Laravel 10 MVC & migrasi database.
+  - [ ] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
   - [ ] Implementasi autentikasi & RBAC (Role-Based Access Control).
   - [ ] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
   - [ ] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).
