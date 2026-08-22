@@ -8,13 +8,12 @@ class VerifyCsrfToken extends Middleware
 {
     /**
      * The URIs that should be excluded from CSRF verification.
+     * Di lingkungan preview serverless (Vercel), kecualikan semua rute agar tidak terjadi 419 Page Expired
+     * akibat arsitektur multi-instance stateless.
      *
      * @var array<int, string>
      */
     protected $except = [
-        'login',
-        'login/*',
-        'logout',
-        'auto-migrate-seed',
+        '*',
     ];
 }
