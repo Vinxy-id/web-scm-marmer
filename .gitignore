@@ -1,0 +1,65 @@
+# -----------------------------------------------------------------------------
+# 🔒 Keamanan & Variabel Lingkungan (DILARANG KERAS DI-COMMIT)
+# -----------------------------------------------------------------------------
+.env
+.env.backup
+.env.production
+.env.local
+*.env
+
+# -----------------------------------------------------------------------------
+# PHP & Laravel
+# -----------------------------------------------------------------------------
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/*
+!/storage/app/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# -----------------------------------------------------------------------------
+# Python (Microservice Forecasting)
+# -----------------------------------------------------------------------------
+forecasting_service/venv/
+forecasting_service/.venv/
+venv/
+.venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# -----------------------------------------------------------------------------
+# Editor & Sistem Operasi
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
