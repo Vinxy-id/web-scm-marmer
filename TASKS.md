@@ -64,14 +64,14 @@ Fokus: Desain teknis detail sebelum pengkodean dimulai.
 ### Sprint 3: Pengkodean Sistem & Integrasi Cloud (Bulan 3)
 Fokus: Coding modul inti aplikasi web dan deployment server.
 
-- [ ] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC)**
-  - [ ] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
-  - [ ] Implementasi autentikasi & RBAC (Role-Based Access Control).
-  - [ ] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
-  - [ ] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).
-  - [ ] Implementasi Modul QC 2-Tahap & Pencatatan Limbah/Sisa Potongan.
-  - [ ] Implementasi Modul Distribusi & Checklist Packing.
-  - [ ] Pembuatan Halaman Dashboard Monitoring Interaktif (KPI Card, Pie, Column, Line Chart).
+- [x] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC)**
+  - [x] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
+  - [x] Implementasi autentikasi & RBAC (Role-Based Access Control).
+  - [x] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
+  - [x] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).
+  - [x] Implementasi Modul QC 2-Tahap & Pencatatan Limbah/Sisa Potongan.
+  - [x] Implementasi Modul Distribusi & Checklist Packing.
+  - [x] Pembuatan Halaman Dashboard Monitoring Interaktif (KPI Card, Pie, Column, Line Chart).
 - [ ] **Kegiatan 8: Integrasi Algoritma ke Sistem & Deployment ke Cloud Server**
   - [ ] Integrasi REST API forecasting Python dengan backend Laravel.
   - [ ] Setup cloud server / VPS (Ubuntu, Nginx, PHP-FPM, MySQL, SSL LetsEncrypt).

@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-SCM Marmer Tulungagung - Sistem Rantai Pasok Terintegrasi</title>
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.27 6.96 12 12.01 20.73 6.96'/><line x1='12' y1='22.08' x2='12' y2='12'/></svg>" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .kanban-col { min-height: 480px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased custom-scrollbar">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="w-64 bg-slate-900 text-slate-200 flex flex-col transition-all duration-300 z-30 flex-shrink-0">
+            <!-- Brand Header -->
+            <div class="h-16 flex items-center px-4 bg-slate-950 border-b border-slate-800 gap-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h1 class="font-bold text-sm text-white tracking-wide leading-tight">E-SCM MARMER</h1>
+                    <p class="text-[11px] text-blue-400 font-medium truncate">Klaster IKM Tulungagung</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="flex-1 overflow-y-auto py-3 px-2 space-y-1 custom-scrollbar">
+                <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Menu Utama</div>
+                
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition bg-blue-600 text-white shadow-sm">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                </button>
+
+                <button onclick="switchTab('supply-chain-flow')" id="nav-supply-chain-flow" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="git-merge" class="w-4 h-4 text-emerald-400"></i> Alur Rantai Pasok
+                </button>
+
+                <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Operasional Hulu</div>
+
+                <button onclick="switchTab('materials')" id="nav-materials" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="boxes" class="w-4 h-4 text-amber-400"></i> Bahan Baku
+                    </div>
+                    <span class="inline-flex items-center gap-1 bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> 1 Kritis
+                    </span>
+                </button>
+
+                <button onclick="switchTab('purchase-orders')" id="nav-purchase-orders" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 text-sky-400"></i> Pengadaan (PO)
+                </button>
+
+                <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Lantai Produksi</div>
+
+                <button onclick="switchTab('production-kanban')" id="nav-production-kanban" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="kanban-square" class="w-4 h-4 text-indigo-400"></i> Produksi & SPK
+                </button>
+
+                <button onclick="switchTab('wip-tracking')" id="nav-wip-tracking" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i> Barang dlm Proses (WIP)
+                </button>
+
+                <button onclick="switchTab('qc-inspection')" id="nav-qc-inspection" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-green-400"></i> QC Dua Tahap
+                </button>
+
+                <button onclick="switchTab('waste-management')" id="nav-waste-management" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="recycle" class="w-4 h-4 text-teal-400"></i> Hilirisasi Residu
+                </button>
+
+                <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Hilir & Distribusi</div>
+
+                <button onclick="switchTab('finished-goods')" id="nav-finished-goods" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="package-check" class="w-4 h-4 text-orange-400"></i> Barang Jadi
+                </button>
+
+                <button onclick="switchTab('distribution')" id="nav-distribution" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="truck" class="w-4 h-4 text-purple-400"></i> Distribusi & Packing
+                </button>
+
+                <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Analitik Cerdas</div>
+
+                <button onclick="switchTab('forecasting')" id="nav-forecasting" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-yellow-400"></i> AI & Forecasting
+                </button>
+
+                <button onclick="switchTab('reports')" id="nav-reports" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400"></i> Laporan & KPI
+                </button>
+            </div>
+
+            <!-- Footer User Profile -->
+            <div class="p-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                        PJ
+                    </div>
+                    <div class="overflow-hidden text-left">
+                        <p class="text-xs font-semibold text-white truncate">Pak Joko Santoso</p>
+                        <p class="text-[10px] text-slate-400">Owner (UD Cahaya Onix)</p>
+                    </div>
+                </div>
+                <button onclick="switchUserRole()" title="Ganti Peran Pengguna" class="p-1.5 hover:bg-slate-800 rounded text-slate-400 hover:text-white">
+                    <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- TOPBAR -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-20 flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg lg:hidden">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-lg font-bold text-slate-800 leading-tight">Dashboard Monitoring Rantai Pasok</h2>
+                        <p id="page-subtitle" class="text-xs text-slate-500">Klaster IKM Marmer Kabupaten Tulungagung</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Quick Stats Badges -->
+                    <div class="hidden md:flex items-center gap-2 text-xs bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-slate-600 font-medium">FastAPI Service: <b class="text-emerald-600">Online</b></span>
+                    </div>
+
+                    <!-- Role Badge -->
+                    <span id="current-role-badge" class="bg-blue-100 text-blue-800 border border-blue-200 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5">
+                        <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Role: Owner / Admin
+                    </span>
+
+                    <!-- Quick Action Button -->
+                    <button onclick="switchTab('production-kanban')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB CONTENT CONTAINER -->
+            <main class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+
+                <!-- ========================================== -->
+                <!-- 1. TAB: DASHBOARD                          -->
+                <!-- ========================================== -->
+                <div id="tab-dashboard" class="tab-pane space-y-6">
+                    
+                    <!-- ALERT BANNER: CRITICAL STOCK -->
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-red-100 text-red-600 rounded-full">
+                                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-red-900">Peringatan Stok Kritis Terdeteksi!</h4>
+                                <p class="text-xs text-red-700">Bahan <b>Bongkahan Onyx Kuning Kristal (MAT-ONX-001)</b> tersisa <b>12 Blok</b> (Ambang batas minimum 15 Blok). Segera lakukan pengadaan.</p>
+                            </div>
+                        </div>
+                        <button onclick="switchTab('purchase-orders')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1">
+                            <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Buat PO Sekarang
+                        </button>
+                    </div>
+
+                    <!-- 4 KPI CARDS -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Bahan Mentah</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1">89 Blok</h3>
+                                <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                                    <i data-lucide="trending-up" class="w-3 h-3"></i> +12% bln ini
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i data-lucide="mountain" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">SPK Produksi Aktif</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1">5 Batch</h3>
+                                <p class="text-[11px] text-blue-600 font-semibold mt-1">Mesin Bubut: 7/7 Beroperasi</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                <i data-lucide="cog" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Barang Jadi Siap Kirim</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1">67 Unit</h3>
+                                <p class="text-[11px] text-emerald-600 font-semibold mt-1">22 Lolos Packing Kayu</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i data-lucide="package-check" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Nilai Inventori</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1">Rp 148.5 Jt</h3>
+                                <p class="text-[11px] text-slate-500 mt-1">Bahan Baku + Barang Jadi</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <i data-lucide="coins" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INTERACTIVE SUPPLY CHAIN FLOW (8 TAHAP MARMER) -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                                    <i data-lucide="git-merge" class="w-5 h-5 text-blue-600"></i> Diagram Alur Rantai Pasok Marmer Terintegrasi
+                                </h3>
+                                <p class="text-xs text-slate-500">Visualisasi aliran dari tambang hingga pelanggan. Klik kotak tahap untuk langsung membuka modulnya.</p>
+                            </div>
+                            <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-md font-semibold border">8 Tahap Hulu-Hilir</span>
+                        </div>
+
+                        <!-- 8 Stages Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5 pt-2">
+                            <!-- Stage 1 -->
+                            <div onclick="switchTab('materials')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                                    <i data-lucide="pickaxe" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">1. Tambang</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">3 Pemasok</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">Besole/CPD</span>
+                            </div>
+
+                            <!-- Stage 2 -->
+                            <div onclick="switchTab('materials')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+                                    <i data-lucide="boxes" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">2. Gudang Batu</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">89 Blok</p>
+                                <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
+                                    <span class="w-1 h-1 rounded-full bg-red-500"></span> 1 Kritis
+                                </span>
+                            </div>
+
+                            <!-- Stage 3 -->
+                            <div onclick="switchTab('production-kanban')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                    <i data-lucide="scissors" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">3. Mesin Slep</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Potong Blok</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Max 80 cm</span>
+                            </div>
+
+                            <!-- Stage 4 -->
+                            <div onclick="switchTab('wip-tracking')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                                    <i data-lucide="disc" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">4. Pembubutan</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">7 Mesin Aktif</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">14 Unit/Hari</span>
+                            </div>
+
+                            <!-- Stage 5 -->
+                            <div onclick="switchTab('qc-inspection')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                    <i data-lucide="scan-search" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">5. QC Tahap 1</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Cek Serat Awal</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold">Bebas Retak</span>
+                            </div>
+
+                            <!-- Stage 6 -->
+                            <div onclick="switchTab('production-kanban')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">6. Finishing Poles</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Hi-Glossy</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">Kilau Super</span>
+                            </div>
+
+                            <!-- Stage 7 -->
+                            <div onclick="switchTab('qc-inspection')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-green-100 text-green-700 flex items-center justify-center">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">7. QC Tahap 2</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Uji Afur</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-semibold">Siap Gudang</span>
+                            </div>
+
+                            <!-- Stage 8 -->
+                            <div onclick="switchTab('distribution')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+                                    <i data-lucide="truck" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">8. Distribusi</h5>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Packing Kayu</p>
+                                <span class="inline-block mt-1.5 text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-semibold">Kirim Buyer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHARTS & SUMMARY SECTION -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Chart 1: Tren Pengadaan vs Produksi (2 Cols) -->
+                        <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">Tren Pengadaan Bahan vs Output Produksi (6 Bulan)</h4>
+                                    <p class="text-xs text-slate-500">Perbandingan volume material masuk (blok) vs wastafel selesai (unit)</p>
+                                </div>
+                                <select class="text-xs bg-slate-50 border rounded-lg px-2 py-1 text-slate-600">
+                                    <option>Semester 1 2026</option>
+                                    <option>Tahun 2025</option>
+                                </select>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: Komposisi Bahan & Stok (1 Col) -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1">Komposisi Inventori Batuan Alam</h4>
+                                <p class="text-xs text-slate-500 mb-3">Distribusi volume bahan baku di gudang</p>
+                                <div class="h-44 flex items-center justify-center">
+                                    <canvas id="compositionChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5">
+                                <div class="flex justify-between text-slate-600"><span>Marmer Putih</span><b>42 Blok (47%)</b></div>
+                                <div class="flex justify-between text-slate-600"><span>Batu Kali</span><b>35 Blok (39%)</b></div>
+                                <div class="flex justify-between text-slate-600"><span>Onyx Kristal</span><b>12 Blok (14%)</b></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABEL MATERIAL KRITIS & STATUS MESIN -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Tabel Stok Kritis -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                    <i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i> Daftar Material Perlu Pengadaan Segera
+                                </h4>
+                                <button onclick="switchTab('materials')" class="text-xs text-blue-600 hover:underline font-medium">Lihat Semua</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b">
+                                        <tr>
+                                            <th class="p-2.5">Material</th>
+                                            <th class="p-2.5">Sisa Stok</th>
+                                            <th class="p-2.5">Batas Min</th>
+                                            <th class="p-2.5">Status</th>
+                                            <th class="p-2.5 text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100">
+                                        <tr>
+                                            <td class="p-2.5 font-medium text-slate-800">Bongkahan Onyx Kristal</td>
+                                            <td class="p-2.5 text-red-600 font-bold">12 Blok</td>
+                                            <td class="p-2.5 text-slate-500">15 Blok</td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                                </span>
+                                            </td>
+                                            <td class="p-2.5 text-right">
+                                                <button onclick="switchTab('purchase-orders')" class="text-blue-600 hover:text-blue-800 font-semibold text-xs">Buat PO</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-medium text-slate-800">Marmer Putih Campurdarat</td>
+                                            <td class="p-2.5 text-amber-600 font-bold">18 Blok</td>
+                                            <td class="p-2.5 text-slate-500">20 Blok</td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rendah
+                                                </span>
+                                            </td>
+                                            <td class="p-2.5 text-right">
+                                                <button onclick="switchTab('purchase-orders')" class="text-blue-600 hover:text-blue-800 font-semibold text-xs">Buat PO</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-medium text-slate-800">Batu Kali Song</td>
+                                            <td class="p-2.5 text-emerald-600 font-bold">35 Blok</td>
+                                            <td class="p-2.5 text-slate-500">10 Blok</td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                                </span>
+                                            </td>
+                                            <td class="p-2.5 text-right">
+                                                <span class="text-slate-400 text-xs">Aman</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Status 7 Mesin Bubut UD Cahaya Onix -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                    <i data-lucide="gauge" class="w-4 h-4 text-indigo-500"></i> Status Utilisasi 7 Mesin Bubut (UD Cahaya Onix)
+                                </h4>
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">100% Aktif</span>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 1</p>
+                                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 2</p>
+                                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (80m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 3</p>
+                                    <p class="text-[10px] text-amber-600 mt-0.5">Onyx Oval</p>
+                                    <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Poles (90m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 4</p>
+                                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Mangkok</p>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (75m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 5</p>
+                                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 6</p>
+                                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Kotak</p>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (90m)</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-50 border rounded-lg text-center col-span-2 sm:col-span-2">
+                                    <p class="font-bold text-slate-800">Mesin Bubut 7 & Mesin Slep</p>
+                                    <p class="text-[10px] text-slate-600 mt-0.5">Persiapan Batch SPK-2026-04</p>
+                                    <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Potong Slep (60m)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 2. TAB: BAHAN BAKU                         -->
+                <!-- ========================================== -->
+                <div id="tab-materials" class="tab-pane hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-xl border border-slate-200">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Manajemen Bahan Baku Batuan Alam</h3>
+                            <p class="text-xs text-slate-500">Pencatatan bongkahan marmer, onyx, dan batu kali dari penambang.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Cari nama / kode batu..." class="text-xs border rounded-lg px-3 py-2 w-48 sm:w-64 focus:outline-blue-500">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Material
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Material Table -->
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
+                                <tr>
+                                    <th class="p-3">Kode Material</th>
+                                    <th class="p-3">Nama Bahan Baku</th>
+                                    <th class="p-3">Jenis / Grade</th>
+                                    <th class="p-3">Dimensi Blok</th>
+                                    <th class="p-3">Stok Terkini</th>
+                                    <th class="p-3">Stok Min</th>
+                                    <th class="p-3">Harga/Blok</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50/80">
+                                    <td class="p-3 font-mono font-bold text-blue-700">MAT-MRM-001</td>
+                                    <td class="p-3 font-semibold text-slate-800">Bongkahan Marmer Putih Campurdarat</td>
+                                    <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold text-[10px]">Marmer - Super A</span></td>
+                                    <td class="p-3 text-slate-500">80 x 60 x 60 cm</td>
+                                    <td class="p-3 font-bold text-slate-800">18.00 Blok</td>
+                                    <td class="p-3 text-slate-500">5.00 Blok</td>
+                                    <td class="p-3 text-slate-700">Rp 450.000</td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                        </span>
+                                    </td>
+                                    <td class="p-3 text-right space-x-1">
+                                        <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                        <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/80 bg-red-50/30">
+                                    <td class="p-3 font-mono font-bold text-blue-700">MAT-ONX-001</td>
+                                    <td class="p-3 font-semibold text-slate-800">Bongkahan Onyx Kuning Kristal</td>
+                                    <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">Onyx - Super A</span></td>
+                                    <td class="p-3 text-slate-500">60 x 45 x 45 cm</td>
+                                    <td class="p-3 font-bold text-red-600">12.00 Blok</td>
+                                    <td class="p-3 text-slate-500">15.00 Blok</td>
+                                    <td class="p-3 text-slate-700">Rp 850.000</td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-red-100 text-red-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                        </span>
+                                    </td>
+                                    <td class="p-3 text-right space-x-1">
+                                        <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                        <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/80">
+                                    <td class="p-3 font-mono font-bold text-blue-700">MAT-BKL-001</td>
+                                    <td class="p-3 font-semibold text-slate-800">Batu Kali Alam Kali Song</td>
+                                    <td class="p-3"><span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-semibold text-[10px]">Batu Kali - B</span></td>
+                                    <td class="p-3 text-slate-500">Dia 35 - 50 cm</td>
+                                    <td class="p-3 font-bold text-slate-800">35.00 Blok</td>
+                                    <td class="p-3 text-slate-500">10.00 Blok</td>
+                                    <td class="p-3 text-slate-700">Rp 95.000</td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                        </span>
+                                    </td>
+                                    <td class="p-3 text-right space-x-1">
+                                        <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                        <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 3. TAB: PRODUKSI & KANBAN BOARD            -->
+                <!-- ========================================== -->
+                <div id="tab-production-kanban" class="tab-pane hidden space-y-6">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-xl border border-slate-200">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Kanban Tracking Surat Perintah Kerja (SPK) Produksi</h3>
+                            <p class="text-xs text-slate-500">Pantau progres batch wastafel dari pembelahan hingga siap masuk gudang.</p>
+                        </div>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Buat SPK Baru
+                        </button>
+                    </div>
+
+                    <!-- 5 KANBAN COLUMNS -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        
+                        <!-- Col 1: Antrian -->
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>1. Antrian SPK</span>
+                                </div>
+                                <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">SPK/2026/04/005</span>
+                                    <span class="text-[9px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded">Urgent</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800">Wastafel Oval Onyx D45</h5>
+                                <p class="text-[11px] text-slate-500">Pesanan: Bali Natural Gallery</p>
+                                <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
+                                    <span>Target: <b>8 Unit</b></span>
+                                    <span>Due: 26 Apr</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Persiapan Bahan (Mesin Slep) -->
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="scissors" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>2. Potong Slep</span>
+                                </div>
+                                <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">SPK/2026/04/004</span>
+                                    <span class="text-[9px] bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.5 rounded">Normal</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800">Wastafel Mangkok D40</h5>
+                                <p class="text-[11px] text-slate-500">Operator: Pak Slamet (Slep)</p>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-blue-600 h-full w-2/5"></div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
+                                    <span>Progress: <b>40%</b></span>
+                                    <span>Qty: 14 Unit</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Pembubutan & Bentuk -->
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="disc" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>3. Mesin Bubut</span>
+                                </div>
+                                <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">2</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">SPK/2026/04/002</span>
+                                    <span class="text-[9px] bg-amber-100 text-amber-700 font-semibold px-1.5 py-0.5 rounded">Bubut 1-4</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800">Wastafel Marmer Bakar</h5>
+                                <p class="text-[11px] text-slate-500">4 Operator (Mesin 1-4)</p>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-amber-500 h-full w-3/4"></div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
+                                    <span>Progress: <b>75%</b></span>
+                                    <span>Qty: 14 Unit</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 4: QC & Finishing Poles -->
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>4. QC & Poles</span>
+                                </div>
+                                <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">SPK/2026/04/001</span>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded">QC 2 Poles</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-800">Wastafel Marmer Putih D40</h5>
+                                <p class="text-[11px] text-slate-500">Inspeksi Lubang Afur</p>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full w-11/12"></div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
+                                    <span>Lolos QC: <b>12/14</b></span>
+                                    <span>Tambal: 2</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 5: Selesai / Siap Gudang -->
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="package-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    <span>5. Siap Kirim</span>
+                                </div>
+                                <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-lg border border-emerald-300 shadow-sm space-y-2">
+                                <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">SPK/2026/03/098</span>
+                                <h5 class="text-xs font-bold text-slate-800">Stepping Stone Batu Kali</h5>
+                                <p class="text-[11px] text-slate-500">PT Citra Griya (Surabaya)</p>
+                                <div class="text-[10px] text-emerald-700 font-semibold pt-1 border-t flex items-center gap-1">
+                                    <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> 45 Unit (Packing Krat Kayu)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 4. TAB: QC DUA TAHAP & RESIDU LIMBAH       -->
+                <!-- ========================================== -->
+                <div id="tab-qc-inspection" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Form Inspeksi Quality Control (QC) Dua Tahap</h3>
+                                <p class="text-xs text-slate-500">Standar pemeriksaan fisik batuan marmer untuk meminimalkan pengerjaan ulang (rework).</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">Tahap 1: Bentuk Mentah</button>
+                                <button class="bg-slate-100 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-slate-200">Tahap 2: Poles Hi-Glossy</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200 mb-6">
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-600">Pilih Batch SPK</label>
+                                <select class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                                    <option>SPK/2026/04/001 - Wastafel D40 Putih (14 Unit)</option>
+                                    <option>SPK/2026/04/002 - Wastafel Bakar (14 Unit)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-600">Jumlah Diperiksa</label>
+                                <input type="number" value="14" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-600">Jumlah Lolos (Pass)</label>
+                                <input type="number" value="12" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white text-emerald-600 font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-600">Perlu Tambal Resin (Rework)</label>
+                                <input type="number" value="2" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white text-amber-600 font-bold">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-2">
+                            <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-lg">Batal</button>
+                            <button class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> Simpan Hasil Inspeksi QC
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 5. TAB: PERAMALAN AI (FORECASTING)         -->
+                <!-- ========================================== -->
+                <div id="tab-forecasting" class="tab-pane hidden space-y-6">
+                    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="bg-blue-500/30 text-blue-200 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-400/30">
+                                    Model Deret Waktu Holt-Winters
+                                </span>
+                                <h3 class="text-xl font-bold mt-2">Peramalan Permintaan & Kebutuhan Bahan Baku</h3>
+                                <p class="text-xs text-slate-300 mt-1 max-w-2xl">
+                                    Simulasi proyeksi kebutuhan bongkahan marmer untuk mengantisipasi lonjakan permintaan pesanan arsitektur luar kota.
+                                </p>
+                            </div>
+                            <button onclick="runForecastSimulation()" class="bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Hitung Ulang Peramalan
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                                <p class="text-xs text-slate-300">Estimasi Kebutuhan Mei 2026</p>
+                                <h4 class="text-2xl font-bold text-white mt-1">420.5 Blok</h4>
+                                <p class="text-[11px] text-blue-300 mt-0.5">Batas: 395 - 446 Blok</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                                <p class="text-xs text-slate-300">Akurasi Model (MAPE)</p>
+                                <h4 class="text-2xl font-bold text-emerald-400 mt-1">6.42 %</h4>
+                                <p class="text-[11px] text-emerald-300 mt-0.5">Kategori: Sangat Akurat (&lt;10%)</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                                <p class="text-xs text-slate-300">Rekomendasi Order Tambang</p>
+                                <h4 class="text-2xl font-bold text-amber-300 mt-1">20 Blok Tambahan</h4>
+                                <p class="text-[11px] text-amber-200 mt-0.5">Order sebelum 5 Mei</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Forecast Line Chart -->
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="text-sm font-bold text-slate-800 mb-1">Visualisasi Historis vs Hasil Ramalan (Confidence Interval 95%)</h4>
+                        <p class="text-xs text-slate-500 mb-4">Garis biru menunjukkan data aktual 12 bulan terakhir, garis oranye putus-putus menunjukkan hasil peramalan 3 bulan ke depan.</p>
+                        <div class="h-72">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generic Container for other tabs (WIP, PO, Distribution, Reports, etc.) -->
+                <div id="tab-generic" class="tab-pane hidden p-12 text-center bg-white rounded-2xl border border-slate-200">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="layers" class="w-8 h-8"></i>
+                    </div>
+                    <h3 id="generic-title" class="text-base font-bold text-slate-800">Modul Operasional</h3>
+                    <p id="generic-desc" class="text-xs text-slate-500 mt-1 max-w-md mx-auto">Modul ini siap dikoneksikan ke backend Laravel MVC pada Kegiatan 7.</p>
+                    <button onclick="switchTab('dashboard')" class="mt-4 bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-lg">Kembali ke Dashboard</button>
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // TAB SWITCHING FUNCTION
+        function switchTab(tabId) {
+            // Hide all tab panes
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+
+            // Remove active class from nav items
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-blue-600', 'text-white');
+                el.classList.add('text-slate-300');
+            });
+
+            // Highlight current nav item if exists
+            const currentNav = document.getElementById('nav-' + tabId);
+            if (currentNav) {
+                currentNav.classList.add('bg-blue-600', 'text-white');
+                currentNav.classList.remove('text-slate-300');
+            }
+
+            // Show target tab pane
+            const targetPane = document.getElementById('tab-' + tabId);
+            if (targetPane) {
+                targetPane.classList.remove('hidden');
+            } else {
+                const genericPane = document.getElementById('tab-generic');
+                genericPane.classList.remove('hidden');
+                document.getElementById('generic-title').innerText = 'Modul: ' + tabId.toUpperCase().replace('-', ' ');
+            }
+
+            // Update title
+            const titles = {
+                'dashboard': 'Dashboard Monitoring Rantai Pasok',
+                'supply-chain-flow': 'Diagram Alur Rantai Pasok Marmer (8 Tahap)',
+                'materials': 'Manajemen Bahan Baku & Stok Bongkahan',
+                'production-kanban': 'Kanban Board SPK & Stasiun Bubut',
+                'qc-inspection': 'Pengendalian Kualitas QC Dua Tahap',
+                'forecasting': 'Peramalan Permintaan & AI Assistant',
+                'purchase-orders': 'Manajemen Pengadaan (Purchase Order)',
+                'distribution': 'Distribusi & Checklist Packing Kayu',
+                'reports': 'Laporan Analitik & Efisiensi KPI'
+            };
+            document.getElementById('page-title').innerText = titles[tabId] || 'E-SCM Marmer Tulungagung';
+
+            // Re-render icons
+            setTimeout(() => lucide.createIcons(), 50);
+        }
+
+        // TOGGLE SIDEBAR MOBILE
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('-translate-x-full');
+        }
+
+        // SWITCH USER ROLE SIMULATOR
+        const roles = ['Owner / Admin', 'Kepala Gudang', 'Mandor Produksi', 'Staf Distribusi'];
+        let currentRoleIdx = 0;
+        function switchUserRole() {
+            currentRoleIdx = (currentRoleIdx + 1) % roles.length;
+            document.getElementById('current-role-badge').innerHTML = '<i data-lucide="user-check" class="w-3.5 h-3.5"></i> Role: ' + roles[currentRoleIdx];
+            lucide.createIcons();
+            alert('Peran pengguna disimulasikan sebagai: ' + roles[currentRoleIdx]);
+        }
+
+        // CHARTS INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            // Trend Chart
+            const ctxTrend = document.getElementById('trendChart')?.getContext('2d');
+            if (ctxTrend) {
+                new Chart(ctxTrend, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Nov 25', 'Des 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                        datasets: [
+                            {
+                                label: 'Bahan Baku Masuk (Blok)',
+                                data: [35, 42, 38, 45, 52, 48],
+                                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                                borderRadius: 6
+                            },
+                            {
+                                label: 'Wastafel Selesai (Unit)',
+                                data: [70, 84, 76, 90, 104, 96],
+                                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } }
+                    }
+                });
+            }
+
+            // Composition Chart
+            const ctxComp = document.getElementById('compositionChart')?.getContext('2d');
+            if (ctxComp) {
+                new Chart(ctxComp, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Marmer Putih', 'Batu Kali', 'Onyx'],
+                        datasets: [{
+                            data: [42, 35, 12],
+                            backgroundColor: ['#3b82f6', '#64748b', '#f59e0b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Forecasting Chart
+            const ctxForecast = document.getElementById('forecastChart')?.getContext('2d');
+            if (ctxForecast) {
+                new Chart(ctxForecast, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mei 25', 'Jun 25', 'Jul 25', 'Agt 25', 'Sep 25', 'Okt 25', 'Nov 25', 'Des 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26', 'Mei 26 (F)', 'Jun 26 (F)', 'Jul 26 (F)'],
+                        datasets: [
+                            {
+                                label: 'Data Aktual (Blok)',
+                                data: [320, 340, 310, 360, 390, 410, 380, 430, 400, 420, 450, 470, null, null, null],
+                                borderColor: '#2563eb',
+                                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'Hasil Ramalan Holt-Winters',
+                                data: [null, null, null, null, null, null, null, null, null, null, null, 470, 485, 498, 515],
+                                borderColor: '#f59e0b',
+                                borderDash: [6, 6],
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } }
+                    }
+                });
+            }
+        });
+
+        function runForecastSimulation() {
+            alert('Mengirim data deret waktu ke microservice Python FastAPI...\nHasil ramalan berhasil diperbarui: MAPE 6.42% (Akurat)');
+        }
+    </script>
+</body>
+</html>
