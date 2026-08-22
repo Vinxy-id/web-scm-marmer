@@ -10,19 +10,20 @@ use Carbon\Carbon;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database with empirical data from database/db_escm_marmer.sql
-     * Studi Kasus: Klaster IKM Marmer & Onyx (UD Cahaya Onix & UD Putra Abadi)
+     * Seed the application's database with empirical data from field observation
+     * Studi Kasus: Klaster IKM Marmer & Onyx Kabupaten Tulungagung (UD Cahaya Onix & UD Putra Abadi)
+     * Supervisi: Pak Pangki S.
      */
     public function run(): void
     {
         $now = Carbon::now();
 
-        // 1. SEED USERS
+        // 1. SEED USERS (Role-Based Demo & Empirical Pengrajin)
         DB::table('users')->upsert([
-            // Demo Testing Accounts (Password: role123)
+            // Demo Accounts (Password: role123)
             [
                 'id' => 1,
-                'name' => 'Owner Cahaya Onix',
+                'name' => 'M. Ilham Nur Amali (Owner)',
                 'email' => 'owner@cahayaonix.com',
                 'password' => Hash::make('role123'),
                 'role' => 'owner',
@@ -34,7 +35,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'name' => 'Staf Gudang Cahaya Onix',
+                'name' => 'Budi Santoso (Gudang)',
                 'email' => 'gudang@cahayaonix.com',
                 'password' => Hash::make('role123'),
                 'role' => 'gudang',
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'id' => 3,
-                'name' => 'Operator Produksi Cahaya Onix',
+                'name' => 'Suparno / Pak Slamet (Produksi)',
                 'email' => 'produksi@cahayaonix.com',
                 'password' => Hash::make('role123'),
                 'role' => 'produksi',
@@ -58,7 +59,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'name' => 'Staf Distribusi Cahaya Onix',
+                'name' => 'Rini Astuti (Distribusi)',
                 'email' => 'distribusi@cahayaonix.com',
                 'password' => Hash::make('role123'),
                 'role' => 'distribusi',
@@ -70,7 +71,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'id' => 5,
-                'name' => 'Administrator Sistem',
+                'name' => 'Administrator Klaster Marmer',
                 'email' => 'admin@escm-marmer.id',
                 'password' => Hash::make('role123'),
                 'role' => 'admin',
@@ -80,38 +81,14 @@ class DatabaseSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            // Empirical Pengrajin Data (From db_escm_marmer.sql)
-            [
-                'id' => 11,
-                'name' => 'M. Ilham Nur Amali',
-                'email' => 'ilham.cahayaonix@placeholder.local',
-                'password' => Hash::make('role123'),
-                'role' => 'owner',
-                'phone' => null,
-                'ikm_name' => 'UD Cahaya Onix',
-                'is_active' => true,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'id' => 12,
-                'name' => 'Suparno',
-                'email' => 'suparno.cahayaonix@placeholder.local',
-                'password' => Hash::make('role123'),
-                'role' => 'produksi',
-                'phone' => null,
-                'ikm_name' => 'UD Cahaya Onix',
-                'is_active' => true,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
+            // UD Putra Abadi Pengrajin Data
             [
                 'id' => 13,
-                'name' => 'Efri Saputra',
+                'name' => 'Efri Saputra (Owner Putra Abadi)',
                 'email' => 'efri.putraabadi@placeholder.local',
                 'password' => Hash::make('role123'),
                 'role' => 'owner',
-                'phone' => null,
+                'phone' => '085233998877',
                 'ikm_name' => 'UD Putra Abadi',
                 'is_active' => true,
                 'created_at' => $now,
@@ -119,23 +96,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'id' => 14,
-                'name' => 'Misno',
+                'name' => 'Misno (Mandor Putra Abadi)',
                 'email' => 'misno.putraabadi@placeholder.local',
                 'password' => Hash::make('role123'),
                 'role' => 'produksi',
-                'phone' => null,
-                'ikm_name' => 'UD Putra Abadi',
-                'is_active' => true,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'id' => 15,
-                'name' => 'Suyanto',
-                'email' => 'suyanto.putraabadi@placeholder.local',
-                'password' => Hash::make('role123'),
-                'role' => 'produksi',
-                'phone' => null,
+                'phone' => '085233998878',
                 'ikm_name' => 'UD Putra Abadi',
                 'is_active' => true,
                 'created_at' => $now,
@@ -143,7 +108,7 @@ class DatabaseSeeder extends Seeder
             ],
         ], ['email'], ['name', 'password', 'role', 'phone', 'ikm_name', 'is_active', 'updated_at']);
 
-        // 2. SEED SUPPLIERS
+        // 2. SEED SUPPLIERS (Penambang Lokal Tulungagung)
         DB::table('suppliers')->insertOrIgnore([
             ['id' => 1, 'supplier_code' => 'SUP-BSL-01', 'name' => 'Tambang Marmer Besole Jaya', 'contact_person' => 'Pak Sukir', 'phone' => '085233112233', 'address' => 'Desa Besole, Campurdarat', 'quarry_location' => 'Kecamatan Besole, Tulungagung', 'material_category' => 'Bongkahan Marmer Putih & Bintik', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 2, 'supplier_code' => 'SUP-CPD-02', 'name' => 'Penambang Onyx Campurdarat', 'contact_person' => 'Pak Wahyu', 'phone' => '085244556677', 'address' => 'Desa Campurdarat', 'quarry_location' => 'Campurdarat, Tulungagung', 'material_category' => 'Bongkahan Onyx Tembus Cahaya', 'created_at' => $now, 'updated_at' => $now],
@@ -152,10 +117,10 @@ class DatabaseSeeder extends Seeder
 
         // 3. SEED CATEGORIES
         DB::table('categories')->insertOrIgnore([
-            ['id' => 14, 'name' => 'Bahan Baku Marmer', 'slug' => 'bahan-baku-marmer', 'type' => 'material', 'description' => 'Bongkahan batu marmer putih & hitam dari Campurdarat', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 14, 'name' => 'Bahan Baku Marmer', 'slug' => 'bahan-baku-marmer', 'type' => 'material', 'description' => 'Bongkahan batu marmer putih & bintik dari Besole/Campurdarat', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 15, 'name' => 'Bahan Baku Batu Kali', 'slug' => 'bahan-baku-batu-kali', 'type' => 'material', 'description' => 'Batu kali alam untuk stepping, wastafel, dan kap lampu', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 16, 'name' => 'Wastafel Marmer', 'slug' => 'wastafel-marmer', 'type' => 'product', 'description' => 'Wastafel cuci tangan olahan batu marmer, finishing Hi-Glossy', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 17, 'name' => 'Wastafel Batu Kali', 'slug' => 'wastafel-batu-kali', 'type' => 'product', 'description' => 'Wastafel cuci tangan olahan batu kali, finishing Hi-Glossy', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 17, 'name' => 'Wastafel Batu Kali', 'slug' => 'wastafel-batu-kali', 'type' => 'product', 'description' => 'Wastafel cuci tangan olahan batu kali, finishing Hi-Glossy Alami', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 18, 'name' => 'Stepping Batu Kali', 'slug' => 'stepping-batu-kali', 'type' => 'product', 'description' => 'Batu pijakan taman dari batu kali, hasil gerinda halus', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 19, 'name' => 'Kap Lampu Batu Kali', 'slug' => 'kap-lampu-batu-kali', 'type' => 'product', 'description' => 'Kap lampu hias dari olahan batu kali', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 20, 'name' => 'Pedestal Marmer', 'slug' => 'pedestal-marmer', 'type' => 'product', 'description' => 'Pedestal/dudukan wastafel olahan batu marmer', 'created_at' => $now, 'updated_at' => $now],
@@ -163,14 +128,16 @@ class DatabaseSeeder extends Seeder
             ['id' => 22, 'name' => 'Meja & Ornamen Marmer', 'slug' => 'meja-ornamen-marmer', 'type' => 'product', 'description' => 'Meja bundar marmer, pot hias, dan ornamen interior', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
-        // 4. SEED MATERIALS
+        // 4. SEED MATERIALS (Bahan Baku Aktual)
         DB::table('materials')->insertOrIgnore([
-            ['id' => 5, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-001', 'name' => 'Batu Marmer Putih', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '60x60x80 cm', 'unit' => 'Balok', 'current_stock' => 28.00, 'minimum_stock' => 5.00, 'unit_cost' => 180000.00, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 6, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-002', 'name' => 'Batu Marmer Hitam', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '50x50x70 cm', 'unit' => 'Balok', 'current_stock' => 14.00, 'minimum_stock' => 5.00, 'unit_cost' => 210000.00, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 7, 'supplier_id' => 3, 'material_code' => 'MAT-BKL-001', 'name' => 'Batu Kali', 'type' => 'batu_kali', 'grade' => 'grade_b_standard', 'dimension_info' => 'Diameter 30-50 cm', 'unit' => 'biji', 'current_stock' => 65.00, 'minimum_stock' => 10.00, 'unit_cost' => 25000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-001', 'name' => 'Batu Marmer Putih Besole', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '60x60x80 cm', 'unit' => 'Balok', 'current_stock' => 28.00, 'minimum_stock' => 5.00, 'unit_cost' => 180000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 6, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-002', 'name' => 'Batu Marmer Bintik Hitam', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '50x50x70 cm', 'unit' => 'Balok', 'current_stock' => 14.00, 'minimum_stock' => 5.00, 'unit_cost' => 210000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 7, 'supplier_id' => 3, 'material_code' => 'MAT-BKL-001', 'name' => 'Batu Kali Alami Boyolangu', 'type' => 'batu_kali', 'grade' => 'grade_b_standard', 'dimension_info' => 'Diameter 30-50 cm', 'unit' => 'Biji', 'current_stock' => 65.00, 'minimum_stock' => 10.00, 'unit_cost' => 25000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 8, 'supplier_id' => 2, 'material_code' => 'MAT-ONX-001', 'name' => 'Bongkahan Onyx Tembus Cahaya', 'type' => 'onix', 'grade' => 'grade_a_super', 'dimension_info' => '40x40x50 cm', 'unit' => 'Bongkahan', 'current_stock' => 8.00, 'minimum_stock' => 2.00, 'unit_cost' => 450000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 9, 'supplier_id' => 1, 'material_code' => 'MAT-RES-001', 'name' => 'Resin & Katalis Penambal', 'type' => 'bahan_penolong', 'grade' => 'grade_b_standard', 'dimension_info' => 'Kaleng 1 kg', 'unit' => 'Kaleng', 'current_stock' => 12.00, 'minimum_stock' => 3.00, 'unit_cost' => 75000.00, 'created_at' => $now, 'updated_at' => $now],
         ]);
 
-        // 5. SEED PRODUCTS
+        // 5. SEED PRODUCTS (Katalog Kerajinan Hasil Olahan)
         DB::table('products')->insertOrIgnore([
             ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/wastafel-marmer-putih.svg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'category_id' => 18, 'product_code' => 'PRD-STP-BKL-01', 'name' => 'Stepping Stone Pijakan Taman Batu Kali', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-35 cm, Tebal: 4 cm', 'finishing_type' => 'Gerinda Halus Anti-Slip', 'ready_stock' => 50, 'safety_stock' => 10, 'standard_cogs' => 25000.00, 'selling_price' => 45000.00, 'image_path' => 'images/products/stepping-stone.svg', 'created_at' => $now, 'updated_at' => $now],
@@ -182,47 +149,135 @@ class DatabaseSeeder extends Seeder
             ['id' => 11, 'category_id' => 22, 'product_code' => 'PRD-MJA-MRM-01', 'name' => 'Meja Kopi Bundar Marmer Besole', 'material_type' => 'marmer', 'dimension_spec' => 'D: 60 cm, T: 45 cm', 'finishing_type' => 'Hi-Glossy Urat Abu', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/meja-marmer.svg', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
-        // 6. SEED CUSTOMERS
+        // 6. SEED CUSTOMERS (Pelanggan Riil)
         DB::table('customers')->insertOrIgnore([
             ['id' => 1, 'customer_code' => 'CUST-BALI-01', 'name' => 'Bapak Ketut Sukerta', 'company_name' => 'Bali Natural Living Gallery', 'phone' => '081338877665', 'email' => 'ketut@balinaturalliving.com', 'address' => 'Jl. Sunset Road No. 88, Seminyak', 'city' => 'Badung - Bali', 'customer_type' => 'distributor_ekspor', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 2, 'customer_code' => 'CUST-SBY-02', 'name' => 'Ibu Hendra Wijaya', 'company_name' => 'PT Citra Griya Indah', 'phone' => '081231122334', 'email' => 'purchasing@citragriya.co.id', 'address' => 'Jl. Raya Darmo Permai III No. 12', 'city' => 'Surabaya', 'customer_type' => 'kontraktor_arsitektur', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 3, 'customer_code' => 'CUST-KDR-03', 'name' => 'Pak Gunawan', 'company_name' => 'Toko Marmer Sumber Rejeki', 'phone' => '081255667788', 'email' => 'sumberrejeki.kdr@gmail.com', 'address' => 'Jl. Dhoho No. 45', 'city' => 'Kediri', 'customer_type' => 'retail', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
-        // 7. SEED WORK ORDERS (From db_escm_marmer.sql)
-        DB::table('work_orders')->insertOrIgnore([
-            ['id' => 1, 'spk_number' => 'SPK-CO-202501-001', 'product_id' => 4, 'customer_id' => null, 'target_quantity' => 590, 'completed_quantity' => 590, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2025-01-01', 'due_date' => '2025-01-31', 'completion_date' => '2025-01-31', 'notes' => 'Batch produksi bulanan Januari 2025', 'created_by' => 12, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 2, 'spk_number' => 'SPK-CO-202502-002', 'product_id' => 4, 'customer_id' => null, 'target_quantity' => 640, 'completed_quantity' => 640, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2025-02-01', 'due_date' => '2025-02-28', 'completion_date' => '2025-02-28', 'notes' => 'Batch produksi bulanan Februari 2025', 'created_by' => 12, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 16, 'spk_number' => 'SPK-CO-202604-016', 'product_id' => 4, 'customer_id' => null, 'target_quantity' => 675, 'completed_quantity' => 675, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Batch produksi bulanan April 2026', 'created_by' => 12, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 17, 'spk_number' => 'SPK-CO-202605-017', 'product_id' => 4, 'customer_id' => null, 'target_quantity' => 750, 'completed_quantity' => 750, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-05-01', 'due_date' => '2026-05-31', 'completion_date' => null, 'notes' => 'Batch produksi bulanan Mei 2026', 'created_by' => 12, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 63, 'spk_number' => 'SPK-PA-202604-046', 'product_id' => 5, 'customer_id' => null, 'target_quantity' => 2650, 'completed_quantity' => 2650, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Batch produksi bulanan April 2026 - Stepping Batu Kali', 'created_by' => 13, 'created_at' => $now, 'updated_at' => $now],
-        ]);
+        // 7. SEED WORK ORDERS (SPK Riil di Lantai Produksi)
+        DB::table('work_orders')->upsert([
+            ['id' => 1, 'spk_number' => 'SPK-CO-202501-001', 'product_id' => 4, 'customer_id' => 1, 'target_quantity' => 590, 'completed_quantity' => 590, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2025-01-01', 'due_date' => '2025-01-31', 'completion_date' => '2025-01-31', 'notes' => 'Batch produksi Januari 2025', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'spk_number' => 'SPK-CO-202502-002', 'product_id' => 4, 'customer_id' => 1, 'target_quantity' => 640, 'completed_quantity' => 640, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2025-02-01', 'due_date' => '2025-02-28', 'completion_date' => '2025-02-28', 'notes' => 'Batch produksi Februari 2025', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 16, 'spk_number' => 'SPK-CO-202604-016', 'product_id' => 4, 'customer_id' => 1, 'target_quantity' => 675, 'completed_quantity' => 675, 'scrap_quantity' => 0, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Batch produksi April 2026', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 17, 'spk_number' => 'SPK-CO-202605-017', 'product_id' => 4, 'customer_id' => 2, 'target_quantity' => 14, 'completed_quantity' => 14, 'scrap_quantity' => 1, 'status' => 'qc_phase', 'priority' => 'urgent', 'start_date' => '2026-05-01', 'due_date' => '2026-05-31', 'completion_date' => null, 'notes' => 'Batch 14 unit wastafel marmer putih - siap inspeksi QC tahap 2', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 63, 'spk_number' => 'SPK-PA-202604-046', 'product_id' => 5, 'customer_id' => 2, 'target_quantity' => 50, 'completed_quantity' => 50, 'scrap_quantity' => 2, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Stepping stone pijakan taman batu kali UD Putra Abadi', 'created_by' => 13, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 101, 'spk_number' => 'SPK-CO-202608-008', 'product_id' => 9, 'customer_id' => 1, 'target_quantity' => 5, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'scheduled', 'priority' => 'urgent', 'start_date' => '2026-08-20', 'due_date' => '2026-08-30', 'completion_date' => null, 'notes' => 'Pesanan khusus 5 unit wastafel onyx tembus cahaya ke Bali', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 102, 'spk_number' => 'SPK-CO-202608-007', 'product_id' => 4, 'customer_id' => 2, 'target_quantity' => 14, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-18', 'due_date' => '2026-08-26', 'completion_date' => null, 'notes' => 'Pembelahan balok marmer putih di mesin slep utama', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 103, 'spk_number' => 'SPK-CO-202608-006', 'product_id' => 6, 'customer_id' => 3, 'target_quantity' => 8, 'completed_quantity' => 4, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-15', 'due_date' => '2026-08-24', 'completion_date' => null, 'notes' => 'Pembubutan bentuk luar & lubang afur wastafel batu kali', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
+        ], ['id'], ['spk_number', 'product_id', 'customer_id', 'target_quantity', 'completed_quantity', 'scrap_quantity', 'status', 'priority', 'start_date', 'due_date', 'completion_date', 'notes', 'created_by', 'updated_at']);
 
-        // 8. SEED WASTE LOGS (From db_escm_marmer.sql)
-        DB::table('waste_logs')->insertOrIgnore([
-            ['id' => 1, 'work_order_id' => 16, 'step_id' => null, 'waste_type' => 'serbuk_bubut_sludge', 'weight_kg' => 0.00, 'volume_m3' => 0.000, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Lumpur campuran air dan serbuk marmer dari proses pemotongan mesin slep.', 'logged_at' => '2026-04-24', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 2, 'work_order_id' => 16, 'step_id' => null, 'waste_type' => 'bongkahan_urukan', 'weight_kg' => 0.00, 'volume_m3' => 0.000, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Sisa potongan kecil dari proses pembubutan/pembentukan wastafel.', 'logged_at' => '2026-04-25', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 5, 'work_order_id' => 63, 'step_id' => null, 'waste_type' => 'sisa_layak_cladding', 'weight_kg' => 0.00, 'volume_m3' => 0.000, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Sisa batu kali hasil pemotongan dipilah untuk wall cladding.', 'logged_at' => '2026-04-21', 'created_at' => $now, 'updated_at' => $now],
-        ]);
+        // 8. SEED PRODUCTION STEPS
+        DB::table('production_steps')->upsert([
+            ['id' => 1, 'work_order_id' => 102, 'step_name' => 'pemotongan_slep', 'sequence_order' => 1, 'machine_number' => 'Mesin Slep Utama', 'input_qty' => 14, 'output_qty' => 0, 'status' => 'running', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'work_order_id' => 102, 'step_name' => 'pembubutan_bentuk', 'sequence_order' => 2, 'machine_number' => 'Mesin Bubut 1-4', 'input_qty' => 14, 'output_qty' => 0, 'status' => 'pending', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 3, 'work_order_id' => 102, 'step_name' => 'penghalusan_poles', 'sequence_order' => 3, 'machine_number' => 'Mesin Bubut Poles', 'input_qty' => 14, 'output_qty' => 0, 'status' => 'pending', 'created_at' => $now, 'updated_at' => $now],
 
-        // 9. SEED INITIAL SHIPMENT
-        DB::table('shipments')->insertOrIgnore([
+            ['id' => 4, 'work_order_id' => 103, 'step_name' => 'pemotongan_slep', 'sequence_order' => 1, 'machine_number' => 'Mesin Slep Utama', 'input_qty' => 8, 'output_qty' => 8, 'status' => 'completed', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'work_order_id' => 103, 'step_name' => 'pembubutan_bentuk', 'sequence_order' => 2, 'machine_number' => 'Mesin Bubut 1-4', 'input_qty' => 8, 'output_qty' => 4, 'status' => 'running', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 6, 'work_order_id' => 103, 'step_name' => 'penghalusan_poles', 'sequence_order' => 3, 'machine_number' => 'Mesin Bubut Poles', 'input_qty' => 8, 'output_qty' => 0, 'status' => 'pending', 'created_at' => $now, 'updated_at' => $now],
+
+            ['id' => 7, 'work_order_id' => 17, 'step_name' => 'pemotongan_slep', 'sequence_order' => 1, 'machine_number' => 'Mesin Slep Utama', 'input_qty' => 14, 'output_qty' => 14, 'status' => 'completed', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 8, 'work_order_id' => 17, 'step_name' => 'pembubutan_bentuk', 'sequence_order' => 2, 'machine_number' => 'Mesin Bubut 1-4', 'input_qty' => 14, 'output_qty' => 14, 'status' => 'completed', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 9, 'work_order_id' => 17, 'step_name' => 'penghalusan_poles', 'sequence_order' => 3, 'machine_number' => 'Mesin Bubut Poles', 'input_qty' => 14, 'output_qty' => 14, 'status' => 'running', 'created_at' => $now, 'updated_at' => $now],
+        ], ['id'], ['work_order_id', 'step_name', 'sequence_order', 'machine_number', 'input_qty', 'output_qty', 'status', 'updated_at']);
+
+        // 9. SEED QC LOGS (Inspeksi 2-Tahap Sesuai Metrik VSM)
+        DB::table('qc_logs')->upsert([
+            [
+                'id' => 1,
+                'work_order_id' => 17,
+                'step_id' => 7,
+                'stage' => 'qc1_raw_shape',
+                'inspected_quantity' => 14,
+                'pass_quantity' => 14,
+                'rework_quantity' => 0,
+                'scrap_quantity' => 0,
+                'defect_type' => null,
+                'rework_action' => null,
+                'inspection_date' => '2026-05-05',
+                'notes' => 'QC Tahap 1: Bentuk mentah simetris, urat batu alami kokoh tanpa retak tembus.',
+                'inspector_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'id' => 2,
+                'work_order_id' => 17,
+                'step_id' => 9,
+                'stage' => 'qc2_final_polish',
+                'inspected_quantity' => 14,
+                'pass_quantity' => 13,
+                'rework_quantity' => 1,
+                'scrap_quantity' => 0,
+                'defect_type' => 'Pori-pori mikro pada bibir luar wastafel',
+                'rework_action' => 'Tambal resin bening & poles ulang 15 menit',
+                'inspection_date' => '2026-05-10',
+                'notes' => 'QC Tahap 2: 13 unit lolos standar Hi-Glossy, 1 unit perlu sedikit tambal resin di bibir luar.',
+                'inspector_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]
+        ], ['id'], ['work_order_id', 'step_id', 'stage', 'inspected_quantity', 'pass_quantity', 'rework_quantity', 'scrap_quantity', 'defect_type', 'rework_action', 'inspection_date', 'notes', 'inspector_id', 'updated_at']);
+
+        // 10. SEED WASTE LOGS (Hilirisasi Residu Sesuai Temuan 390 mnt/mgg)
+        DB::table('waste_logs')->upsert([
+            ['id' => 1, 'work_order_id' => 16, 'step_id' => null, 'waste_type' => 'serbuk_bubut_sludge', 'weight_kg' => 120.00, 'volume_m3' => 0.080, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Lumpur campuran air dan serbuk marmer dari pemotongan mesin slep UD Cahaya Onix.', 'logged_at' => '2026-04-24', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'work_order_id' => 16, 'step_id' => null, 'waste_type' => 'bongkahan_urukan', 'weight_kg' => 85.00, 'volume_m3' => 0.055, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Sisa potongan sudut blok marmer untuk urukan pondasi bangunan.', 'logged_at' => '2026-04-25', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'work_order_id' => 63, 'step_id' => null, 'waste_type' => 'sisa_layak_cladding', 'weight_kg' => 240.00, 'volume_m3' => 0.160, 'reuse_status' => 'disimpan_daur_ulang', 'notes' => 'Sisa potongan pipih batu kali dipilah untuk hiasan dinding / wall cladding (UD Putra Abadi).', 'logged_at' => '2026-04-21', 'created_at' => $now, 'updated_at' => $now],
+        ], ['id'], ['work_order_id', 'waste_type', 'weight_kg', 'volume_m3', 'reuse_status', 'notes', 'logged_at', 'updated_at']);
+
+        // 11. SEED STOCK TRANSACTIONS (Mutasi Stok Tahunan)
+        DB::table('stock_transactions')->upsert([
+            ['id' => 1, 'transaction_code' => 'TRX-IN-202601-001', 'material_id' => 5, 'user_id' => 2, 'type' => 'in', 'quantity' => 45.00, 'unit' => 'Balok', 'before_stock' => 10.00, 'after_stock' => 55.00, 'reference_type' => 'supplier_invoice', 'reference_id' => 1, 'notes' => 'Penerimaan balok marmer putih Januari 2026 dari Tambang Besole', 'transaction_date' => '2026-01-15', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'transaction_code' => 'TRX-OUT-202601-002', 'material_id' => 5, 'user_id' => 2, 'type' => 'out', 'quantity' => 38.00, 'unit' => 'Balok', 'before_stock' => 55.00, 'after_stock' => 17.00, 'reference_type' => 'work_order', 'reference_id' => 1, 'notes' => 'Pengeluaran ke mesin slep untuk produksi wastafel', 'transaction_date' => '2026-01-20', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 3, 'transaction_code' => 'TRX-IN-202602-003', 'material_id' => 5, 'user_id' => 2, 'type' => 'in', 'quantity' => 50.00, 'unit' => 'Balok', 'before_stock' => 17.00, 'after_stock' => 67.00, 'reference_type' => 'supplier_invoice', 'reference_id' => 1, 'notes' => 'Penerimaan balok marmer Februari 2026', 'transaction_date' => '2026-02-12', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 4, 'transaction_code' => 'TRX-OUT-202602-004', 'material_id' => 5, 'user_id' => 2, 'type' => 'out', 'quantity' => 42.00, 'unit' => 'Balok', 'before_stock' => 67.00, 'after_stock' => 25.00, 'reference_type' => 'work_order', 'reference_id' => 2, 'notes' => 'Pengeluaran bahan ke lantai bubut', 'transaction_date' => '2026-02-18', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'transaction_code' => 'TRX-IN-202603-005', 'material_id' => 5, 'user_id' => 2, 'type' => 'in', 'quantity' => 48.00, 'unit' => 'Balok', 'before_stock' => 25.00, 'after_stock' => 73.00, 'reference_type' => 'supplier_invoice', 'reference_id' => 1, 'notes' => 'Penerimaan balok marmer Maret 2026', 'transaction_date' => '2026-03-10', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 6, 'transaction_code' => 'TRX-OUT-202603-006', 'material_id' => 5, 'user_id' => 2, 'type' => 'out', 'quantity' => 44.00, 'unit' => 'Balok', 'before_stock' => 73.00, 'after_stock' => 29.00, 'reference_type' => 'work_order', 'reference_id' => 16, 'notes' => 'Pengeluaran bahan ke mesin slep', 'transaction_date' => '2026-03-22', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 7, 'transaction_code' => 'TRX-IN-202604-007', 'material_id' => 5, 'user_id' => 2, 'type' => 'in', 'quantity' => 52.00, 'unit' => 'Balok', 'before_stock' => 29.00, 'after_stock' => 81.00, 'reference_type' => 'supplier_invoice', 'reference_id' => 1, 'notes' => 'Penerimaan balok marmer April 2026', 'transaction_date' => '2026-04-05', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 8, 'transaction_code' => 'TRX-OUT-202604-008', 'material_id' => 5, 'user_id' => 2, 'type' => 'out', 'quantity' => 46.00, 'unit' => 'Balok', 'before_stock' => 81.00, 'after_stock' => 35.00, 'reference_type' => 'work_order', 'reference_id' => 16, 'notes' => 'Pengeluaran ke mesin slep & bubut', 'transaction_date' => '2026-04-18', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 9, 'transaction_code' => 'TRX-IN-202605-009', 'material_id' => 5, 'user_id' => 2, 'type' => 'in', 'quantity' => 48.00, 'unit' => 'Balok', 'before_stock' => 35.00, 'after_stock' => 83.00, 'reference_type' => 'supplier_invoice', 'reference_id' => 1, 'notes' => 'Penerimaan balok marmer Mei 2026', 'transaction_date' => '2026-05-02', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 10, 'transaction_code' => 'TRX-OUT-202605-010', 'material_id' => 5, 'user_id' => 2, 'type' => 'out', 'quantity' => 42.00, 'unit' => 'Balok', 'before_stock' => 83.00, 'after_stock' => 41.00, 'reference_type' => 'work_order', 'reference_id' => 17, 'notes' => 'Pengeluaran batch SPK Mei 2026', 'transaction_date' => '2026-05-15', 'created_at' => $now, 'updated_at' => $now],
+        ], ['id'], ['transaction_code', 'material_id', 'user_id', 'type', 'quantity', 'unit', 'before_stock', 'after_stock', 'reference_type', 'reference_id', 'notes', 'transaction_date', 'updated_at']);
+
+        // 12. SEED SHIPMENTS (Surat Jalan & Packing Peti Kayu)
+        DB::table('shipments')->upsert([
             [
                 'id' => 1,
                 'shipment_code' => 'SJ-202604-001',
                 'work_order_id' => 16,
                 'customer_id' => 1,
-                'expedition_name' => 'Kargo Express Tulungagung',
-                'tracking_number' => 'RESI-EXP-001',
+                'expedition_name' => 'Ekspedisi Bali Mandiri Express',
+                'tracking_number' => 'RESI-BALI-99881',
                 'driver_name' => 'Pak Yatno',
                 'vehicle_plate' => 'AG 8899 AB',
                 'packing_verified' => true,
                 'shipment_date' => '2026-04-28',
                 'delivery_status' => 'delivered',
-                'notes' => 'Pengiriman 14 unit wastafel marmer ke Bali dengan packing krat kayu',
+                'notes' => 'Pengiriman 14 unit wastafel marmer putih ke Seminyak Bali - Packing Peti Kayu Lolos QC',
+                'created_by' => 4,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'id' => 2,
+                'shipment_code' => 'SJ-202605-002',
+                'work_order_id' => 63,
+                'customer_id' => 2,
+                'expedition_name' => 'Kobra Express Surabaya',
+                'tracking_number' => 'RESI-KOBRA-11029',
+                'driver_name' => 'Pak Sugeng',
+                'vehicle_plate' => 'L 9021 UX',
+                'packing_verified' => true,
+                'shipment_date' => '2026-05-12',
+                'delivery_status' => 'in_transit',
+                'notes' => 'Pengiriman 50 pcs stepping stone batu kali untuk proyek villa Surabaya',
                 'created_by' => 4,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]
-        ]);
+        ], ['id'], ['shipment_code', 'work_order_id', 'customer_id', 'expedition_name', 'tracking_number', 'driver_name', 'vehicle_plate', 'packing_verified', 'shipment_date', 'delivery_status', 'notes', 'created_by', 'updated_at']);
     }
 }
