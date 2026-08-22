@@ -145,6 +145,11 @@ class ProductionController extends Controller
         return redirect()->route('production.kanban')->with('success', 'Status SPK ' . $workOrder->spk_number . ' diperbarui menjadi ' . ucfirst(str_replace('_', ' ', $validated['status'])));
     }
 
+    public function wip()
+    {
+        return $this->wipTracking();
+    }
+
     public function wipTracking()
     {
         $workOrders = WorkOrder::with(['product', 'steps.operator'])

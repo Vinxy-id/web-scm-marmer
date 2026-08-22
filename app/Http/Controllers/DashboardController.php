@@ -66,15 +66,26 @@ class DashboardController extends Controller
 
     public function reports()
     {
+        $driver = DB::connection()->getDriverName();
+        $monthExpr = $driver === 'sqlite'
+            ? "CAST(strftime('%m', transaction_date) AS INTEGER)"
+            : "MONTH(transaction_date)";
+
+        $yearExpr = $driver === 'sqlite'
+            ? "strftime('%Y', transaction_date)"
+            : "YEAR(transaction_date)";
+
         $monthlyTransactions = StockTransaction::select(
-            DB::raw('MONTH(transaction_date) as month'),
+            DB::raw("{$monthExpr} as month"),
             DB::raw('SUM(CASE WHEN type = "in" THEN quantity ELSE 0 END) as total_in'),
             DB::raw('SUM(CASE WHEN type = "out" THEN quantity ELSE 0 END) as total_out')
         )
-        ->whereYear('transaction_date', date('Y'))
-        ->groupBy(DB::raw('MONTH(transaction_date)'))
+        ->whereRaw("{$yearExpr} = ?", [date('Y')])
+        ->groupBy(DB::raw($monthExpr))
+        ->orderBy(DB::raw($monthExpr), 'asc')
         ->get();
 
         return view('dashboard.reports', compact('monthlyTransactions'));
     }
 }
+
