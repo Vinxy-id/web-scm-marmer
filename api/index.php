@@ -53,6 +53,16 @@ $app->useStoragePath('/tmp/storage');
 
 $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
 
+// Auto-create & seed tables in TiDB Cloud on first boot
+try {
+    if (!\Illuminate\Support\Facades\Schema::hasTable('users')) {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+    }
+} catch (\Throwable $e) {
+    // Graceful fallback if database credentials not yet configured
+}
+
 $response = $kernel->handle(
     $request = \Illuminate\Http\Request::capture()
 )->send();

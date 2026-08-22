@@ -24,3 +24,26 @@ require __DIR__ . '/modules/qc.php';           // Dikelola Dapin
 require __DIR__ . '/modules/distribution.php'; // Dikelola Dapin
 require __DIR__ . '/modules/analytics.php';    // Dikelola Dapin
 
+// Helper endpoint to auto-migrate & seed cloud database
+Route::get('/auto-migrate-seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrate = \Illuminate\Support\Facades\Artisan::output();
+
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        $seed = \Illuminate\Support\Facades\Artisan::output();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database TiDB Cloud berhasil di-migrasi dan di-seed!',
+            'migration_log' => $migrate,
+            'seeder_log' => $seed,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+});
+
