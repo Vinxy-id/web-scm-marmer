@@ -21,7 +21,7 @@ return [
 
     'forecasting' => [
         'url' => env('FORECASTING_API_URL', 'http://127.0.0.1:8001'),
-        'timeout' => env('FORECASTING_API_TIMEOUT', 30),
+        'timeout' => (int) env('FORECASTING_API_TIMEOUT', 30),
     ],
 
 ];
