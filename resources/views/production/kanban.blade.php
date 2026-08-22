@@ -44,6 +44,7 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="in_progress">
+                    <input type="hidden" name="step" value="slep">
                     <button type="submit" class="w-full text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-1 rounded flex items-center justify-center gap-1">
                         Mulai Potong Slep <i data-lucide="arrow-right" class="w-3 h-3"></i>
                     </button>
@@ -77,6 +78,15 @@
                     <span>Target: <b>{{ $spk->target_quantity }} Unit</b></span>
                     <span>Due: {{ $spk->due_date->format('d M') }}</span>
                 </div>
+                <form action="{{ route('production.work-order.update-status', $spk->id) }}" method="POST" class="pt-1">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="in_progress">
+                    <input type="hidden" name="step" value="bubut">
+                    <button type="submit" class="w-full text-[10px] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold py-1 rounded flex items-center justify-center gap-1">
+                        Selesai Slep &rarr; Kirim Bubut <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    </button>
+                </form>
             </div>
             @endforeach
         </div>

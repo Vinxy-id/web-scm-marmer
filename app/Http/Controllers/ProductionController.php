@@ -28,17 +28,30 @@ class ProductionController extends Controller
             ->orderBy('priority', 'desc')
             ->get();
 
+        // Col 2: In Slep (in_progress AND slep is running or pending, and bubut is not running)
         $colSlep = WorkOrder::with(['product', 'customer', 'steps'])
             ->where('status', 'in_progress')
-            ->whereHas('steps', function ($q) {
-                $q->where('step_name', 'pemotongan_slep')->where('status', 'running');
+            ->where(function ($query) {
+                $query->whereHas('steps', function ($q) {
+                    $q->where('step_name', 'pemotongan_slep')
+                      ->whereIn('status', ['running', 'pending']);
+                })
+                ->whereDoesntHave('steps', function ($q) {
+                    $q->where('step_name', 'pembubutan_bentuk')
+                      ->where('status', 'running');
+                });
             })
             ->get();
 
+        // Col 3: In Bubut (in_progress AND bubut is running)
         $colBubut = WorkOrder::with(['product', 'customer', 'steps'])
             ->where('status', 'in_progress')
-            ->whereDoesntHave('steps', function ($q) {
-                $q->where('step_name', 'pemotongan_slep')->where('status', 'running');
+            ->where(function ($query) {
+                $query->whereHas('steps', function ($q) {
+                    $q->where('step_name', 'pembubutan_bentuk')
+                      ->where('status', 'running');
+                })
+                ->orWhereDoesntHave('steps');
             })
             ->get();
 
@@ -129,6 +142,7 @@ class ProductionController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', 'in:draft,scheduled,in_progress,qc_phase,completed,cancelled'],
+            'step' => ['nullable', 'string'],
         ]);
 
         $updateData = ['status' => $validated['status']];
@@ -142,7 +156,20 @@ class ProductionController extends Controller
 
         $workOrder->update($updateData);
 
-        return redirect()->route('production.kanban')->with('success', 'Status SPK ' . $workOrder->spk_number . ' diperbarui menjadi ' . ucfirst(str_replace('_', ' ', $validated['status'])));
+        // Advance steps accordingly
+        if ($request->input('step') === 'slep' || ($validated['status'] === 'in_progress' && !$request->filled('step'))) {
+            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'running']);
+            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'pending']);
+        } elseif ($request->input('step') === 'bubut') {
+            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
+            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'running']);
+        } elseif ($validated['status'] === 'qc_phase') {
+            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
+            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'completed']);
+            $workOrder->steps()->where('step_name', 'penghalusan_poles')->update(['status' => 'running']);
+        }
+
+        return redirect()->route('production.kanban')->with('success', 'Status SPK ' . $workOrder->spk_number . ' berhasil diperbarui.');
     }
 
     public function updateWipProgress(Request $request, WorkOrder $workOrder)
