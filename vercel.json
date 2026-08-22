@@ -24,11 +24,13 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",
+        "APP_KEY": "base64:IhDKGEhZ4YlerAkEn6Q3nAbOh/11KjtnL7/7TDCbw04=",
         "APP_STORAGE": "/tmp/storage",
         "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
         "CACHE_STORE": "array",
         "CACHE_DRIVER": "array",
         "SESSION_DRIVER": "cookie",
+        "SESSION_ENCRYPT": "true",
         "LOG_CHANNEL": "stderr",
         "DB_CONNECTION": "sqlite",
         "DB_DATABASE": "/tmp/database.sqlite"

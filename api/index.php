@@ -29,9 +29,15 @@ if (!file_exists($sqliteDest) && file_exists($sqliteSource)) {
 }
 
 // 2. Set environment overrides untuk serverless cache, storage & database
+if (empty($_ENV['APP_KEY'])) {
+    $_ENV['APP_KEY'] = 'base64:IhDKGEhZ4YlerAkEn6Q3nAbOh/11KjtnL7/7TDCbw04=';
+    putenv('APP_KEY=base64:IhDKGEhZ4YlerAkEn6Q3nAbOh/11KjtnL7/7TDCbw04=');
+}
+
 $_ENV['CACHE_STORE'] = 'array';
 $_ENV['CACHE_DRIVER'] = 'array';
 $_ENV['SESSION_DRIVER'] = 'cookie';
+$_ENV['SESSION_ENCRYPT'] = 'true';
 $_ENV['APP_STORAGE'] = '/tmp/storage';
 $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 $_ENV['APP_SERVICES_CACHE'] = '/tmp/bootstrap/cache/services.php';
@@ -43,6 +49,7 @@ $_ENV['APP_EVENTS_CACHE'] = '/tmp/bootstrap/cache/events.php';
 putenv('CACHE_STORE=array');
 putenv('CACHE_DRIVER=array');
 putenv('SESSION_DRIVER=cookie');
+putenv('SESSION_ENCRYPT=true');
 putenv('APP_STORAGE=/tmp/storage');
 putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
 putenv('APP_SERVICES_CACHE=/tmp/bootstrap/cache/services.php');
