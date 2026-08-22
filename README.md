@@ -56,7 +56,7 @@ Proyek ini dibangun untuk mengatasi kendala kesenjangan informasi (*information 
 ### 2. Langkah Instalasi Aplikasi Utama
 ```bash
 # 1. Clone repositori
-git clone https://github.com/username/web-scm-marmer.git
+git clone https://github.com/Vinxy-id/web-scm-marmer.git
 cd web-scm-marmer
 
 # 2. Install dependensi PHP & Node
