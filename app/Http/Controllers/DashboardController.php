@@ -54,13 +54,40 @@ class DashboardController extends Controller
     public function supplyChainFlow()
     {
         $materialsCount = Material::count();
-        $workOrdersCount = WorkOrder::count();
+        $totalRawStock = Material::whereIn('type', ['marmer', 'onix', 'batu_kali'])->sum('current_stock');
+        $criticalCount = Material::whereRaw('current_stock <= minimum_stock')->count();
+
+        $activeWorkOrders = WorkOrder::whereIn('status', ['scheduled', 'in_progress', 'qc_phase'])->count();
+        $activeBatchQty = WorkOrder::whereIn('status', ['scheduled', 'in_progress', 'qc_phase'])->sum('target_quantity');
+        $completedWorkOrders = WorkOrder::where('status', 'completed')->count();
+
         $readyProductsCount = Product::where('ready_stock', '>', 0)->count();
+        $totalReadyStock = Product::sum('ready_stock');
+
+        $materialValue = Material::select(DB::raw('SUM(current_stock * unit_cost) as total'))->value('total') ?? 0;
+        $productValue = Product::select(DB::raw('SUM(ready_stock * standard_cogs) as total'))->value('total') ?? 0;
+        $totalInventoryValue = $materialValue + $productValue;
+
+        $activeShipments = DB::table('shipments')->whereIn('delivery_status', ['packed', 'in_transit'])->count();
+        $deliveredShipments = DB::table('shipments')->where('delivery_status', 'delivered')->count();
+
+        $qcLogsCount = DB::table('qc_logs')->count();
+        $wasteLogsWeight = DB::table('waste_logs')->sum('weight_kg');
 
         return view('dashboard.supply-chain-flow', compact(
             'materialsCount',
-            'workOrdersCount',
-            'readyProductsCount'
+            'totalRawStock',
+            'criticalCount',
+            'activeWorkOrders',
+            'activeBatchQty',
+            'completedWorkOrders',
+            'readyProductsCount',
+            'totalReadyStock',
+            'totalInventoryValue',
+            'activeShipments',
+            'deliveredShipments',
+            'qcLogsCount',
+            'wasteLogsWeight'
         ));
     }
 
