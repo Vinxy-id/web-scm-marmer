@@ -145,7 +145,7 @@
                         <p class="text-[11px] font-semibold text-green-600 mt-0.5">Stock Coverage</p>
                         <p class="text-xs font-bold text-slate-700">14 Hari</p>
                     </div>
-                    <a href="{{ route('public.catalog') }}" class="text-[10px] font-bold text-green-600 hover:text-green-700 mt-2 flex items-center gap-0.5 group-hover:underline">
+                    <a href="{{ route('catalog') }}" class="text-[10px] font-bold text-green-600 hover:text-green-700 mt-2 flex items-center gap-0.5 group-hover:underline">
                         Lihat <i data-lucide="arrow-right" class="w-3 h-3"></i>
                     </a>
                 </div>
@@ -470,7 +470,7 @@
                             <span class="text-slate-700 font-medium">Stok Wastafel Marmer Putih B1 & Stepping Stone aman</span> untuk order reguler.
                         </td>
                         <td class="p-3.5 text-right">
-                            <a href="{{ route('public.catalog') }}" class="text-[11px] font-bold text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 px-2.5 py-1 rounded-lg transition inline-flex items-center gap-1">
+                            <a href="{{ route('catalog') }}" class="text-[11px] font-bold text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 px-2.5 py-1 rounded-lg transition inline-flex items-center gap-1">
                                 Lihat <i data-lucide="arrow-right" class="w-3 h-3"></i>
                             </a>
                         </td>
