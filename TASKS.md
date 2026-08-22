@@ -53,10 +53,11 @@ Fokus: Desain teknis detail sebelum pengkodean dimulai.
   - [ ] Evaluasi metrik akurasi (Target MAPE $< 10\%$, evaluasi RMSE).
   - [ ] Pembuatan REST API endpoint wrapper (FastAPI / Flask).
 - [x] **Kegiatan 6: Perancangan Antarmuka Pengguna (UI/UX)**
-  - [x] Penyusunan User Persona & User Journey Map (Pak Joko, Mas Budi, Pak Slamet, Mbak Rini).
-  - [x] Perancangan Information Architecture & Site Map.
-  - [x] Pembuatan Wireframe Low-Fidelity & High-Fidelity UI Design System.
-  - [ ] Usability testing awal interaktif prototype.
+  - [x] Penyusunan User Persona & User Journey Map (Pak Joko, Mas Budi, Pak Slamet, Mbak Rini) (Form 6.1).
+  - [x] Perancangan Information Architecture & Site Map 6 modul terintegrasi.
+  - [x] Pembuatan High-Fidelity UI Design System & Prototype Interaktif ([`public/index.html`](file:///d:/Project%20Coding/Web%20SCM/public/index.html)).
+  - [x] Pelaksanaan Usability Testing Awal 5 skenario tugas operasional (Form 6.2).
+  - [x] Penyusunan dokumen laporan output ([`Docs/laporan_kegiatan/Kegiatan_6_Perancangan_Antarmuka_Pengguna_UI_UX.md`](file:///d:/Project%20Coding/Web%20SCM/Docs/laporan_kegiatan/Kegiatan_6_Perancangan_Antarmuka_Pengguna_UI_UX.md)).
 
 ---
 
