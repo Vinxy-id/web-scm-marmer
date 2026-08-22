@@ -49,7 +49,7 @@
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Kata Sandi</label>
                 <div class="relative">
                     <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3 top-3"></i>
-                    <input type="password" name="password" value="owner123" required class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <input type="password" name="password" value="role123" required class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500">
                 </div>
             </div>
 

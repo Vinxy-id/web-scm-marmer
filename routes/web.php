@@ -18,11 +18,9 @@ Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('cat
 
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';
+require __DIR__ . '/modules/materials.php';    // Dikelola Alvin
+require __DIR__ . '/modules/production.php';   // Dikelola Alvin
+require __DIR__ . '/modules/qc.php';           // Dikelola Dapin
+require __DIR__ . '/modules/distribution.php'; // Dikelola Dapin
+require __DIR__ . '/modules/analytics.php';    // Dikelola Dapin
 
-Route::middleware(['web'])->group(function () {
-    require __DIR__ . '/modules/materials.php';    // Dikelola Alvin
-    require __DIR__ . '/modules/production.php';   // Dikelola Alvin
-    require __DIR__ . '/modules/qc.php';           // Dikelola Dapin
-    require __DIR__ . '/modules/distribution.php'; // Dikelola Dapin
-    require __DIR__ . '/modules/analytics.php';    // Dikelola Dapin
-});
