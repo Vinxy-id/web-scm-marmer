@@ -24,8 +24,10 @@ foreach ($tmpDirs as $dir) {
 // Inisialisasi SQLite database di /tmp/database.sqlite
 $sqliteSource = __DIR__ . '/../database/database.sqlite';
 $sqliteDest = '/tmp/database.sqlite';
-if (!file_exists($sqliteDest) && file_exists($sqliteSource)) {
-    @copy($sqliteSource, $sqliteDest);
+if (file_exists($sqliteSource)) {
+    if (!file_exists($sqliteDest) || (@filesize($sqliteDest) !== @filesize($sqliteSource))) {
+        @copy($sqliteSource, $sqliteDest);
+    }
 }
 
 // 2. Bersihkan legacy cookie yang berukuran besar jika ada di request

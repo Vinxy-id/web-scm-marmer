@@ -214,6 +214,32 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 10 | `generated_at` | TIMESTAMP | - | NULL | - | Waktu komputasi algoritma |
 | 11 | `created_at` | TIMESTAMP | - | NULL | - | Waktu penyimpanan log ke database |
 
+### 4.12 Tabel `categories` (Master Kategori Produk & Bahan)
+| No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `id` | BIGINT UNSIGNED | - | PK, Auto Increment | - | ID unik kategori |
+| 2 | `name` | VARCHAR | 100 | NOT NULL | - | Nama kategori (Wastafel, Stepping, Bahan) |
+| 3 | `slug` | VARCHAR | 100 | NOT NULL, UNIQUE | - | Slug URL kategori |
+| 4 | `type` | ENUM | 'material','product' | NOT NULL, Default: 'product' | - | Tipe kategori pengelompokan |
+| 5 | `description` | VARCHAR | 255 | NULL | - | Deskripsi singkat kategori |
+| 6 | `created_at` | TIMESTAMP | - | NULL | - | Waktu pembuatan kategori |
+| 7 | `updated_at` | TIMESTAMP | - | NULL | - | Waktu perubahan terakhir |
+
+### 4.13 Tabel `customers` (Master Pelanggan & Buyer Ekspor)
+| No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `id` | BIGINT UNSIGNED | - | PK, Auto Increment | - | ID unik pelanggan |
+| 2 | `customer_code` | VARCHAR | 50 | NOT NULL, UNIQUE | - | Kode pelanggan (CUST-xxx) |
+| 3 | `name` | VARCHAR | 150 | NOT NULL | - | Nama perorangan / pemilik toko |
+| 4 | `company_name` | VARCHAR | 150 | NULL | - | Nama badan usaha / galeri seni |
+| 5 | `phone` | VARCHAR | 20 | NOT NULL | - | Nomor telepon / WhatsApp buyer |
+| 6 | `email` | VARCHAR | 100 | NULL | - | Email korespondensi |
+| 7 | `address` | TEXT | - | NOT NULL | - | Alamat lengkap pengiriman |
+| 8 | `city` | VARCHAR | 100 | NOT NULL | - | Kota tujuan (Denpasar, Surabaya, dll.) |
+| 9 | `customer_type` | ENUM | 'retail','kontraktor_arsitektur','distributor_ekspor' | NOT NULL | - | Segmen buyer marmer |
+| 10 | `created_at` | TIMESTAMP | - | NULL | - | Waktu pendaftaran buyer |
+| 11 | `updated_at` | TIMESTAMP | - | NULL | - | Waktu perubahan terakhir |
+
 ---
 
 ## 5. Form 4.2: Mapping Integrasi Antar-Modul
@@ -236,8 +262,8 @@ Tabel berikut mendefinisikan mekanisme aliran data dan integrasi antarmodul dala
 
 ## 6. Output Akhir & Deliverable Kegiatan 4 (Checklist)
 
-- [x] **Diagram ERD Konseptual & Fisik:** Lengkap merelasikan 11 entitas operasional utama.
+- [x] **Diagram ERD Konseptual & Fisik:** Lengkap merelasikan 13 entitas relasional operasional utama.
 - [x] **Skema Basis Data Ternormalisasi (1NF, 2NF, 3NF):** Tidak memiliki data redundan dan menjaga integritas referensial.
-- [x] **Kamus Data (Data Dictionary) Lengkap:** 11 tabel terdokumentasi rapi di Form 4.1 sesuai struktur riil `db_escm_marmer.sql`.
+- [x] **Kamus Data (Data Dictionary) Lengkap:** 13 tabel terdokumentasi rapi di Form 4.1 sesuai struktur riil `db_escm_marmer.sql`.
 - [x] **Dokumen Mapping Integrasi Antar-Modul:** Terdefinisi di Form 4.2 dengan protokol HTTP REST JSON.
 - [x] **Script DDL & Migrasi Modular Laravel:** 11 file migration `database/migrations/*.php` dan SQL dump [`database/db_escm_marmer.sql`](file:///d:/Project%20Coding/Web%20SCM/database/db_escm_marmer.sql) berisi data seed riil IKM UD Cahaya Onix & UD Putra Abadi.
