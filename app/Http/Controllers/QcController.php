@@ -49,10 +49,10 @@ class QcController extends Controller
                 'pass_quantity' => $validated['pass_quantity'],
                 'rework_quantity' => $validated['rework_quantity'],
                 'scrap_quantity' => $validated['scrap_quantity'],
-                'defect_type' => $validated['defect_type'],
-                'rework_action' => $validated['rework_action'],
+                'defect_type' => $validated['defect_type'] ?? null,
+                'rework_action' => $validated['rework_action'] ?? null,
                 'inspection_date' => now()->toDateString(),
-                'notes' => $validated['notes'],
+                'notes' => $validated['notes'] ?? null,
             ]);
 
             // If QC2 and Pass quantity > 0, we update work order and ready stock

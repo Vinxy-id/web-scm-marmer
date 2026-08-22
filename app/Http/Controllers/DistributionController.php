@@ -40,12 +40,12 @@ class DistributionController extends Controller
             'shipment_number' => $shipmentNumber,
             'customer_id' => $validated['customer_id'],
             'shipment_date' => $validated['shipment_date'],
-            'expedition_name' => $validated['expedition_name'],
-            'vehicle_number' => $validated['vehicle_number'],
-            'driver_name' => $validated['driver_name'],
+            'expedition_name' => $validated['expedition_name'] ?? null,
+            'vehicle_number' => $validated['vehicle_number'] ?? null,
+            'driver_name' => $validated['driver_name'] ?? null,
             'wooden_packing_checked' => $validated['wooden_packing_checked'],
             'status' => 'prepared',
-            'notes' => $validated['notes'],
+            'notes' => $validated['notes'] ?? null,
             'created_by' => Auth::id() ?? 1,
         ]);
 

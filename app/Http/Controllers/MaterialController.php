@@ -120,4 +120,29 @@ class MaterialController extends Controller
 
         return redirect()->route('materials.index')->with('success', 'Transaksi mutasi stok berhasil dicatat.');
     }
+
+    public function update(Request $request, Material $material)
+    {
+        $validated = $request->validate([
+            'supplier_id' => ['nullable', 'exists:suppliers,id'],
+            'name' => ['required', 'string', 'max:150'],
+            'type' => ['required', 'in:marmer,onix,batu_kali,bahan_penolong'],
+            'grade' => ['required', 'in:grade_a_super,grade_b_standard,grade_c_ekonomis'],
+            'dimension_info' => ['nullable', 'string', 'max:100'],
+            'minimum_stock' => ['required', 'numeric', 'min:0'],
+            'unit_cost' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $material->update($validated);
+
+        return redirect()->route('materials.index')->with('success', 'Data bahan baku ' . $material->material_code . ' berhasil diperbarui.');
+    }
+
+    public function destroy(Material $material)
+    {
+        $code = $material->material_code;
+        $material->delete();
+
+        return redirect()->route('materials.index')->with('success', 'Bahan baku ' . $code . ' berhasil dihapus.');
+    }
 }

@@ -36,6 +36,9 @@
             <button type="submit" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1">
                 <i data-lucide="filter" class="w-3.5 h-3.5"></i> Filter
             </button>
+            @if(request()->hasAny(['search', 'type', 'status']))
+            <a href="{{ route('materials.index') }}" class="text-xs text-blue-600 hover:underline px-2 py-1">Reset</a>
+            @endif
         </form>
 
         <button onclick="document.getElementById('modal-stock-transaction').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
@@ -96,8 +99,19 @@
                             </span>
                             @endif
                         </td>
-                        <td class="p-3 text-right space-x-1">
-                            <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                        <td class="p-3 text-right">
+                            <div class="inline-flex items-center gap-1">
+                                <button type="button" onclick="openEditModal({{ $mat->id }}, '{{ addslashes($mat->name) }}', '{{ $mat->type }}', '{{ $mat->grade }}', '{{ $mat->supplier_id }}', {{ $mat->minimum_stock }}, {{ $mat->unit_cost }}, '{{ addslashes($mat->dimension_info ?? '') }}')" title="Edit Data" class="p-1 text-slate-400 hover:text-blue-600">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </button>
+                                <form action="{{ route('materials.destroy', $mat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus bahan baku ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" title="Hapus Data" class="p-1 text-slate-400 hover:text-red-600">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -202,6 +216,79 @@
     </div>
 </div>
 
+<!-- MODAL EDIT MATERIAL -->
+<div id="modal-edit-material" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+        <div class="flex items-center justify-between border-b pb-3">
+            <h4 class="text-sm font-bold text-slate-800">Edit Data Bahan Baku</h4>
+            <button onclick="document.getElementById('modal-edit-material').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <form id="form-edit-material" method="POST" class="space-y-3">
+            @csrf
+            @method('PUT')
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Jenis Batuan</label>
+                    <select id="edit_type" name="type" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                        <option value="marmer">Marmer</option>
+                        <option value="onix">Onyx</option>
+                        <option value="batu_kali">Batu Kali</option>
+                        <option value="bahan_penolong">Bahan Penolong</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Grade Batuan</label>
+                    <select id="edit_grade" name="grade" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                        <option value="grade_a_super">Grade A Super</option>
+                        <option value="grade_b_standard">Grade B Standard</option>
+                        <option value="grade_c_ekonomis">Grade C Ekonomis</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[11px] font-bold text-slate-600">Nama Bahan Baku</label>
+                <input type="text" id="edit_name" name="name" required class="w-full text-xs mt-1 border rounded-lg p-2">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Pemasok Tambang</label>
+                    <select id="edit_supplier_id" name="supplier_id" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                        <option value="">Pilih Pemasok (Opsional)</option>
+                        @foreach($suppliers as $sup)
+                        <option value="{{ $sup->id }}">{{ $sup->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Batas Min (Alert)</label>
+                    <input type="number" step="0.01" id="edit_minimum_stock" name="minimum_stock" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Dimensi Blok</label>
+                    <input type="text" id="edit_dimension_info" name="dimension_info" class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Harga Satuan (Rp)</label>
+                    <input type="number" id="edit_unit_cost" name="unit_cost" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t">
+                <button type="button" onclick="document.getElementById('modal-edit-material').classList.add('hidden')" class="text-xs px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- MODAL MUTASI STOK -->
 <div id="modal-stock-transaction" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border">
@@ -249,4 +336,22 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function openEditModal(id, name, type, grade, supplierId, minStock, unitCost, dimensionInfo) {
+        document.getElementById('form-edit-material').action = '/materials/' + id;
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_type').value = type;
+        document.getElementById('edit_grade').value = grade;
+        document.getElementById('edit_supplier_id').value = supplierId || '';
+        document.getElementById('edit_minimum_stock').value = minStock;
+        document.getElementById('edit_unit_cost').value = unitCost;
+        document.getElementById('edit_dimension_info').value = dimensionInfo || '';
+        
+        document.getElementById('modal-edit-material').classList.remove('hidden');
+        lucide.createIcons();
+    }
+</script>
 @endsection

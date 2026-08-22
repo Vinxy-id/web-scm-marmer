@@ -25,6 +25,7 @@
                         <th class="p-3">Ekspedisi & Driver</th>
                         <th class="p-3">Checklist Packing Kayu</th>
                         <th class="p-3">Status</th>
+                        <th class="p-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -53,32 +54,36 @@
                         </td>
                         <td class="p-3">
                             <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
-                                {{ $sh->status }}
+                                {{ str_replace('_', ' ', $sh->status) }}
                             </span>
+                        </td>
+                        <td class="p-3 text-right">
+                            @if($sh->status === 'prepared')
+                            <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="status" value="in_transit">
+                                <button type="submit" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-2 py-1 rounded">
+                                    Kirim Kargo
+                                </button>
+                            </form>
+                            @elseif($sh->status === 'in_transit')
+                            <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="status" value="delivered">
+                                <button type="submit" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2 py-1 rounded">
+                                    Tandai Terkirim
+                                </button>
+                            </form>
+                            @else
+                            <span class="text-[10px] text-emerald-600 font-semibold">Selesai</span>
+                            @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td class="p-3 font-mono font-bold text-purple-700">SJ/2026/04/0001</td>
-                        <td class="p-3 font-semibold text-slate-800">
-                            Bali Natural Living Gallery
-                            <p class="text-[10px] text-slate-400 font-normal">Denpasar, Bali</p>
-                        </td>
-                        <td class="p-3">22 Apr 2026</td>
-                        <td class="p-3 text-slate-600">
-                            Kargo Lintas Jawa-Bali
-                            <p class="text-[10px] text-slate-400">Driver: Pak Agus (AG 8942 US)</p>
-                        </td>
-                        <td class="p-3">
-                            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
-                                <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> Terverifikasi Solid (12 Krat)
-                            </span>
-                        </td>
-                        <td class="p-3">
-                            <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
-                                In Transit
-                            </span>
-                        </td>
+                        <td colspan="7" class="p-4 text-center text-slate-400">Belum ada data pengiriman surat jalan.</td>
                     </tr>
                     @endforelse
                 </tbody>

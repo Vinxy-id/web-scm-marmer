@@ -89,7 +89,7 @@ class ProductionController extends Controller
                 'priority' => $validated['priority'],
                 'start_date' => $validated['start_date'],
                 'due_date' => $validated['due_date'],
-                'notes' => $validated['notes'],
+                'notes' => $validated['notes'] ?? null,
                 'created_by' => Auth::id() ?? 1,
             ]);
 
