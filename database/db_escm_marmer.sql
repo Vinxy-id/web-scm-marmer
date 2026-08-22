@@ -3,6 +3,9 @@
 -- Generated for Web SCM Marmer Project
 -- --------------------------------------------------------
 
+CREATE DATABASE IF NOT EXISTS `test`;
+USE `test`;
+
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
