@@ -22,6 +22,9 @@ foreach ($tmpDirs as $dir) {
 }
 
 // 2. Set environment overrides untuk serverless cache & storage
+$_ENV['CACHE_STORE'] = 'array';
+$_ENV['CACHE_DRIVER'] = 'array';
+$_ENV['SESSION_DRIVER'] = 'cookie';
 $_ENV['APP_STORAGE'] = '/tmp/storage';
 $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 $_ENV['APP_SERVICES_CACHE'] = '/tmp/bootstrap/cache/services.php';
@@ -30,6 +33,9 @@ $_ENV['APP_CONFIG_CACHE'] = '/tmp/bootstrap/cache/config.php';
 $_ENV['APP_ROUTES_CACHE'] = '/tmp/bootstrap/cache/routes.php';
 $_ENV['APP_EVENTS_CACHE'] = '/tmp/bootstrap/cache/events.php';
 
+putenv('CACHE_STORE=array');
+putenv('CACHE_DRIVER=array');
+putenv('SESSION_DRIVER=cookie');
 putenv('APP_STORAGE=/tmp/storage');
 putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
 putenv('APP_SERVICES_CACHE=/tmp/bootstrap/cache/services.php');
