@@ -1,6 +1,6 @@
 <?php
 
-// 1. Inisialisasi direktori storage di /tmp (karena filesystem Vercel read-only)
+// 1. Inisialisasi struktur folder /tmp untuk environment serverless Vercel
 $tmpDirs = [
     '/tmp/storage',
     '/tmp/storage/app',
@@ -11,7 +11,8 @@ $tmpDirs = [
     '/tmp/storage/framework/sessions',
     '/tmp/storage/framework/views',
     '/tmp/storage/logs',
-    '/tmp/views',
+    '/tmp/bootstrap',
+    '/tmp/bootstrap/cache',
 ];
 
 foreach ($tmpDirs as $dir) {
@@ -20,5 +21,34 @@ foreach ($tmpDirs as $dir) {
     }
 }
 
-// 2. Forward request ke Laravel public/index.php
-require __DIR__ . '/../public/index.php';
+// 2. Set environment overrides untuk serverless cache & storage
+$_ENV['APP_STORAGE'] = '/tmp/storage';
+$_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+$_ENV['APP_SERVICES_CACHE'] = '/tmp/bootstrap/cache/services.php';
+$_ENV['APP_PACKAGES_CACHE'] = '/tmp/bootstrap/cache/packages.php';
+$_ENV['APP_CONFIG_CACHE'] = '/tmp/bootstrap/cache/config.php';
+$_ENV['APP_ROUTES_CACHE'] = '/tmp/bootstrap/cache/routes.php';
+$_ENV['APP_EVENTS_CACHE'] = '/tmp/bootstrap/cache/events.php';
+
+putenv('APP_STORAGE=/tmp/storage');
+putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+putenv('APP_SERVICES_CACHE=/tmp/bootstrap/cache/services.php');
+putenv('APP_PACKAGES_CACHE=/tmp/bootstrap/cache/packages.php');
+putenv('APP_CONFIG_CACHE=/tmp/bootstrap/cache/config.php');
+putenv('APP_ROUTES_CACHE=/tmp/bootstrap/cache/routes.php');
+putenv('APP_EVENTS_CACHE=/tmp/bootstrap/cache/events.php');
+
+// 3. Register autoloader & load Laravel app
+require __DIR__ . '/../vendor/autoload.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
+
+// Set storage path Laravel ke /tmp/storage
+$app->useStoragePath('/tmp/storage');
+
+$kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
+
+$response = $kernel->handle(
+    $request = \Illuminate\Http\Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);

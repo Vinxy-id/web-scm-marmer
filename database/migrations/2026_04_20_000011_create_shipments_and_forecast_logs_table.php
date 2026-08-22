@@ -11,40 +11,39 @@ return new class extends Migration
         // 1. Tabel Shipments
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->string('shipment_number', 50)->unique();
+            $table->string('shipment_code', 50)->unique();
+            $table->foreignId('work_order_id')->nullable()->constrained('work_orders')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('customer_id')->constrained('customers')->restrictOnDelete()->cascadeOnUpdate();
-            $table->date('shipment_date');
-            $table->string('expedition_name', 100)->nullable();
-            $table->string('vehicle_number', 30)->nullable();
-            $table->string('driver_name', 100)->nullable();
-            $table->boolean('wooden_packing_checked')->default(true)->comment('Verifikasi packing krat kayu');
-            $table->enum('status', ['prepared', 'in_transit', 'delivered', 'cancelled'])->default('prepared');
+            $table->string('expedition_name', 100)->comment('Armada Sendiri / Truk Ekspedisi');
             $table->string('tracking_number', 100)->nullable();
+            $table->string('driver_name', 100)->nullable();
+            $table->string('vehicle_plate', 20)->nullable();
+            $table->boolean('packing_verified')->default(false)->comment('1 = Checklist packing kayu lolos');
+            $table->date('shipment_date');
+            $table->enum('delivery_status', ['packed', 'in_transit', 'delivered', 'returned'])->default('packed');
             $table->text('notes')->nullable();
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->timestamps();
 
-            $table->index('shipment_number');
-            $table->index('status');
+            $table->index('shipment_code');
+            $table->index('delivery_status');
         });
 
         // 2. Tabel Forecasting Logs
         Schema::create('forecasting_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('material_id')->nullable()->constrained('materials')->nullOnDelete()->cascadeOnUpdate();
-            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete()->cascadeOnUpdate();
-            $table->enum('model_type', ['moving_average', 'single_exp_smoothing', 'holt_winters'])->default('holt_winters');
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->integer('horizon_months')->default(3);
-            $table->json('input_data_json')->nullable();
-            $table->json('forecast_result_json')->nullable();
-            $table->decimal('mape_score', 8, 4)->nullable();
-            $table->decimal('rmse_score', 12, 4)->nullable();
-            $table->foreignId('generated_by')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
-            $table->timestamps();
+            $table->enum('item_type', ['material', 'product']);
+            $table->unsignedBigInteger('item_id');
+            $table->string('algorithm_used', 50)->comment('Moving Average, Holt-Winters, ARIMA');
+            $table->integer('forecast_horizon_months')->default(3);
+            $table->integer('historical_data_points')->default(0);
+            $table->decimal('mape_score', 6, 2)->default(0.00)->comment('Akurasi Persentase Error');
+            $table->decimal('rmse_score', 10, 2)->default(0.00);
+            $table->json('prediction_json')->nullable()->comment('Hasil proyeksi per periode');
+            $table->timestamp('generated_at')->nullable()->useCurrent();
+            $table->timestamp('created_at')->nullable()->useCurrent();
 
-            $table->index('model_type');
+            $table->index(['item_type', 'item_id']);
         });
     }
 

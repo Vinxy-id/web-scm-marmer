@@ -24,6 +24,10 @@ class BlackBoxTestSuiteTest extends TestCase
     {
         parent::setUp();
 
+        if (User::where('email', 'owner@cahayaonix.com')->count() === 0 || Customer::count() === 0) {
+            $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        }
+
         $this->ownerUser = User::where('email', 'owner@cahayaonix.com')->first() 
             ?? User::where('role', 'owner')->first() 
             ?? User::first();

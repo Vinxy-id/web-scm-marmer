@@ -17,6 +17,11 @@ class E2EButtonFunctionalityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (Customer::count() === 0) {
+            $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        }
+
         $this->user = User::first() ?? User::factory()->create();
     }
 
