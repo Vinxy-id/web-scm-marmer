@@ -4,13 +4,13 @@ use Illuminate\Support\Str;
 
 return [
 
-    'driver' => env('SESSION_DRIVER', 'cookie'),
+    'driver' => env('SESSION_DRIVER', 'file'),
 
     'lifetime' => (int) env('SESSION_LIFETIME', 120),
 
     'expire_on_close' => false,
 
-    'encrypt' => (bool) env('SESSION_ENCRYPT', true),
+    'encrypt' => (bool) env('SESSION_ENCRYPT', false),
 
     'files' => storage_path('framework/sessions'),
 
