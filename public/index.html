@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-SCM Marmer Tulungagung - Sistem Rantai Pasok Terintegrasi</title>
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.27 6.96 12 12.01 20.73 6.96'/><line x1='12' y1='22.08' x2='12' y2='12'/></svg>" />
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
@@ -24,12 +26,6 @@
                             700: '#1d4ed8',
                             800: '#1e40af',
                             900: '#1e3a8a',
-                        },
-                        marble: {
-                            light: '#f8fafc',
-                            card: '#ffffff',
-                            border: '#e2e8f0',
-                            accent: '#0f766e',
                         }
                     }
                 }
@@ -51,8 +47,8 @@
         <aside id="sidebar" class="w-64 bg-slate-900 text-slate-200 flex flex-col transition-all duration-300 z-30 flex-shrink-0">
             <!-- Brand Header -->
             <div class="h-16 flex items-center px-4 bg-slate-950 border-b border-slate-800 gap-3">
-                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30">
-                    ⛓️
+                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
                 </div>
                 <div class="overflow-hidden">
                     <h1 class="font-bold text-sm text-white tracking-wide leading-tight">E-SCM MARMER</h1>
@@ -78,7 +74,9 @@
                     <div class="flex items-center gap-3">
                         <i data-lucide="boxes" class="w-4 h-4 text-amber-400"></i> Bahan Baku
                     </div>
-                    <span class="bg-red-500/20 text-red-400 text-xs px-1.5 py-0.5 rounded font-semibold">1 Kritis</span>
+                    <span class="inline-flex items-center gap-1 bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> 1 Kritis
+                    </span>
                 </button>
 
                 <button onclick="switchTab('purchase-orders')" id="nav-purchase-orders" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
@@ -100,7 +98,7 @@
                 </button>
 
                 <button onclick="switchTab('waste-management')" id="nav-waste-management" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                    <i data-lucide="recycle" class="w-4 h-4 text-teal-400"></i> Hilirisasi Residu (Limbah)
+                    <i data-lucide="recycle" class="w-4 h-4 text-teal-400"></i> Hilirisasi Residu
                 </button>
 
                 <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Hilir & Distribusi</div>
@@ -116,7 +114,7 @@
                 <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Analitik Cerdas</div>
 
                 <button onclick="switchTab('forecasting')" id="nav-forecasting" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400"></i> AI & Forecasting
+                    <i data-lucide="trending-up" class="w-4 h-4 text-yellow-400"></i> AI & Forecasting
                 </button>
 
                 <button onclick="switchTab('reports')" id="nav-reports" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">
@@ -127,7 +125,7 @@
             <!-- Footer User Profile -->
             <div class="p-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
                 <div class="flex items-center gap-2.5 overflow-hidden">
-                    <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xs">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                         PJ
                     </div>
                     <div class="overflow-hidden text-left">
@@ -164,12 +162,12 @@
                     </div>
 
                     <!-- Role Badge -->
-                    <span id="current-role-badge" class="bg-blue-100 text-blue-800 border border-blue-200 text-xs px-2.5 py-1 rounded-md font-semibold">
-                        Role: Owner / Admin
+                    <span id="current-role-badge" class="bg-blue-100 text-blue-800 border border-blue-200 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5">
+                        <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Role: Owner / Admin
                     </span>
 
                     <!-- Quick Action Button -->
-                    <button onclick="openModal('quick-action-modal')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <button onclick="switchTab('production-kanban')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
                         <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
                     </button>
                 </div>
@@ -209,8 +207,8 @@
                                     <i data-lucide="trending-up" class="w-3 h-3"></i> +12% bln ini
                                 </p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
-                                🪨
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i data-lucide="mountain" class="w-6 h-6"></i>
                             </div>
                         </div>
 
@@ -220,8 +218,8 @@
                                 <h3 class="text-2xl font-bold text-slate-800 mt-1">5 Batch</h3>
                                 <p class="text-[11px] text-blue-600 font-semibold mt-1">Mesin Bubut: 7/7 Beroperasi</p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                                ⚙️
+                            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                <i data-lucide="cog" class="w-6 h-6"></i>
                             </div>
                         </div>
 
@@ -231,8 +229,8 @@
                                 <h3 class="text-2xl font-bold text-slate-800 mt-1">67 Unit</h3>
                                 <p class="text-[11px] text-emerald-600 font-semibold mt-1">22 Lolos Packing Kayu</p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                                📦
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i data-lucide="package-check" class="w-6 h-6"></i>
                             </div>
                         </div>
 
@@ -242,8 +240,8 @@
                                 <h3 class="text-2xl font-bold text-slate-800 mt-1">Rp 148.5 Jt</h3>
                                 <p class="text-[11px] text-slate-500 mt-1">Bahan Baku + Barang Jadi</p>
                             </div>
-                            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
-                                💰
+                            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <i data-lucide="coins" class="w-6 h-6"></i>
                             </div>
                         </div>
                     </div>
@@ -264,7 +262,9 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5 pt-2">
                             <!-- Stage 1 -->
                             <div onclick="switchTab('materials')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">⛏️</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                                    <i data-lucide="pickaxe" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">1. Tambang</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">3 Pemasok</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">Besole/CPD</span>
@@ -272,15 +272,21 @@
 
                             <!-- Stage 2 -->
                             <div onclick="switchTab('materials')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">🪨</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+                                    <i data-lucide="boxes" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">2. Gudang Batu</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">89 Blok</p>
-                                <span class="inline-block mt-1.5 text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">🔴 1 Kritis</span>
+                                <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
+                                    <span class="w-1 h-1 rounded-full bg-red-500"></span> 1 Kritis
+                                </span>
                             </div>
 
                             <!-- Stage 3 -->
                             <div onclick="switchTab('production-kanban')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">🪚</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                    <i data-lucide="scissors" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">3. Mesin Slep</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">Potong Blok</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Max 80 cm</span>
@@ -288,7 +294,9 @@
 
                             <!-- Stage 4 -->
                             <div onclick="switchTab('wip-tracking')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">⚙️</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                                    <i data-lucide="disc" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">4. Pembubutan</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">7 Mesin Aktif</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">14 Unit/Hari</span>
@@ -296,7 +304,9 @@
 
                             <!-- Stage 5 -->
                             <div onclick="switchTab('qc-inspection')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">🔍</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                    <i data-lucide="scan-search" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">5. QC Tahap 1</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">Cek Serat Awal</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold">Bebas Retak</span>
@@ -304,7 +314,9 @@
 
                             <!-- Stage 6 -->
                             <div onclick="switchTab('production-kanban')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">✨</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">6. Finishing Poles</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">Hi-Glossy</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">Kilau Super</span>
@@ -312,7 +324,9 @@
 
                             <!-- Stage 7 -->
                             <div onclick="switchTab('qc-inspection')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">🛡️</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-green-100 text-green-700 flex items-center justify-center">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">7. QC Tahap 2</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">Uji Afur</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-semibold">Siap Gudang</span>
@@ -320,7 +334,9 @@
 
                             <!-- Stage 8 -->
                             <div onclick="switchTab('distribution')" class="cursor-pointer group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition">
-                                <div class="text-2xl mb-1">🚚</div>
+                                <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+                                    <i data-lucide="truck" class="w-4 h-4"></i>
+                                </div>
                                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">8. Distribusi</h5>
                                 <p class="text-[10px] text-slate-500 mt-0.5">Packing Kayu</p>
                                 <span class="inline-block mt-1.5 text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-semibold">Kirim Buyer</span>
@@ -390,7 +406,11 @@
                                             <td class="p-2.5 font-medium text-slate-800">Bongkahan Onyx Kristal</td>
                                             <td class="p-2.5 text-red-600 font-bold">12 Blok</td>
                                             <td class="p-2.5 text-slate-500">15 Blok</td>
-                                            <td class="p-2.5"><span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold text-[10px]">🔴 Kritis</span></td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                                </span>
+                                            </td>
                                             <td class="p-2.5 text-right">
                                                 <button onclick="switchTab('purchase-orders')" class="text-blue-600 hover:text-blue-800 font-semibold text-xs">Buat PO</button>
                                             </td>
@@ -399,7 +419,11 @@
                                             <td class="p-2.5 font-medium text-slate-800">Marmer Putih Campurdarat</td>
                                             <td class="p-2.5 text-amber-600 font-bold">18 Blok</td>
                                             <td class="p-2.5 text-slate-500">20 Blok</td>
-                                            <td class="p-2.5"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">🟡 Rendah</span></td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rendah
+                                                </span>
+                                            </td>
                                             <td class="p-2.5 text-right">
                                                 <button onclick="switchTab('purchase-orders')" class="text-blue-600 hover:text-blue-800 font-semibold text-xs">Buat PO</button>
                                             </td>
@@ -408,7 +432,11 @@
                                             <td class="p-2.5 font-medium text-slate-800">Batu Kali Song</td>
                                             <td class="p-2.5 text-emerald-600 font-bold">35 Blok</td>
                                             <td class="p-2.5 text-slate-500">10 Blok</td>
-                                            <td class="p-2.5"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">🟢 Normal</span></td>
+                                            <td class="p-2.5">
+                                                <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                                </span>
+                                            </td>
                                             <td class="p-2.5 text-right">
                                                 <span class="text-slate-400 text-xs">Aman</span>
                                             </td>
@@ -510,7 +538,11 @@
                                     <td class="p-3 font-bold text-slate-800">18.00 Blok</td>
                                     <td class="p-3 text-slate-500">5.00 Blok</td>
                                     <td class="p-3 text-slate-700">Rp 450.000</td>
-                                    <td class="p-3"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">🟢 Normal</span></td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                        </span>
+                                    </td>
                                     <td class="p-3 text-right space-x-1">
                                         <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
                                         <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -524,7 +556,11 @@
                                     <td class="p-3 font-bold text-red-600">12.00 Blok</td>
                                     <td class="p-3 text-slate-500">15.00 Blok</td>
                                     <td class="p-3 text-slate-700">Rp 850.000</td>
-                                    <td class="p-3"><span class="bg-red-100 text-red-800 px-2 py-0.5 rounded font-semibold text-[10px]">🔴 Kritis</span></td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-red-100 text-red-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                        </span>
+                                    </td>
                                     <td class="p-3 text-right space-x-1">
                                         <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
                                         <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -538,7 +574,11 @@
                                     <td class="p-3 font-bold text-slate-800">35.00 Blok</td>
                                     <td class="p-3 text-slate-500">10.00 Blok</td>
                                     <td class="p-3 text-slate-700">Rp 95.000</td>
-                                    <td class="p-3"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">🟢 Normal</span></td>
+                                    <td class="p-3">
+                                        <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
+                                        </span>
+                                    </td>
                                     <td class="p-3 text-right space-x-1">
                                         <button class="p-1 text-slate-400 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
                                         <button class="p-1 text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -569,7 +609,10 @@
                         <!-- Col 1: Antrian -->
                         <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
-                                <span>📋 1. Antrian SPK</span>
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>1. Antrian SPK</span>
+                                </div>
                                 <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
                             </div>
                             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
@@ -589,7 +632,10 @@
                         <!-- Col 2: Persiapan Bahan (Mesin Slep) -->
                         <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
-                                <span>🪚 2. Potong Slep</span>
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="scissors" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>2. Potong Slep</span>
+                                </div>
                                 <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
                             </div>
                             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
@@ -612,7 +658,10 @@
                         <!-- Col 3: Pembubutan & Bentuk -->
                         <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
-                                <span>⚙️ 3. Mesin Bubut</span>
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="disc" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>3. Mesin Bubut</span>
+                                </div>
                                 <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">2</span>
                             </div>
                             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
@@ -635,7 +684,10 @@
                         <!-- Col 4: QC & Finishing Poles -->
                         <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
-                                <span>🔍 4. QC & Poles</span>
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>4. QC & Poles</span>
+                                </div>
                                 <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
                             </div>
                             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 cursor-pointer hover:border-blue-400 transition">
@@ -658,15 +710,18 @@
                         <!-- Col 5: Selesai / Siap Gudang -->
                         <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
-                                <span>✅ 5. Siap Kirim</span>
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="package-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    <span>5. Siap Kirim</span>
+                                </div>
                                 <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">1</span>
                             </div>
                             <div class="bg-white p-3.5 rounded-lg border border-emerald-300 shadow-sm space-y-2">
                                 <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">SPK/2026/03/098</span>
                                 <h5 class="text-xs font-bold text-slate-800">Stepping Stone Batu Kali</h5>
                                 <p class="text-[11px] text-slate-500">PT Citra Griya (Surabaya)</p>
-                                <div class="text-[10px] text-emerald-700 font-semibold pt-1 border-t">
-                                    ✓ 45 Unit (Packing Krat Kayu)
+                                <div class="text-[10px] text-emerald-700 font-semibold pt-1 border-t flex items-center gap-1">
+                                    <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> 45 Unit (Packing Krat Kayu)
                                 </div>
                             </div>
                         </div>
@@ -729,7 +784,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <span class="bg-blue-500/30 text-blue-200 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-400/30">
-                                    ✨ Model Deret Waktu Holt-Winters
+                                    Model Deret Waktu Holt-Winters
                                 </span>
                                 <h3 class="text-xl font-bold mt-2">Peramalan Permintaan & Kebutuhan Bahan Baku</h3>
                                 <p class="text-xs text-slate-300 mt-1 max-w-2xl">
@@ -750,7 +805,7 @@
                             <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
                                 <p class="text-xs text-slate-300">Akurasi Model (MAPE)</p>
                                 <h4 class="text-2xl font-bold text-emerald-400 mt-1">6.42 %</h4>
-                                <p class="text-[11px] text-emerald-300 mt-0.5">Kategori: Sangat Akurat (<10%)</p>
+                                <p class="text-[11px] text-emerald-300 mt-0.5">Kategori: Sangat Akurat (&lt;10%)</p>
                             </div>
                             <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
                                 <p class="text-xs text-slate-300">Rekomendasi Order Tambang</p>
@@ -772,8 +827,8 @@
 
                 <!-- Generic Container for other tabs (WIP, PO, Distribution, Reports, etc.) -->
                 <div id="tab-generic" class="tab-pane hidden p-12 text-center bg-white rounded-2xl border border-slate-200">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
-                        📦
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="layers" class="w-8 h-8"></i>
                     </div>
                     <h3 id="generic-title" class="text-base font-bold text-slate-800">Modul Operasional</h3>
                     <p id="generic-desc" class="text-xs text-slate-500 mt-1 max-w-md mx-auto">Modul ini siap dikoneksikan ke backend Laravel MVC pada Kegiatan 7.</p>
@@ -847,7 +902,8 @@
         let currentRoleIdx = 0;
         function switchUserRole() {
             currentRoleIdx = (currentRoleIdx + 1) % roles.length;
-            document.getElementById('current-role-badge').innerText = 'Role: ' + roles[currentRoleIdx];
+            document.getElementById('current-role-badge').innerHTML = '<i data-lucide="user-check" class="w-3.5 h-3.5"></i> Role: ' + roles[currentRoleIdx];
+            lucide.createIcons();
             alert('Peran pengguna disimulasikan sebagai: ' + roles[currentRoleIdx]);
         }
 
