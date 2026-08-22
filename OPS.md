@@ -154,6 +154,8 @@ Pengujian menggunakan teknik **Equivalence Partitioning (EP)** dan **Boundary Va
 | **TC-006** | QC Inspeksi | Input unit lolos + rework + scrap = total unit SPK | Diperiksa: 14, Lolos: 12, Rework: 2, Scrap: 0 | Data tersimpan, stok barang jadi bertambah 12 | Pass |
 | **TC-007** | Peramalan | Request prediksi horizon 3 bulan | `item_id: 1`, `horizon: 3`, `model: holt_winters` | Menghasilkan array prediksi 3 periode + MAPE | Pass |
 | **TC-008** | Hak Akses | Operator mencoba akses menu Manajemen Akun | URL: `/admin/users` dengan role `produksi` | Muncul response `403 Unauthorized` | Pass |
+| **TC-009** | Katalog Publik | Akses Landing Page dan Filter Kategori | URL: `/` dan `/katalog?material=onix` | Menampilkan etalase produk onix tembus cahaya & profil IKM mitra | Pass |
+| **TC-010** | Order WhatsApp | Klik tombol 'Pesan via WA' pada produk | Klik tombol WA produk ID 9 (Wastafel Onix) | Membuka link `wa.me` dengan teks pesan prefilled nama & kode produk | Pass |
 
 ### 3.3 Format Bug Report Log (Template Pencatatan Kendala)
 

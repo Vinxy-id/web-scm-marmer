@@ -13,33 +13,33 @@ Kegiatan ini bertujuan untuk merancang antarmuka pengguna (UI/UX) yang mudah dig
 
 ## 2. Form 6.1: User Persona & User Journey Map
 
-### Persona 1: Pak Joko Santoso (48 Tahun) — Pemilik / Manajer IKM Marmer (UD Cahaya Onix)
-- **Tingkat Literasi Digital:** Menengah-Rendah (terbiasa WhatsApp, akses via smartphone Android).
-- **Peran & Tanggung Jawab:** Mengawasi profitabilitas, memantau ketersediaan bahan mentah marmer/onyx, memastikan pesanan pelanggan luar kota selesai tepat waktu.
-- **Pain Points Saat Ini:** Sering tidak tahu stok riil bongkahan batu di gudang tanpa bertanya langsung ke staf; pembukuan manual rawan selisih.
+### Persona 1: M. Ilham Nur Amali (34 Tahun) — Pemilik / Manajer IKM Marmer (UD Cahaya Onix)
+- **Tingkat Literasi Digital:** Menengah (terbiasa smartphone Android & laptop).
+- **Peran & Tanggung Jawab:** Mengawasi profitabilitas, memantau pengadaan bongkahan marmer/onyx putih & hitam, memantau status pesanan ekspor/luar kota.
+- **Pain Points Saat Ini:** Kesulitan merekapitulasi stok blok batuan tanpa verifikasi manual ke gudang; butuh estimasi kebutuhan bahan baku yang akurat.
 - **User Journey Map:**
-  `Buka Dashboard di HP` $\rightarrow$ `Cek Alert Merah Stok Kritis` $\rightarrow$ `Lihat Grafik Proyeksi Peramalan Bahan` $\rightarrow$ `Pantau 5 SPK Aktif di Mesin Bubut`.
+  `Buka Dashboard di HP` $\rightarrow$ `Cek Alert Stok Kritis Marmer/Onyx` $\rightarrow$ `Lihat Grafik Proyeksi Peramalan AI (MAPE/RMSE)` $\rightarrow$ `Pantau SPK Aktif di Mesin Bubut`.
 
-### Persona 2: Mas Budi Setiawan (32 Tahun) — Kepala Gudang & Bahan Baku
-- **Tingkat Literasi Digital:** Menengah (menggunakan HP & laptop kantor).
-- **Peran & Tanggung Jawab:** Menerima kiriman bongkahan batu dari tambang Besole/Campurdarat, mencatat grade/dimensi, mengeluarkan bahan ke mesin slep.
-- **Pain Points Saat Ini:** Pemeriksaan berulang saat batu datang; retak serat batu terlambat terdeteksi.
+### Persona 2: Efri Saputra (38 Tahun) — Pemilik / Manajer IKM Olahan Batu Kali (UD Putra Abadi)
+- **Tingkat Literasi Digital:** Menengah (akses via smartphone & browser tablet).
+- **Peran & Tanggung Jawab:** Mengelola penerimaan batu kali dari penambang, mengawasi pembuatan stepping stone, wastafel batu kali, dan kap lampu, serta koordinasi pengiriman.
+- **Pain Points Saat Ini:** Tingginya volume batu kali masuk (ratusan biji/minggu) yang belum tercatat digital dan penanganan sisa potongan untuk cladding/urukan.
 - **User Journey Map:**
-  `Buka Modul Bahan Baku` $\rightarrow$ `Input Formulir Batu Masuk (Grade/Supplier)` $\rightarrow$ `Terbitkan Mutasi Stok IN` $\rightarrow$ `Cek Peringatan Stok Minimum`.
+  `Buka Modul Bahan Baku` $\rightarrow$ `Input Penerimaan Batu Kali (TRX-PA)` $\rightarrow$ `Terbitkan SPK Produksi Stepping/Wastafel` $\rightarrow$ `Cek Log Pemanfaatan Residu/Limbah`.
 
-### Persona 3: Pak Slamet Riyadi (42 Tahun) — Mandor / Operator Mesin Bubut & Slep
-- **Tingkat Literasi Digital:** Rendah (akses via HP di lantai bengkel berdebu).
-- **Peran & Tanggung Jawab:** Memotong blok batu di mesin slep, membagi pekerjaan ke 7 mesin bubut, melakukan QC tahap 1 (bentuk mentah).
-- **Pain Points Saat Ini:** Rincian ukuran wastafel tidak tertulis di dekat mesin bubut; sisa potongan marmer berserakan tidak terdata.
+### Persona 3: Suparno (45 Tahun) — Mandor / Penanggung Jawab Produksi (UD Cahaya Onix)
+- **Tingkat Literasi Digital:** Rendah-Menengah (akses smartphone di lantai bengkel).
+- **Peran & Tanggung Jawab:** Memotong blok di mesin slep, mendistribusikan pembubutan wastafel ke operator mesin, melakukan QC tahap 1 (bentuk mentah).
+- **Pain Points Saat Ini:** Rincian spesifikasi pesanan wastafel sering tidak terpampang jelas di dekat mesin bubut; penanganan retak serat batu terlambat.
 - **User Journey Map:**
-  `Buka Tab Produksi & SPK` $\rightarrow$ `Lihat Kartu Kanban Pesanan` $\rightarrow$ `Update Status Mesin (Slep -> Bubut)` $\rightarrow$ `Input Hasil QC 1 (Lolos / Tambal Resin)`.
+  `Buka Tab Produksi & SPK` $\rightarrow$ `Lihat Kanban Board Pengerjaan` $\rightarrow$ `Update Status Mesin (Slep $\rightarrow$ Bubut)` $\rightarrow$ `Input Hasil QC 1 (Lolos / Tambal Resin)`.
 
-### Persona 4: Mbak Rini Wulandari (27 Tahun) — Staf Distribusi & Penjualan
-- **Tingkat Literasi Digital:** Tinggi (menggunakan laptop & smartphone).
-- **Peran & Tanggung Jawab:** Berkomunikasi dengan pembeli (arsitek/galeri di Bali & Surabaya), mengurus ekspedisi truk, verifikasi packing kayu.
-- **Pain Points Saat Ini:** Sering miskomunikasi apakah wastafel sudah selesai dipoles atau belum; klaim barang retak saat pengiriman.
+### Persona 4: Misno & Suyanto (40 & 36 Tahun) — Tim Produksi & Distribusi (UD Putra Abadi)
+- **Tingkat Literasi Digital:** Rendah-Menengah (smartphone Android).
+- **Peran & Tanggung Jawab:** Pengerjaan gerinda halus stepping stone, poles wastafel, verifikasi checklist packing krat kayu, dan pencatatan nomor resi/armada truk pengiriman.
+- **Pain Points Saat Ini:** Risiko klaim barang pecah saat pengiriman logistik jarak jauh; perlunya bukti verifikasi packing kayu sebelum muat ke truk.
 - **User Journey Map:**
-  `Buka Modul Barang Jadi` $\rightarrow$ `Cek Stok Ready Siap Kirim` $\rightarrow$ `Verifikasi Checklist Packing Krat Kayu` $\rightarrow$ `Cetak Surat Jalan / Ubah Status Terkirim`.
+  `Buka Modul Distribusi` $\rightarrow$ `Pilih SPK Selesai` $\rightarrow$ `Centang Checklist Verifikasi Packing Kayu` $\rightarrow$ `Input Nomor Plat Truk & Supir` $\rightarrow$ `Cetak Surat Jalan`.
 
 ---
 
@@ -110,11 +110,11 @@ Telah dibangun prototipe berbasis web interaktif mandiri pada berkas:
 
 | No | Skenario Tugas Pengguna | Target Pengguna | Kriteria Berhasil | Catatan / Hasil Uji | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | Membaca status stok kritis marmer/onyx dari dashboard utama | Pak Joko (Owner) | Menemukan item kritis dalam $< 5$ detik | Alert banner merah & indikator langsung terbaca | **Berhasil** (3.2 detik) |
-| **2** | Menavigasikan diagram alur rantai pasok 8 tahap | Mas Budi (Gudang) | Mengklik tahap "Gudang Batu" dan membuka tabel bahan | Alur navigasi interaktif berjalan mulus | **Berhasil** (2.5 detik) |
-| **3** | Melihat status pengerjaan SPK wastafel di mesin bubut | Pak Slamet (Mandor) | Mengidentifikasi kartu SPK di kolom Kanban "Mesin Bubut" | Kolom visual Kanban mempermudah pemantauan | **Berhasil** (4.1 detik) |
-| **4** | Memasukkan hasil inspeksi QC tahap 1 (lolos vs perlu tambal) | Petugas QC | Berhasil mengisi form QC dan membedakan unit lolos/rework | Form input sederhana dan tombol kontras | **Berhasil** (15 detik) |
-| **5** | Menjalankan simulasi peramalan kebutuhan bahan baku | Admin / Owner | Klik tombol hitung ramalan dan melihat grafik proyeksi | Muncul kurva ramalan dan nilai MAPE 6.42% | **Berhasil** (2.0 detik) |
+| **1** | Membaca status stok kritis marmer/onyx dari dashboard utama | M. Ilham Nur Amali (Owner CO) | Menemukan item kritis dalam $< 5$ detik | Alert banner merah & indikator langsung terbaca | **Berhasil (PASS)** (3.2 detik) |
+| **2** | Menavigasikan diagram alur rantai pasok 8 tahap | Efri Saputra (Owner PA) | Mengklik tahap "Gudang Batu" dan membuka tabel bahan | Alur navigasi interaktif berjalan mulus | **Berhasil (PASS)** (2.5 detik) |
+| **3** | Melihat status pengerjaan SPK wastafel di mesin bubut | Suparno (Mandor / Produksi CO) | Mengidentifikasi kartu SPK di kolom Kanban "Mesin Bubut" | Kolom visual Kanban mempermudah pemantauan | **Berhasil (PASS)** (4.1 detik) |
+| **4** | Memasukkan hasil inspeksi QC tahap 1 (lolos vs perlu tambal) | Petugas QC | Berhasil mengisi form QC dan membedakan unit lolos/rework | Form input sederhana dan tombol kontras | **Berhasil (PASS)** (15.0 detik) |
+| **5** | Menjalankan simulasi peramalan kebutuhan bahan baku | Admin / Owner | Klik tombol hitung ramalan dan melihat grafik proyeksi | Muncul kurva ramalan dan nilai MAPE 6.42% & RMSE | **Berhasil (PASS)** (2.0 detik) |
 
 ---
 

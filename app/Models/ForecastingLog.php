@@ -9,42 +9,46 @@ class ForecastingLog extends Model
 {
     use HasFactory;
 
+    public $timestamps = false; // generated_at & created_at are timestamp columns in DB
+
     protected $fillable = [
-        'material_id',
-        'product_id',
-        'model_type',
-        'period_start',
-        'period_end',
-        'horizon_months',
-        'input_data_json',
-        'forecast_result_json',
+        'item_type',
+        'item_id',
+        'algorithm_used',
+        'forecast_horizon_months',
+        'historical_data_points',
         'mape_score',
         'rmse_score',
-        'generated_by',
+        'prediction_json',
+        'generated_at',
+        'created_at',
     ];
 
     protected $casts = [
-        'period_start' => 'date',
-        'period_end' => 'date',
-        'horizon_months' => 'integer',
-        'input_data_json' => 'array',
-        'forecast_result_json' => 'array',
-        'mape_score' => 'decimal:4',
-        'rmse_score' => 'decimal:4',
+        'forecast_horizon_months' => 'integer',
+        'historical_data_points' => 'integer',
+        'mape_score' => 'decimal:2',
+        'rmse_score' => 'decimal:2',
+        'prediction_json' => 'array',
+        'generated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function material()
     {
-        return $this->belongsTo(Material::class);
+        return $this->belongsTo(Material::class, 'item_id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'item_id');
     }
 
-    public function generator()
+    public function getItemNameAttribute(): string
     {
-        return $this->belongsTo(User::class, 'generated_by');
+        if ($this->item_type === 'material') {
+            return $this->material?->name ?? ('Bahan Baku #' . $this->item_id);
+        }
+        return $this->product?->name ?? ('Produk #' . $this->item_id);
     }
 }

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="grassBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#d1fae5"/>
+    </linearGradient>
+    <radialGradient id="stoneTop" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="60%" stop-color="#64748b"/>
+      <stop offset="90%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </radialGradient>
+    <filter id="steppingShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-opacity="0.22" flood-color="#064e3b"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="450" fill="url(#grassBg)"/>
+  
+  <!-- Garden decorative leaves -->
+  <path d="M 40 380 Q 70 340, 110 370 T 150 410" fill="#a7f3d0" opacity="0.7"/>
+  <path d="M 470 70 Q 520 40, 560 90 T 540 140" fill="#a7f3d0" opacity="0.6"/>
+
+  <!-- Stepping Stone 1 (Background smaller) -->
+  <g opacity="0.85">
+    <ellipse cx="440" cy="160" rx="100" ry="50" fill="#334155"/>
+    <ellipse cx="440" cy="150" rx="98" ry="48" fill="#64748b"/>
+    <ellipse cx="440" cy="148" rx="88" ry="42" fill="#94a3b8" opacity="0.5"/>
+  </g>
+
+  <!-- Stepping Stone 2 (Foreground main) -->
+  <g filter="url(#steppingShadow)">
+    <!-- 3D Thickness Side Rim -->
+    <path d="M 120 250 C 110 320, 200 370, 310 365 C 420 360, 480 305, 470 245 L 470 265 C 480 325, 420 380, 310 385 C 200 390, 110 340, 120 270 Z" fill="#1e293b"/>
+    
+    <!-- Flat Polished Top Surface -->
+    <path d="M 120 250 C 110 320, 200 370, 310 365 C 420 360, 480 305, 470 245 C 460 185, 380 145, 270 150 C 170 155, 130 190, 120 250 Z" fill="url(#stoneTop)"/>
+    
+    <!-- Natural Stone Texture & Grain -->
+    <path d="M 180 220 Q 260 290, 380 270" stroke="#cbd5e1" stroke-width="2" fill="none" opacity="0.4"/>
+    <path d="M 220 180 Q 290 230, 420 220" stroke="#cbd5e1" stroke-width="1.5" fill="none" opacity="0.35"/>
+    <circle cx="250" cy="300" r="8" fill="#334155" opacity="0.4"/>
+    <circle cx="360" cy="230" r="10" fill="#334155" opacity="0.3"/>
+  </g>
+
+  <!-- Anti-Slip Matte Highlight -->
+  <ellipse cx="280" cy="230" rx="90" ry="35" fill="#ffffff" opacity="0.25"/>
+
+  <!-- Badge Info -->
+  <rect x="24" y="24" width="185" height="32" rx="16" fill="#047857" opacity="0.95"/>
+  <text x="116" y="44" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">STEPPING STONE TAMAN</text>
+</svg>

@@ -69,6 +69,29 @@ Setiap kartu metrik menampilkan:
 
 ## 3. Tata Letak Layar Utama (Layout & Mockup Wireframe)
 
+### 3.0 Layar Publik: Landing Page & Katalog Showcase (`/` & `/katalog`)
+```
++-----------------------------------------------------------------------------------+
+| [Logo E-SCM]  Beranda | Katalog | Profil IKM | Alur SCM       [Masuk Portal E-SCM] |
++-----------------------------------------------------------------------------------+
+| [HERO SECTION]                                                                    |
+| "Koleksi Kerajinan Marmer & Onyx Asli Tulungagung" (Kualitas Ekspor)              |
+| [Tombol: Jelajahi Katalog] [Tombol: Konsultasi Custom WA]                         |
+| [Badge 1: 100% Alami] [Badge 2: QC 2-Tahap] [Badge 3: Peti Kayu] [Badge 4: Harga Pengrajin]|
++-----------------------------------------------------------------------------------+
+| [PROFIL IKM MITRA]                                                                |
+| [Card 1: UD Cahaya Onix - Marmer & Onix]  [Card 2: UD Putra Abadi - Batu Kali & Stepping]|
++-----------------------------------------------------------------------------------+
+| [INTERACTIVE CATALOG SHOWCASE]                                                    |
+| [Filter: Semua] [Wastafel Marmer] [Wastafel Onix] [Batu Kali] [Stepping Stone]    |
+| [Card Produk 1]  [Card Produk 2]  [Card Produk 3]  [Card Produk 4]                |
+| (D40 T15, Rp 450k) (Onix Translucent) (Batu Kali Alami)  (Stepping Taman)         |
++-----------------------------------------------------------------------------------+
+| [ALUR TRANSPARANSI SCM]                                                           |
+| 1. Tambang Besole -> 2. Bubut Presisi -> 3. QC 2-Tahap -> 4. Peti Kayu Ekspedisi |
++-----------------------------------------------------------------------------------+
+```
+
 ### 3.1 Layar Dashboard Utama (`/dashboard`)
 ```
 +-----------------------------------------------------------------------------------+

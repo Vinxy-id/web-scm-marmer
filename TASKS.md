@@ -54,8 +54,8 @@ Fokus: Desain teknis detail sebelum pengkodean dimulai.
   - [ ] Pembuatan REST API endpoint wrapper (FastAPI / Flask).
 - [x] **Kegiatan 6: Perancangan Antarmuka Pengguna (UI/UX)**
   - [x] Penyusunan User Persona & User Journey Map (Pak Joko, Mas Budi, Pak Slamet, Mbak Rini) (Form 6.1).
-  - [x] Perancangan Information Architecture & Site Map 6 modul terintegrasi.
-  - [x] Pembuatan High-Fidelity UI Design System & Prototype Interaktif ([`public/index.html`](file:///d:/Project%20Coding/Web%20SCM/public/index.html)).
+  - [x] Perancangan Information Architecture & Site Map modul terintegrasi & Front-End Showcase.
+  - [x] Pembuatan High-Fidelity UI Design System & Prototype Interaktif di Stitch ([Proyek Stitch E-SCM Marmer UI Guide](https://lh3.googleusercontent.com/aida/AEtjO1UbQnpuJr-rmh_oCKFK7UQU5gsQEcPfijwuCsZRYuWFL_4UIw1cLP0hu5Rm7zeqDcDXt1iZI7g5GkhjZuLVFxqngxHxdQhXP78263s3Cj9yBeDCLkSRRHDX3p_B6ssrA_rSQoD3iIVoWQmsFIPKFZqfceB06yLhXpUYLtBA6zE1toHvKP46HcbOybCDDESdlgvmG8aqDxKDAotkNvlNSkCwuxug-sBWTDY8Wxa960FnxA1uV-jgMdf2LVSC)).
   - [x] Pelaksanaan Usability Testing Awal 5 skenario tugas operasional (Form 6.2).
   - [x] Penyusunan dokumen laporan output ([`Docs/laporan_kegiatan/Kegiatan_6_Perancangan_Antarmuka_Pengguna_UI_UX.md`](file:///d:/Project%20Coding/Web%20SCM/Docs/laporan_kegiatan/Kegiatan_6_Perancangan_Antarmuka_Pengguna_UI_UX.md)).
 
@@ -64,8 +64,9 @@ Fokus: Desain teknis detail sebelum pengkodean dimulai.
 ### Sprint 3: Pengkodean Sistem & Integrasi Cloud (Bulan 3)
 Fokus: Coding modul inti aplikasi web dan deployment server.
 
-- [x] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC)**
+- [x] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC, & Showcase Publik)**
   - [x] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
+  - [x] Implementasi Front-End Landing Page Publik & Katalog Produk Kerajinan Marmer/Onyx (Filter, Quick View Modal, Order WhatsApp).
   - [x] Implementasi autentikasi & RBAC (Role-Based Access Control).
   - [x] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
   - [x] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).

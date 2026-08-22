@@ -55,6 +55,8 @@ htmlcov/
 .DS_Store
 Thumbs.db
 Desktop.ini
+~$*
+*.tmp
 
 .idea/
 .vscode/

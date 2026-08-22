@@ -13,7 +13,7 @@
 
 ## 1. Ringkasan Eksekutif Hasil Implementasi
 
-Kegiatan 7 telah berhasil merealisasikan seluruh rancangan basis data (Kegiatan 4) dan desain antarmuka interaktif (Kegiatan 6) ke dalam arsitektur backend nyata berbasis **Laravel MVC Framework**. Sistem telah berhasil dihubungkan ke basis data MySQL (`db_escm_marmer`) dan menyediakan 33 rute fungsional, 12 Eloquent Models, 7 Controllers, 1 Middleware RBAC, serta 11 modul tampilan Blade.
+Kegiatan 7 telah berhasil merealisasikan seluruh rancangan basis data (Kegiatan 4) dan desain antarmuka interaktif (Kegiatan 6) ke dalam arsitektur backend nyata berbasis **Laravel MVC Framework** dengan integrasi data empiris lapangan (UD Cahaya Onix & UD Putra Abadi). Sistem telah berhasil dihubungkan ke basis data MySQL (`db_escm_marmer`) memuat 40 transaksi riil material batu marmer/kali dan 35 *batch* SPK historis (2025–2026), serta menyediakan 33 rute fungsional, 12 Eloquent Models, 7 Controllers, 1 Middleware RBAC, dan 11 modul tampilan Blade.
 
 ---
 

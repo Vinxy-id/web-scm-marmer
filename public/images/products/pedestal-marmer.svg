@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pedestalBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="pedestalMarble" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="30%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <radialGradient id="pedestalSink" cx="45%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </radialGradient>
+    <filter id="pedShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="18" stdDeviation="15" flood-opacity="0.2" flood-color="#0f172a"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="450" fill="url(#pedestalBg)"/>
+  
+  <path d="M 0 380 L 600 380" stroke="#cbd5e1" stroke-width="2"/>
+  <rect y="380" width="600" height="70" fill="#f1f5f9"/>
+
+  <!-- Shadow below base -->
+  <ellipse cx="300" cy="390" rx="110" ry="22" fill="#0f172a" opacity="0.22" filter="url(#pedShadow)"/>
+
+  <!-- Pedestal Column Structure -->
+  <g filter="url(#pedShadow)">
+    <!-- Base Foot -->
+    <path d="M 230 350 L 210 380 C 210 390, 390 390, 390 380 L 370 350 Z" fill="#94a3b8"/>
+    <ellipse cx="300" cy="350" rx="70" ry="18" fill="#cbd5e1"/>
+
+    <!-- Central Fluted Column Body -->
+    <path d="M 250 140 L 240 350 C 240 358, 360 358, 360 350 L 350 140 Z" fill="url(#pedestalMarble)"/>
+    
+    <!-- Vertical Marble Flutes & Veins -->
+    <path d="M 260 145 L 252 345" stroke="#94a3b8" stroke-width="2" opacity="0.4"/>
+    <path d="M 285 148 L 282 348" stroke="#94a3b8" stroke-width="2" opacity="0.4"/>
+    <path d="M 315 148 L 318 348" stroke="#94a3b8" stroke-width="2" opacity="0.4"/>
+    <path d="M 340 145 L 348 345" stroke="#94a3b8" stroke-width="2" opacity="0.4"/>
+    <path d="M 270 180 Q 330 240, 290 310" stroke="#64748b" stroke-width="1.8" fill="none" opacity="0.4"/>
+
+    <!-- Integrated Top Washbasin Bowl -->
+    <path d="M 180 120 C 180 170, 230 195, 300 195 C 370 195, 420 170, 420 120 C 420 90, 370 70, 300 70 C 230 70, 180 90, 180 120 Z" fill="url(#pedestalSink)"/>
+    
+    <!-- Inner Bowl Cavity -->
+    <ellipse cx="300" cy="115" rx="105" ry="38" fill="#cbd5e1"/>
+    <ellipse cx="300" cy="118" rx="90" ry="30" fill="#94a3b8" opacity="0.6"/>
+    
+    <!-- Drain Hole -->
+    <ellipse cx="300" cy="130" rx="16" ry="6" fill="#1e293b"/>
+    <circle cx="300" cy="129" r="2.5" fill="#ffffff"/>
+  </g>
+
+  <!-- Reflection Highlight -->
+  <path d="M 200 110 C 230 90, 270 82, 300 82 C 330 82, 370 90, 400 110" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.75"/>
+
+  <!-- Badge Info -->
+  <rect x="24" y="24" width="185" height="32" rx="16" fill="#1e3a8a" opacity="0.95"/>
+  <text x="116" y="44" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">PEDESTAL MARMER MEWAH</text>
+</svg>

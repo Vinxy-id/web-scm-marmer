@@ -1,0 +1,5 @@
+/vendor
+/forecasting_service/venv
+.env
+.git
+tests

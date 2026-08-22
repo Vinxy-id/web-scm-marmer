@@ -13,6 +13,16 @@
 
     <!-- Navigation Links -->
     <div class="flex-1 overflow-y-auto py-3 px-2 space-y-1 custom-scrollbar">
+        
+        <!-- Showcase Front-End Link -->
+        <a href="{{ route('home') }}" target="_blank" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition bg-slate-800 text-blue-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 mb-2">
+            <div class="flex items-center gap-2">
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Lihat Katalog Publik</span>
+            </div>
+            <span class="text-[9px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-mono">Front</span>
+        </a>
+
         <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Menu Utama</div>
         
         <a href="{{ route('dashboard') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -29,8 +39,8 @@
             <div class="flex items-center gap-3">
                 <i data-lucide="boxes" class="w-4 h-4 text-amber-400"></i> Bahan Baku
             </div>
-            <span class="inline-flex items-center gap-1 bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0.5 rounded font-semibold">
-                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> 1 Kritis
+            <span class="inline-flex items-center gap-1 bg-blue-500/20 text-blue-300 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                Stok
             </span>
         </a>
 
@@ -41,7 +51,7 @@
         </a>
 
         <a href="{{ route('production.wip') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('production.wip') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-            <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i> WIP 7 Mesin Bubut
+            <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i> WIP Stasiun Mesin
         </a>
 
         <a href="{{ route('qc.index') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('qc.*') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -73,11 +83,11 @@
     <div class="p-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
         <div class="flex items-center gap-2.5 overflow-hidden">
             <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-                {{ substr(auth()->user()->name ?? 'Pak Joko', 0, 2) }}
+                {{ substr(auth()->user()->name ?? 'UD', 0, 2) }}
             </div>
             <div class="overflow-hidden text-left">
-                <p class="text-xs font-semibold text-white truncate">{{ auth()->user()->name ?? 'Pak Joko Santoso' }}</p>
-                <p class="text-[10px] text-slate-400">{{ ucfirst(auth()->user()->role ?? 'owner') }} (UD Cahaya Onix)</p>
+                <p class="text-xs font-semibold text-white truncate">{{ auth()->user()->name ?? 'M. Ilham Nur Amali' }}</p>
+                <p class="text-[10px] text-slate-400 truncate">{{ ucfirst(auth()->user()->role ?? 'owner') }} ({{ auth()->user()->ikm_name ?? 'UD Cahaya Onix' }})</p>
             </div>
         </div>
         <form action="{{ route('logout') }}" method="POST" class="inline">

@@ -63,6 +63,7 @@ Berdasarkan studi empiris di klaster pengrajin marmer Kabupaten Tulungagung (stu
 ## 3. Prioritas Fitur (Metode MoSCoW)
 
 ### 3.1 Must Have (Wajib Ada di MVP)
+- **Landing Page & Katalog Showcase Publik:** Etalase produk kerajinan marmer, onyx tembus cahaya, wastafel batu kali, dan stepping stone untuk pembeli umum/arsitek dengan filter kategori, quick view modal, dan direct WhatsApp order CTA.
 - **Autentikasi & RBAC:** Login aman multi-peran (Admin/Owner, Gudang, Produksi, Distribusi).
 - **Modul Manajemen Stok Bahan Baku & Produk Jadi:** CRUD master barang, kategori, satuan, pencatatan transaksi masuk (In), keluar (Out), penyesuaian awal (Opening), dan titipan (Consign).
 - **Notifikasi Stok Minimum (*Low Stock Alert*):** Indikator visual otomatis saat kuantitas batu/bahan baku di bawah batas aman.

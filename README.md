@@ -10,6 +10,7 @@ Proyek ini dibangun untuk mengatasi kendala kesenjangan informasi (*information 
 
 ### 🚀 Fitur Utama
 
+- **Landing Page Publik & Katalog Showcase Interaktif:** Etalase produk kerajinan marmer, onyx tembus cahaya, wastafel batu kali, dan stepping stone untuk calon pembeli/arsitek publik dengan filter kategori, spesifikasi teknis (lubang afur standar, dimensi, finishing), dan direct CTA order via WhatsApp pengrajin.
 - **Dashboard Monitoring Terintegrasi:** Ringkasan KPI aliran material (Opening, In, Out, Consign), grafik stok per produk & gudang, metrik efisiensi siklus (VA vs NVA).
 - **Manajemen Bahan Baku & Stok:** Pencatatan bahan baku masuk (bongkahan marmer/batu kali), spesifikasi dimensi/grade, nomor batch/blok, dan *stock alert* otomatis.
 - **Tracking Alur Produksi & SPK Digital:** Surat Perintah Kerja (SPK) digital terdistribusi per stasiun kerja (Pembelahan, Pemotongan Slep, Pembubutan/Gerinda, Finishing/Poles, dan QC 2-Tahap).

@@ -13,34 +13,11 @@ Kegiatan ini bertujuan untuk merancang struktur basis data relasional ternormali
 
 ## 2. Diagram Hubungan Entitas (Entity Relationship Diagram - ERD)
 
-### 2.1 ERD Konseptual & Fisik (Mermaid Diagram)
+Berikut adalah rancangan diagram hubungan entitas relasional (*Entity Relationship Diagram*) yang mengintegrasikan seluruh alur operasional rantai pasok marmer dari hulu (pemasok tambang & bahan baku), lantai produksi (SPK, tahapan stasiun mesin, kendali mutu QC 2-tahap, dan pengelolaan limbah), hingga hilir (produk jadi, pelanggan, pengiriman surat jalan, serta log peramalan AI):
 
-```mermaid
-erDiagram
-    USERS ||--o{ STOCK_TRANSACTIONS : "mencatat"
-    USERS ||--o{ WORK_ORDERS : "menerbitkan"
-    USERS ||--o{ PRODUCTION_STEPS : "mengerjakan"
-    USERS ||--o{ QC_LOGS : "menginspeksi"
-    USERS ||--o{ SHIPMENTS : "memproses"
+![Gambar 1. Entity Relationship Diagram (ERD) Sistem E-Supply Chain](erd_escm_marmer.png)
 
-    SUPPLIERS ||--o{ MATERIALS : "memasok"
-    CATEGORIES ||--o{ PRODUCTS : "mengelompokkan"
-    CATEGORIES ||--o{ MATERIALS : "mengklasifikasikan"
-
-    MATERIALS ||--o{ STOCK_TRANSACTIONS : "mengalami mutasi"
-    PRODUCTS ||--o{ WORK_ORDERS : "diproduksi via"
-
-    CUSTOMERS ||--o{ WORK_ORDERS : "memesan"
-    CUSTOMERS ||--o{ SHIPMENTS : "menerima kiriman"
-
-    WORK_ORDERS ||--|{ PRODUCTION_STEPS : "terdiri dari stasiun"
-    WORK_ORDERS ||--o{ QC_LOGS : "diuji kualitas"
-    WORK_ORDERS ||--o{ WASTE_LOGS : "menghasilkan limbah"
-    WORK_ORDERS ||--o{ SHIPMENTS : "dikirim ke buyer"
-
-    PRODUCTION_STEPS ||--o{ QC_LOGS : "titik inspeksi"
-    PRODUCTION_STEPS ||--o{ WASTE_LOGS : "titik residu potongan"
-```
+**Gambar 1. Entity Relationship Diagram (ERD) Sistem E-Supply Chain**
 
 ---
 
@@ -114,11 +91,15 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 4 | `user_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `users.id` | Petugas pencatat mutasi |
 | 5 | `type` | ENUM | 'opening','in','out','consign' | NOT NULL | - | Jenis transaksi aliran material |
 | 6 | `quantity` | DECIMAL | 12,2 | NOT NULL | - | Jumlah unit batu masuk/keluar |
-| 7 | `before_stock` | DECIMAL | 12,2 | NOT NULL | - | Posisi stok sebelum transaksi |
-| 8 | `after_stock` | DECIMAL | 12,2 | NOT NULL | - | Posisi stok sesudah transaksi |
-| 9 | `reference_type` | VARCHAR | 50 | NULL | - | Dokumen rujukan (Surat Jalan/SPK) |
-| 10 | `notes` | TEXT | - | NULL | - | Catatan kondisi fisik batu |
-| 11 | `transaction_date`| DATE | - | NOT NULL | - | Tanggal mutasi fisik |
+| 7 | `unit` | VARCHAR | 20 | NOT NULL, Default: 'blok' | - | Satuan unit mutasi ('blok','biji','ton') |
+| 8 | `before_stock` | DECIMAL | 12,2 | NOT NULL, Default: 0 | - | Posisi stok sebelum transaksi |
+| 9 | `after_stock` | DECIMAL | 12,2 | NOT NULL, Default: 0 | - | Posisi stok sesudah transaksi |
+| 10 | `reference_type` | VARCHAR | 50 | NULL | - | Dokumen rujukan (surat_jalan_tambang, spk) |
+| 11 | `reference_id` | BIGINT UNSIGNED | - | NULL | - | ID entitas dokumen rujukan terkait |
+| 12 | `notes` | TEXT | - | NULL | - | Catatan kondisi fisik batu |
+| 13 | `transaction_date`| DATE | - | NOT NULL | - | Tanggal mutasi fisik |
+| 14 | `created_at` | TIMESTAMP | - | NULL | - | Waktu pembuatan transaksi |
+| 15 | `updated_at` | TIMESTAMP | - | NULL | - | Waktu perubahan transaksi |
 
 ### 4.5 Tabel `products` (Katalog Produk Jadi)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -129,10 +110,12 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 4 | `name` | VARCHAR | 150 | NOT NULL | - | Nama produk (Wastafel Bakar D40) |
 | 5 | `material_type` | ENUM | 'marmer','onix','batu_kali','kombinasi' | NOT NULL | - | Jenis batuan dominan |
 | 6 | `dimension_spec` | VARCHAR | 100 | NULL | - | Spesifikasi ukuran (D, T, P, L) |
-| 7 | `finishing_type` | VARCHAR | 50 | NOT NULL | - | Poles Hi-Glossy / Doff / Alami |
+| 7 | `finishing_type` | VARCHAR | 50 | NOT NULL, Default: 'Hi-Glossy' | - | Poles Hi-Glossy / Doff / Alami |
 | 8 | `ready_stock` | INT | - | NOT NULL, Default: 0 | - | Stok produk jadi siap kirim |
 | 9 | `safety_stock` | INT | - | NOT NULL, Default: 5 | - | Batas aman stok barang jadi |
-| 10 | `selling_price` | DECIMAL | 15,2 | NOT NULL, Default: 0 | - | Harga jual ke pelanggan (Rp) |
+| 10 | `standard_cogs` | DECIMAL | 15,2 | NOT NULL, Default: 0 | - | HPP Standar produksi (Rp) |
+| 11 | `selling_price` | DECIMAL | 15,2 | NOT NULL, Default: 0 | - | Harga jual ke pelanggan (Rp) |
+| 12 | `image_path` | VARCHAR | 255 | NULL | - | Path foto katalog produk |
 
 ### 4.6 Tabel `work_orders` (Surat Perintah Kerja Produksi Digital)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -141,14 +124,16 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 2 | `spk_number` | VARCHAR | 50 | NOT NULL, UNIQUE | - | Nomor resmi SPK digital |
 | 3 | `product_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `products.id` | Target produk yang dibikin |
 | 4 | `customer_id` | BIGINT UNSIGNED | - | NULL | FK $\rightarrow$ `customers.id` | Pemesan (jika pesanan khusus) |
-| 5 | `target_quantity` | INT | - | NOT NULL | - | Jumlah unit target |
+| 5 | `target_quantity` | INT | - | NOT NULL, Default: 1 | - | Jumlah unit target |
 | 6 | `completed_quantity`| INT | - | NOT NULL, Default: 0 | - | Jumlah unit lolos QC akhir |
 | 7 | `scrap_quantity` | INT | - | NOT NULL, Default: 0 | - | Jumlah unit rusak/afkir |
 | 8 | `status` | ENUM | 'draft','scheduled','in_progress','qc_phase','completed','cancelled' | NOT NULL | - | Status tahapan pengerjaan |
 | 9 | `priority` | ENUM | 'low','normal','high','urgent' | NOT NULL, Default: 'normal' | Prioritas pengerjaan mesin |
 | 10 | `start_date` | DATE | - | NOT NULL | - | Tanggal mulai produksi |
 | 11 | `due_date` | DATE | - | NOT NULL | - | Batas waktu penyelesaian |
-| 12 | `created_by` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `users.id` | Admin pembuat SPK |
+| 12 | `completion_date` | DATE | - | NULL | - | Tanggal penyelesaian aktual |
+| 13 | `notes` | TEXT | - | NULL | - | Catatan instruksi kerja |
+| 14 | `created_by` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `users.id` | Petugas pembuat SPK |
 
 ### 4.7 Tabel `production_steps` (Tracking Tahapan Stasiun Kerja)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -156,13 +141,16 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 1 | `id` | BIGINT UNSIGNED | - | PK, Auto Increment | - | ID tahapan kerja |
 | 2 | `work_order_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `work_orders.id` | SPK induk |
 | 3 | `step_name` | ENUM | 'pembelahan_bongkahan','pemotongan_slep','pembubutan_bentuk','penghalusan_poles','inspeksi_qc' | NOT NULL | - | Nama stasiun kerja |
-| 4 | `sequence_order` | INT | - | NOT NULL | - | Urutan stasiun (1 s.d 5) |
+| 4 | `sequence_order` | INT | - | NOT NULL, Default: 1 | - | Urutan stasiun (1 s.d 5) |
 | 5 | `machine_number` | VARCHAR | 30 | NULL | - | Nomor mesin bubut/slep (1-7) |
 | 6 | `operator_id` | BIGINT UNSIGNED | - | NULL | FK $\rightarrow$ `users.id` | Operator yang mengerjakan |
-| 7 | `duration_minutes`| INT | - | NOT NULL, Default: 0 | - | Durasi kerja aktual (menit) |
-| 8 | `input_qty` | INT | - | NOT NULL, Default: 0 | - | Unit masuk stasiun |
-| 9 | `output_qty` | INT | - | NOT NULL, Default: 0 | - | Unit berhasil diproses |
-| 10 | `status` | ENUM | 'pending','running','completed' | NOT NULL | - | Status pengerjaan stasiun |
+| 7 | `start_time` | DATETIME | - | NULL | - | Waktu mulai proses stasiun |
+| 8 | `end_time` | DATETIME | - | NULL | - | Waktu selesai proses stasiun |
+| 9 | `duration_minutes`| INT | - | NOT NULL, Default: 0 | - | Durasi kerja aktual (menit) |
+| 10 | `input_qty` | INT | - | NOT NULL, Default: 0 | - | Unit masuk stasiun |
+| 11 | `output_qty` | INT | - | NOT NULL, Default: 0 | - | Unit berhasil diproses |
+| 12 | `status` | ENUM | 'pending','running','completed' | NOT NULL, Default: 'pending' | Status pengerjaan stasiun |
+| 13 | `notes` | TEXT | - | NULL | - | Catatan hambatan mesin/operator |
 
 ### 4.8 Tabel `qc_logs` (Pemeriksaan Kualitas Dua Tahap)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -172,13 +160,14 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 3 | `step_id` | BIGINT UNSIGNED | - | NULL | FK $\rightarrow$ `production_steps.id` | Stasiun kerja terkait |
 | 4 | `stage` | ENUM | 'qc1_raw_shape','qc2_final_polish' | NOT NULL | - | Tahap 1 (Bentuk) / Tahap 2 (Poles) |
 | 5 | `inspector_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `users.id` | Petugas pemeriksa |
-| 6 | `inspected_quantity`| INT | - | NOT NULL | - | Jumlah unit diperiksa |
-| 7 | `pass_quantity` | INT | - | NOT NULL | - | Jumlah unit lolos standar |
-| 8 | `rework_quantity`| INT | - | NOT NULL | - | Jumlah unit perlu tambal resin |
-| 9 | `scrap_quantity` | INT | - | NOT NULL | - | Jumlah unit retak total |
-| 10 | `defect_type` | VARCHAR | 150 | NULL | - | Jenis cacat yang teramati |
-| 11 | `rework_action` | VARCHAR | 255 | NULL | - | Tindakan penanganan perbaikan |
+| 6 | `inspected_quantity`| INT | - | NOT NULL, Default: 0 | - | Jumlah unit diperiksa |
+| 7 | `pass_quantity` | INT | - | NOT NULL, Default: 0 | - | Jumlah unit lolos standar |
+| 8 | `rework_quantity`| INT | - | NOT NULL, Default: 0 | - | Jumlah unit perlu tambal resin |
+| 9 | `scrap_quantity` | INT | - | NOT NULL, Default: 0 | - | Jumlah unit retak total |
+| 10 | `defect_type` | VARCHAR | 150 | NULL | - | Retak serat alam, lubang afur miring, dll |
+| 11 | `rework_action` | VARCHAR | 255 | NULL | - | Tambal resin / poles ulang / potong ulang |
 | 12 | `inspection_date`| DATE | - | NOT NULL | - | Tanggal inspeksi |
+| 13 | `notes` | TEXT | - | NULL | - | Catatan teknis pengujian |
 
 ### 4.9 Tabel `waste_logs` (Pencatatan Limbah & Sisa Potongan Marmer)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -187,9 +176,11 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 2 | `work_order_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `work_orders.id` | SPK asal pemotongan |
 | 3 | `step_id` | BIGINT UNSIGNED | - | NULL | FK $\rightarrow$ `production_steps.id` | Stasiun pemotong/slep |
 | 4 | `waste_type` | ENUM | 'sisa_layak_cladding','serbuk_bubut_sludge','bongkahan_urukan' | NOT NULL | - | Klasifikasi limbah marmer |
-| 5 | `weight_kg` | DECIMAL | 10,2 | NOT NULL | - | Berat residu (kg) |
-| 6 | `reuse_status` | ENUM | 'disimpan_daur_ulang','dijual_ke_pihak3','dibuang_ke_urukan' | NOT NULL | - | Pemanfaatan hilirisasi limbah |
-| 7 | `logged_at` | DATE | - | NOT NULL | - | Tanggal pencatatan |
+| 5 | `weight_kg` | DECIMAL | 10,2 | NOT NULL, Default: 0.00 | - | Berat residu (kg) |
+| 6 | `volume_m3` | DECIMAL | 10,3 | NULL, Default: 0.000 | - | Estimasi volume lumpur/sisa ($m^3$) |
+| 7 | `reuse_status` | ENUM | 'disimpan_daur_ulang','dijual_ke_pihak3','dibuang_ke_urukan' | NOT NULL, Default: 'disimpan_daur_ulang' | - | Pemanfaatan hilirisasi limbah |
+| 8 | `notes` | VARCHAR | 255 | NULL | - | Catatan observasi penanganan residu |
+| 9 | `logged_at` | DATE | - | NOT NULL | - | Tanggal pencatatan |
 
 ### 4.10 Tabel `shipments` (Pengiriman & Verifikasi Packing)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -198,10 +189,15 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 2 | `shipment_code` | VARCHAR | 50 | NOT NULL, UNIQUE | - | Nomor Surat Jalan (SJ-xxx) |
 | 3 | `work_order_id` | BIGINT UNSIGNED | - | NULL | FK $\rightarrow$ `work_orders.id` | Pesanan SPK terkait |
 | 4 | `customer_id` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `customers.id` | Pelanggan penerima |
-| 5 | `expedition_name`| VARCHAR | 100 | NOT NULL | - | Nama ekspedisi / armada |
-| 6 | `packing_verified`| TINYINT | 1 | NOT NULL, Default: 0 | - | Status cek packing krat kayu |
-| 7 | `shipment_date` | DATE | - | NOT NULL | - | Tanggal keberangkatan |
-| 8 | `delivery_status`| ENUM | 'packed','in_transit','delivered','returned' | NOT NULL | - | Status perjalanan logistik |
+| 5 | `expedition_name`| VARCHAR | 100 | NOT NULL | - | Nama ekspedisi / armada kargo |
+| 6 | `tracking_number`| VARCHAR | 100 | NULL | - | Nomor resi / AWB ekspedisi |
+| 7 | `driver_name` | VARCHAR | 100 | NULL | - | Nama pengemudi truk |
+| 8 | `vehicle_plate` | VARCHAR | 20 | NULL | - | Nomor plat kendaraan pengangkut |
+| 9 | `packing_verified`| TINYINT | 1 | NOT NULL, Default: 0 | - | Checklist packing krat kayu (1 = lolos) |
+| 10 | `shipment_date` | DATE | - | NOT NULL | - | Tanggal keberangkatan kargo |
+| 11 | `delivery_status`| ENUM | 'packed','in_transit','delivered','returned' | NOT NULL, Default: 'packed' | - | Status perjalanan logistik |
+| 12 | `notes` | TEXT | - | NULL | - | Catatan instruksi pengantaran |
+| 13 | `created_by` | BIGINT UNSIGNED | - | NOT NULL | FK $\rightarrow$ `users.id` | Petugas pembuat surat jalan |
 
 ### 4.11 Tabel `forecasting_logs` (Histori Eksekusi Algoritma Peramalan)
 | No | Nama Kolom | Tipe Data | Panjang / Format | Constraint | Relasi | Keterangan |
@@ -209,11 +205,14 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 1 | `id` | BIGINT UNSIGNED | - | PK, Auto Increment | - | ID log prediksi |
 | 2 | `item_type` | ENUM | 'material','product' | NOT NULL | - | Objek yang diprediksi |
 | 3 | `item_id` | BIGINT UNSIGNED | - | NOT NULL | - | ID bahan baku / produk |
-| 4 | `algorithm_used`| VARCHAR | 50 | NOT NULL | - | Holt-Winters / ARIMA / Moving Avg |
-| 5 | `forecast_horizon_months` | INT | - | NOT NULL, Default: 3 | - | Rentang bulan ke depan |
-| 6 | `mape_score` | DECIMAL | 6,2 | NOT NULL | - | Akurasi error (%) |
-| 7 | `prediction_json`| JSON | - | NOT NULL | - | Array data hasil ramalan |
-| 8 | `generated_at` | TIMESTAMP | - | NOT NULL | - | Waktu eksekusi algoritma |
+| 4 | `algorithm_used`| VARCHAR | 50 | NOT NULL | - | Model: Holt-Winters / Moving Average / ARIMA |
+| 5 | `forecast_horizon_months` | INT | - | NOT NULL, Default: 3 | - | Rentang proyeksi bulan ke depan |
+| 6 | `historical_data_points` | INT | - | NOT NULL | - | Jumlah sampel data deret waktu historis |
+| 7 | `mape_score` | DECIMAL | 6,2 | NOT NULL | - | Skor Mean Absolute Percentage Error (%) |
+| 8 | `rmse_score` | DECIMAL | 10,2 | NOT NULL | - | Skor Root Mean Square Error |
+| 9 | `prediction_json`| JSON | - | NOT NULL | - | Struktur JSON hasil proyeksi deret waktu |
+| 10 | `generated_at` | TIMESTAMP | - | NULL | - | Waktu komputasi algoritma |
+| 11 | `created_at` | TIMESTAMP | - | NULL | - | Waktu penyimpanan log ke database |
 
 ---
 
@@ -239,6 +238,6 @@ Tabel berikut mendefinisikan mekanisme aliran data dan integrasi antarmodul dala
 
 - [x] **Diagram ERD Konseptual & Fisik:** Lengkap merelasikan 11 entitas operasional utama.
 - [x] **Skema Basis Data Ternormalisasi (1NF, 2NF, 3NF):** Tidak memiliki data redundan dan menjaga integritas referensial.
-- [x] **Kamus Data (Data Dictionary) Lengkap:** 11 tabel terdokumentasi rapi di Form 4.1.
+- [x] **Kamus Data (Data Dictionary) Lengkap:** 11 tabel terdokumentasi rapi di Form 4.1 sesuai struktur riil `db_escm_marmer.sql`.
 - [x] **Dokumen Mapping Integrasi Antar-Modul:** Terdefinisi di Form 4.2 dengan protokol HTTP REST JSON.
-- [x] **Script DDL Basis Data Siap Eksekusi:** File [`database/schema.sql`](file:///d:/Project%20Coding/Web%20SCM/database/schema.sql) berisi DDL lengkap beserta *seed data* riil pengrajin marmer Tulungagung.
+- [x] **Script DDL & Migrasi Modular Laravel:** 11 file migration `database/migrations/*.php` dan SQL dump [`database/db_escm_marmer.sql`](file:///d:/Project%20Coding/Web%20SCM/database/db_escm_marmer.sql) berisi data seed riil IKM UD Cahaya Onix & UD Putra Abadi.

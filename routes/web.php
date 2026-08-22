@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PublicCatalogController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes - E-SCM Marmer Tulungagung
@@ -9,10 +11,10 @@ use Illuminate\Support\Facades\Route;
 | Sesuai Dokumen Pembagian Tugas: Docs/PEMBAGIAN_TUGAS_MIGRASI.md
 */
 
-// Redirect root to dashboard (or login if not authenticated)
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+// Public Front-End Landing Page & Product Catalog Showcase
+Route::get('/', [PublicCatalogController::class, 'index'])->name('home');
+Route::get('/katalog', [PublicCatalogController::class, 'catalog'])->name('catalog');
+Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('catalog.show');
 
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';
