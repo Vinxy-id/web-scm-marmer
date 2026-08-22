@@ -22,7 +22,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased custom-scrollbar">
 
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden relative">
         
         <!-- MODULAR SIDEBAR -->
         @include('layouts.sidebar')
@@ -34,13 +34,13 @@
             @include('layouts.header')
 
             <!-- MAIN SCROLLABLE BODY -->
-            <main class="flex-1 overflow-y-auto p-6 bg-slate-50 custom-scrollbar">
+            <main class="flex-1 overflow-y-auto p-3.5 sm:p-6 bg-slate-50 custom-scrollbar">
                 
                 <!-- Flash Alerts -->
                 @if(session('success'))
                 <div class="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl flex items-center justify-between text-xs font-semibold shadow-sm">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
                         <span>{{ session('success') }}</span>
                     </div>
                     <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">
@@ -52,7 +52,7 @@
                 @if(session('error'))
                 <div class="mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl flex items-center justify-between text-xs font-semibold shadow-sm">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i>
+                        <i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i>
                         <span>{{ session('error') }}</span>
                     </div>
                     <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
@@ -64,7 +64,7 @@
                 @if($errors->any())
                 <div class="mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-xs shadow-sm">
                     <div class="flex items-center gap-2 font-bold mb-1">
-                        <i data-lucide="alert-circle" class="w-4 h-4 text-red-600"></i>
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-red-600 flex-shrink-0"></i>
                         <span>Terjadi Kesalahan Validasi:</span>
                     </div>
                     <ul class="list-disc list-inside space-y-0.5 text-[11px] text-red-700">
@@ -87,11 +87,16 @@
         // Init Lucide Vector Icons
         lucide.createIcons();
 
-        // Responsive Sidebar Toggle
+        // Responsive Sidebar Toggle with Backdrop
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
-            sidebar.classList.toggle('absolute');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar) {
+                sidebar.classList.toggle('-translate-x-full');
+            }
+            if (backdrop) {
+                backdrop.classList.toggle('hidden');
+            }
         }
     </script>
     @yield('scripts')

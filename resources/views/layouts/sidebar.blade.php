@@ -1,14 +1,23 @@
+<!-- BACKDROP OVERLAY FOR MOBILE -->
+<div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
+
 <!-- SIDEBAR -->
-<aside id="sidebar" class="w-64 bg-slate-900 text-slate-200 flex flex-col transition-all duration-300 z-30 flex-shrink-0">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-200 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 lg:static lg:inset-auto flex-shrink-0 shadow-2xl lg:shadow-none">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center px-4 bg-slate-950 border-b border-slate-800 gap-3">
-        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
-            <i data-lucide="layers" class="w-5 h-5"></i>
+    <div class="h-16 flex items-center justify-between px-4 bg-slate-950 border-b border-slate-800">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 flex-shrink-0">
+                <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h1 class="font-bold text-sm text-white tracking-wide leading-tight">E-SCM MARMER</h1>
+                <p class="text-[11px] text-blue-400 font-medium truncate">Klaster IKM Tulungagung</p>
+            </div>
         </div>
-        <div class="overflow-hidden">
-            <h1 class="font-bold text-sm text-white tracking-wide leading-tight">E-SCM MARMER</h1>
-            <p class="text-[11px] text-blue-400 font-medium truncate">Klaster IKM Tulungagung</p>
-        </div>
+        <!-- Close Button (Mobile Only) -->
+        <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden" title="Tutup Menu">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
     </div>
 
     <!-- Navigation Links -->
@@ -82,7 +91,7 @@
     <!-- Footer User Profile -->
     <div class="p-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
         <div class="flex items-center gap-2.5 overflow-hidden">
-            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
                 {{ substr(auth()->user()->name ?? 'UD', 0, 2) }}
             </div>
             <div class="overflow-hidden text-left">

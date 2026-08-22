@@ -14,10 +14,10 @@
 <div class="space-y-6">
 
     <!-- 5 KANBAN COLUMNS -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x snap-mandatory">
         
         <!-- Col 1: Antrian SPK -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+        <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-1.5">
                     <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-slate-500"></i>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- Col 2: Persiapan Bahan (Mesin Slep) -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+        <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-1.5">
                     <i data-lucide="scissors" class="w-3.5 h-3.5 text-slate-500"></i>
@@ -82,7 +82,7 @@
         </div>
 
         <!-- Col 3: Pembubutan & Bentuk -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+        <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-1.5">
                     <i data-lucide="disc" class="w-3.5 h-3.5 text-slate-500"></i>
@@ -119,7 +119,7 @@
         </div>
 
         <!-- Col 4: QC & Finishing Poles -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+        <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-1.5">
                     <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-500"></i>
@@ -151,7 +151,7 @@
         </div>
 
         <!-- Col 5: Selesai / Siap Kirim -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3">
+        <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700 pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-1.5">
                     <i data-lucide="package-check" class="w-3.5 h-3.5 text-emerald-600"></i>
