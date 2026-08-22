@@ -4,16 +4,16 @@
 | Parameter Kegiatan | Deskripsi |
 | :--- | :--- |
 | **Kode Kegiatan** | Kegiatan 7 (Sprint 3) |
-| **Nama Kegiatan** | Pengkodean Modul Inti (Stok, Produksi, QC, Distribusi, RBAC, dan Forecasting) |
+| **Nama Kegiatan** | Pengkodean Modul Inti (Stok, Produksi, WIP 7 Mesin, QC, Distribusi, Alur SCM, RBAC, dan Forecasting) |
 | **Waktu Pelaksanaan** | Bulan ke-3 |
-| **Arsitektur & Stack** | PHP 8.3 / Laravel 11.56 MVC + MySQL 8.0 + Tailwind CSS + Lucide Icons + Chart.js |
+| **Arsitektur & Stack** | PHP 8.3 / Laravel 11.56 MVC + Dual Engine (SQLite / MySQL 8.0) + Tailwind CSS + Lucide Icons + Chart.js |
 | **Lokasi Studi Kasus** | UD Cahaya Onix & UD Putra Abadi (Kabupaten Tulungagung) |
 
 ---
 
 ## 1. Ringkasan Eksekutif Hasil Implementasi
 
-Kegiatan 7 telah berhasil merealisasikan seluruh rancangan basis data (Kegiatan 4) dan desain antarmuka interaktif (Kegiatan 6) ke dalam arsitektur backend nyata berbasis **Laravel MVC Framework** dengan integrasi data empiris lapangan (UD Cahaya Onix & UD Putra Abadi). Sistem telah berhasil dihubungkan ke basis data MySQL (`db_escm_marmer`) memuat 40 transaksi riil material batu marmer/kali dan 35 *batch* SPK historis (2025–2026), serta menyediakan 33 rute fungsional, 12 Eloquent Models, 7 Controllers, 1 Middleware RBAC, dan 11 modul tampilan Blade.
+Kegiatan 7 telah berhasil merealisasikan seluruh rancangan basis data (Kegiatan 4) dan desain antarmuka interaktif (Kegiatan 6) ke dalam arsitektur backend nyata berbasis **Laravel MVC Framework** dengan integrasi data empiris lapangan (UD Cahaya Onix & UD Putra Abadi). Sistem terhubung ke basis data dengan 17 bulan data historis produksi riil (2025–2026), serta menyediakan 36 rute fungsional, 12 Eloquent Models, 7 Controllers, 1 Middleware RBAC dinamis, dan 12 modul tampilan Blade responsif.
 
 ---
 
@@ -21,14 +21,14 @@ Kegiatan 7 telah berhasil merealisasikan seluruh rancangan basis data (Kegiatan 
 
 | No | Modul Sistem | Controller | Endpoint URL | Metode HTTP | Deskripsi Fungsi Operasional |
 | :---: | :--- | :--- | :--- | :---: | :--- |
-| **1** | **Autentikasi & RBAC** | `AuthController` | `/login`<br>`/logout` | `GET / POST`<br>`POST` | Login multi-role (Owner, Gudang, Produksi, Distribusi), proteksi CSRF & session timeout. |
-| **2** | **Dashboard Eksekutif** | `DashboardController` | `/dashboard`<br>`/supply-chain-flow`<br>`/reports` | `GET`<br>`GET`<br>`GET` | Agregasi 4 Card KPI, visualisasi 8 Tahap Alur Marmer, grafik tren 6 bulan, dan status 7 mesin bubut. |
-| **3** | **Bahan Baku (Hulu)** | `MaterialController` | `/materials`<br>`/materials/transaction` | `GET / POST`<br>`POST` | Manajemen stok bongkahan marmer/onyx, filter status stok (🔴 Kritis, 🟡 Rendah, 🟢 Normal), dan pencatatan mutasi In/Out. |
-| **4** | **Produksi & SPK** | `ProductionController` | `/production/kanban`<br>`/production/work-order`<br>`/production/wip` | `GET`<br>`POST`<br>`GET` | Kanban Board 5 Kolom (Antrian, Slep, Bubut, QC, Selesai), penerbitan SPK baru, dan tracking utilisasi mesin bubut. |
-| **5** | **Quality Control (QC)** | `QcController` | `/qc`<br>`/qc/inspect` | `GET`<br>`POST` | Form inspeksi QC Tahap 1 (Bentuk Mentah) & QC Tahap 2 (Poles Hi-Glossy & Uji Afur). Auto-update stok produk jadi saat pass. |
-| **6** | **Hilirisasi Residu** | `WasteController` | `/waste` | `GET / POST` | Pencatatan limbah potongan layak cladding/stepping stone dan residu lumpur bubut (UD Putra Abadi). |
-| **7** | **Distribusi & Packing** | `DistributionController` | `/distribution`<br>`/distribution/shipment` | `GET`<br>`POST` | Manajemen Surat Jalan (SJ), verifikasi checklist packing kayu solid anti-pecah, dan tracking kargo. |
-| **8** | **AI Forecasting** | `ForecastingController` | `/forecasting`<br>`/forecasting/calculate` | `GET`<br>`POST` | Integrasi HTTP Client ke microservice Python FastAPI port 8001 (Model Holt-Winters & Moving Average). |
+| **1** | **Autentikasi & RBAC** | `AuthController` | `/login`<br>`/logout` | `GET / POST`<br>`POST` | Login multi-role (Owner, Gudang, Produksi, Distribusi, Admin) dengan proteksi sesi database anti-bloatware. |
+| **2** | **Dashboard Eksekutif** | `DashboardController` | `/dashboard`<br>`/supply-chain-flow`<br>`/reports` | `GET`<br>`GET`<br>`GET` | Agregasi 4 Card KPI, panduan alur kerja berbasis peran dinamis (*Role Workflow Guide*), visualisasi 8 Tahap Alur Marmer dengan ribbon progres dan tabel monitoring bottleneck, grafik tren produksi 17 bulan empiris, dan analisis PCE $64,58\%$. |
+| **3** | **Bahan Baku (Hulu)** | `MaterialController` | `/materials`<br>`/materials/transaction` | `GET / POST`<br>`POST` | Manajemen stok bongkahan marmer Besole, onyx, dan batu kali Boyolangu; filter status stok (🔴 Kritis, 🟡 Rendah, 🟢 Normal), dan mutasi In/Out/Consign. |
+| **4** | **Produksi & SPK** | `ProductionController` | `/production/kanban`<br>`/production/work-order`<br>`/production/wip`<br>`/production/work-order/{id}/wip-progress` | `GET`<br>`POST`<br>`GET`<br>`PATCH` | Kanban Board 5 Kolom berurutan (*Antrian $\rightarrow$ Slep $\rightarrow$ Bubut $\rightarrow$ QC $\rightarrow$ Siap Kirim*), tombol instan *Selesai Slep ➔ Kirim Bubut*, tracking grid 7 stasiun mesin bubut dengan modal update progres live, serta tombol cepat **ACC Pengiriman & Buat Surat Jalan**. |
+| **5** | **Quality Control (QC)** | `QcController` | `/qc`<br>`/qc/inspect` | `GET`<br>`POST` | Form inspeksi QC Tahap 1 (Bentuk Mentah & deteksi retak alami Besole) & QC Tahap 2 (Poles Hi-Glossy $95\text{ GU}$ & Uji Lubang Afur $4,5\text{ cm}$). Auto-update kuantitas lolos QC. |
+| **6** | **Hilirisasi Residu** | `WasteController` | `/waste` | `GET / POST` | Pencatatan limbah potongan layak wall cladding ($240\text{ kg}$), bongkahan urukan ($85\text{ kg}$), dan lumpur serbuk slep ($120\text{ kg}$) untuk mereduksi pemborosan waktu handling $390\text{ mnt/mgg}$. |
+| **7** | **Distribusi & Packing** | `DistributionController` | `/distribution`<br>`/distribution/shipment`<br>`/distribution/shipment/{id}/status` | `GET`<br>`POST`<br>`PATCH` | Manajemen Surat Jalan (SJ), antrean khusus SPK siap kirim yang menunggu ACC, checklist verifikasi packing peti kayu solid anti-pecah, serta tracking status pengiriman (*Packed $\rightarrow$ In Transit $\rightarrow$ Delivered*). |
+| **8** | **AI Forecasting** | `ForecastingController` | `/forecasting`<br>`/forecasting/calculate` | `GET`<br>`POST` | Integrasi HTTP Client ke microservice peramalan (Holt-Winters & Moving Average) dengan dataset empiris 17 bulan (Jan 2025 – Mei 2026). |
 
 ---
 
@@ -39,18 +39,21 @@ Seluruh endpoint telah diverifikasi secara otomatis menggunakan *unit HTTP respo
 ```
 [TEST SUMMARY] - 22 Agustus 2026
 ------------------------------------------------------------
-GET  /login                   --> HTTP 200 OK (Blade Rendered)
-GET  /dashboard               --> HTTP 200 OK (Data Aggregated)
-GET  /supply-chain-flow       --> HTTP 200 OK (8 Stages Rendered)
-GET  /materials               --> HTTP 200 OK (Paginated & Filtered)
-GET  /production/kanban       --> HTTP 200 OK (5 Columns Loaded)
-GET  /production/wip          --> HTTP 200 OK (Machine Tracking)
-GET  /qc                      --> HTTP 200 OK (Inspection Form Ready)
-GET  /waste                   --> HTTP 200 OK (Residue Logs Loaded)
-GET  /distribution            --> HTTP 200 OK (Shipment List Loaded)
-GET  /forecasting             --> HTTP 200 OK (AI Curves Rendered)
-GET  /reports                 --> HTTP 200 OK (PCE & KPI Analytics)
-GET  /api/health              --> HTTP 200 OK (JSON Status Online)
+GET   /login                                --> HTTP 200 OK (Blade Rendered)
+GET   /dashboard                            --> HTTP 200 OK (Data Aggregated + Role Banner)
+GET   /supply-chain-flow                    --> HTTP 200 OK (8 Stages Ribbon & Bottleneck Table)
+GET   /materials                            --> HTTP 200 OK (Paginated & Filtered)
+GET   /production/kanban                    --> HTTP 200 OK (5 Columns Loaded + ACC Modal)
+GET   /production/wip                       --> HTTP 200 OK (7 Machines Grid & Progres Modal)
+PATCH /production/work-order/{id}/wip-progress --> HTTP 302 Redirect (Progress Updated)
+GET   /qc                                   --> HTTP 200 OK (Inspection 2-Stage Form Ready)
+GET   /waste                                --> HTTP 200 OK (Residue Logs Loaded)
+GET   /distribution                         --> HTTP 200 OK (Shipment List & ACC Queue Loaded)
+POST  /distribution/shipment                --> HTTP 302 Redirect (Surat Jalan Created)
+PATCH /distribution/shipment/{id}/status    --> HTTP 302 Redirect (Status Updated)
+GET   /forecasting                          --> HTTP 200 OK (AI Curves 17-Month Rendered)
+GET   /reports                              --> HTTP 200 OK (PCE & KPI Analytics SQLite/MySQL)
+GET   /api/health                           --> HTTP 200 OK (JSON Status Online)
 ------------------------------------------------------------
 TOTAL STATUS: 100% PASS (Zero Syntax Errors, Zero Broken Links)
 ```
