@@ -145,6 +145,36 @@ class ProductionController extends Controller
         return redirect()->route('production.kanban')->with('success', 'Status SPK ' . $workOrder->spk_number . ' diperbarui menjadi ' . ucfirst(str_replace('_', ' ', $validated['status'])));
     }
 
+    public function updateWipProgress(Request $request, WorkOrder $workOrder)
+    {
+        $validated = $request->validate([
+            'completed_quantity' => ['required', 'integer', 'min:0'],
+            'scrap_quantity' => ['nullable', 'integer', 'min:0'],
+            'status' => ['required', 'in:draft,scheduled,in_progress,qc_phase,completed,cancelled'],
+            'machine_station' => ['nullable', 'string', 'max:100'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $updateData = [
+            'completed_quantity' => $validated['completed_quantity'],
+            'scrap_quantity' => $validated['scrap_quantity'] ?? $workOrder->scrap_quantity,
+            'status' => $validated['status'],
+        ];
+
+        if (!empty($validated['notes'])) {
+            $updateData['notes'] = $validated['notes'];
+        }
+
+        if ($validated['status'] === 'completed' && !$workOrder->completion_date) {
+            $updateData['completion_date'] = now()->toDateString();
+            $workOrder->product->increment('ready_stock', $validated['completed_quantity']);
+        }
+
+        $workOrder->update($updateData);
+
+        return redirect()->back()->with('success', 'Progres WIP untuk SPK ' . $workOrder->spk_number . ' berhasil diperbarui.');
+    }
+
     public function wip()
     {
         return $this->wipTracking();
@@ -153,9 +183,10 @@ class ProductionController extends Controller
     public function wipTracking()
     {
         $workOrders = WorkOrder::with(['product', 'steps.operator'])
-            ->whereIn('status', ['in_progress', 'qc_phase'])
+            ->whereIn('status', ['scheduled', 'in_progress', 'qc_phase'])
             ->get();
 
         return view('production.wip', compact('workOrders'));
     }
 }
+
