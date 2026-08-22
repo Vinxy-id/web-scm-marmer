@@ -89,18 +89,16 @@ class MaterialController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        DB::transaction(function () use ($validated) {
-            $material = Material::findOrFail($validated['material_id']);
-            $beforeStock = $material->current_stock;
+        $material = Material::findOrFail($validated['material_id']);
+        if ($validated['type'] === 'out' && $material->current_stock < $validated['quantity']) {
+            return back()->withErrors(['quantity' => 'Stok bahan baku tidak mencukupi untuk transaksi keluar.'])->withInput();
+        }
 
-            if ($validated['type'] === 'in') {
-                $afterStock = $beforeStock + $validated['quantity'];
-            } else {
-                if ($beforeStock < $validated['quantity']) {
-                    throw new \Exception('Stok bahan baku tidak mencukupi untuk transaksi keluar.');
-                }
-                $afterStock = $beforeStock - $validated['quantity'];
-            }
+        DB::transaction(function () use ($validated, $material) {
+            $beforeStock = $material->current_stock;
+            $afterStock = ($validated['type'] === 'in')
+                ? $beforeStock + $validated['quantity']
+                : $beforeStock - $validated['quantity'];
 
             $material->update(['current_stock' => $afterStock]);
 

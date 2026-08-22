@@ -16,13 +16,69 @@ class DatabaseSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        // 1. SEED USERS
-        DB::table('users')->insertOrIgnore([
+        // 1. SEED USERS (Demo Testing & Empirical Data)
+        DB::table('users')->upsert([
+            // Demo Testing Accounts (Password: role123)
             [
-                'id' => 11,
+                'name' => 'Owner Cahaya Onix',
+                'email' => 'owner@cahayaonix.com',
+                'password' => Hash::make('role123'),
+                'role' => 'owner',
+                'phone' => '081234567890',
+                'ikm_name' => 'UD Cahaya Onix',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Staf Gudang Cahaya Onix',
+                'email' => 'gudang@cahayaonix.com',
+                'password' => Hash::make('role123'),
+                'role' => 'gudang',
+                'phone' => '081234567891',
+                'ikm_name' => 'UD Cahaya Onix',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Operator Produksi Cahaya Onix',
+                'email' => 'produksi@cahayaonix.com',
+                'password' => Hash::make('role123'),
+                'role' => 'produksi',
+                'phone' => '081234567892',
+                'ikm_name' => 'UD Cahaya Onix',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Staf Distribusi Cahaya Onix',
+                'email' => 'distribusi@cahayaonix.com',
+                'password' => Hash::make('role123'),
+                'role' => 'distribusi',
+                'phone' => '081234567893',
+                'ikm_name' => 'UD Cahaya Onix',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Administrator Sistem',
+                'email' => 'admin@escm-marmer.id',
+                'password' => Hash::make('role123'),
+                'role' => 'admin',
+                'phone' => '081234567899',
+                'ikm_name' => 'Pusat Klaster Tulungagung',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            // Empirical Pengrajin Data
+            [
                 'name' => 'M. Ilham Nur Amali',
                 'email' => 'ilham.cahayaonix@placeholder.local',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('role123'),
                 'role' => 'owner',
                 'phone' => null,
                 'ikm_name' => 'UD Cahaya Onix',
@@ -31,10 +87,9 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
-                'id' => 12,
                 'name' => 'Suparno',
                 'email' => 'suparno.cahayaonix@placeholder.local',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('role123'),
                 'role' => 'produksi',
                 'phone' => null,
                 'ikm_name' => 'UD Cahaya Onix',
@@ -43,10 +98,9 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
-                'id' => 13,
                 'name' => 'Efri Saputra',
                 'email' => 'efri.putraabadi@placeholder.local',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('role123'),
                 'role' => 'owner',
                 'phone' => null,
                 'ikm_name' => 'UD Putra Abadi',
@@ -55,10 +109,9 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
-                'id' => 14,
                 'name' => 'Misno',
                 'email' => 'misno.putraabadi@placeholder.local',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('role123'),
                 'role' => 'produksi',
                 'phone' => null,
                 'ikm_name' => 'UD Putra Abadi',
@@ -67,10 +120,9 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
-                'id' => 15,
                 'name' => 'Suyanto',
                 'email' => 'suyanto.putraabadi@placeholder.local',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('role123'),
                 'role' => 'produksi',
                 'phone' => null,
                 'ikm_name' => 'UD Putra Abadi',
@@ -78,7 +130,7 @@ class DatabaseSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ], ['email'], ['name', 'password', 'role', 'phone', 'ikm_name', 'is_active', 'updated_at']);
 
         // 2. SEED CATEGORIES
         DB::table('categories')->insertOrIgnore([
@@ -110,6 +162,12 @@ class DatabaseSeeder extends Seeder
             ['id' => 9, 'category_id' => 21, 'product_code' => 'PRD-WSF-ONX-01', 'name' => 'Wastafel Onyx Tembus Cahaya Eksklusif', 'material_type' => 'onix', 'dimension_spec' => 'D: 42 cm, T: 14 cm', 'finishing_type' => 'Super Hi-Glossy Translucent', 'ready_stock' => 5, 'safety_stock' => 2, 'standard_cogs' => 550000.00, 'selling_price' => 950000.00, 'image_path' => 'images/products/wastafel-onyx.svg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 10, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-02', 'name' => 'Wastafel Marmer Bakar Antik', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Tekstur Bakar Kasar Eksotis', 'ready_stock' => 6, 'safety_stock' => 3, 'standard_cogs' => 300000.00, 'selling_price' => 490000.00, 'image_path' => 'images/products/wastafel-marmer-bakar.svg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 11, 'category_id' => 22, 'product_code' => 'PRD-MJA-MRM-01', 'name' => 'Meja Kopi Bundar Marmer Besole', 'material_type' => 'marmer', 'dimension_spec' => 'D: 60 cm, T: 45 cm', 'finishing_type' => 'Hi-Glossy Urat Abu', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/meja-marmer.svg', 'created_at' => $now, 'updated_at' => $now],
+        ]);
+
+        // 5. SEED CUSTOMERS
+        DB::table('customers')->insertOrIgnore([
+            ['id' => 1, 'customer_code' => 'CUST-BALI-01', 'name' => 'Bapak Ketut Sukerta', 'company_name' => 'Bali Natural Living Gallery', 'phone' => '081338877665', 'email' => 'ketut@balinaturalliving.com', 'address' => 'Jl. Sunset Road No. 88, Seminyak', 'city' => 'Badung - Bali', 'customer_type' => 'distributor_ekspor', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'customer_code' => 'CUST-SBY-02', 'name' => 'Ibu Hendra Wijaya', 'company_name' => 'PT Citra Griya Indah', 'phone' => '081231122334', 'email' => 'purchasing@citragriya.co.id', 'address' => 'Jl. Raya Darmo Permai III No. 12', 'city' => 'Surabaya', 'customer_type' => 'kontraktor_arsitektur', 'created_at' => $now, 'updated_at' => $now],
         ]);
     }
 }

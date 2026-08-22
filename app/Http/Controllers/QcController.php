@@ -26,7 +26,7 @@ class QcController extends Controller
 
     public function storeInspection(Request $request)
     {
-        $validated = $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'work_order_id' => ['required', 'exists:work_orders,id'],
             'stage' => ['required', 'in:qc1_raw_shape,qc2_final_polish'],
             'inspected_quantity' => ['required', 'integer', 'min:1'],
@@ -37,6 +37,19 @@ class QcController extends Controller
             'rework_action' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ]);
+
+        $validator->after(function ($validator) use ($request) {
+            $inspected = (int) $request->input('inspected_quantity', 0);
+            $pass = (int) $request->input('pass_quantity', 0);
+            $rework = (int) $request->input('rework_quantity', 0);
+            $scrap = (int) $request->input('scrap_quantity', 0);
+
+            if (($pass + $rework + $scrap) !== $inspected) {
+                $validator->errors()->add('inspected_quantity', 'Jumlah total unit (Lolos + Rework + Scrap) harus sama dengan Jumlah yang Diperiksa.');
+            }
+        });
+
+        $validated = $validator->validate();
 
         DB::transaction(function () use ($validated) {
             $wo = WorkOrder::findOrFail($validated['work_order_id']);
