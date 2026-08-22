@@ -21,7 +21,14 @@ foreach ($tmpDirs as $dir) {
     }
 }
 
-// 2. Set environment overrides untuk serverless cache & storage
+// Inisialisasi SQLite database di /tmp/database.sqlite
+$sqliteSource = __DIR__ . '/../database/database.sqlite';
+$sqliteDest = '/tmp/database.sqlite';
+if (!file_exists($sqliteDest) && file_exists($sqliteSource)) {
+    @copy($sqliteSource, $sqliteDest);
+}
+
+// 2. Set environment overrides untuk serverless cache, storage & database
 $_ENV['CACHE_STORE'] = 'array';
 $_ENV['CACHE_DRIVER'] = 'array';
 $_ENV['SESSION_DRIVER'] = 'cookie';
@@ -52,16 +59,6 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 $app->useStoragePath('/tmp/storage');
 
 $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
-
-// Auto-create & seed tables in TiDB Cloud on first boot
-try {
-    if (!\Illuminate\Support\Facades\Schema::hasTable('users')) {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    }
-} catch (\Throwable $e) {
-    // Graceful fallback if database credentials not yet configured
-}
 
 $response = $kernel->handle(
     $request = \Illuminate\Http\Request::capture()

@@ -16,14 +16,14 @@ if ($port === 3306 && str_contains($cleanHost, 'tidbcloud.com')) {
 
 return [
 
-    'default' => in_array(env('DB_CONNECTION'), ['mysql', 'sqlite', 'pgsql', 'sqlsrv']) ? env('DB_CONNECTION') : 'mysql',
+    'default' => in_array(env('DB_CONNECTION'), ['mysql', 'sqlite', 'pgsql', 'sqlsrv']) ? env('DB_CONNECTION') : (file_exists('/tmp/database.sqlite') || file_exists(database_path('database.sqlite')) ? 'sqlite' : 'mysql'),
 
     'connections' => [
 
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_DATABASE', file_exists('/tmp/database.sqlite') ? '/tmp/database.sqlite' : database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
