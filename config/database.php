@@ -4,7 +4,7 @@ use Illuminate\Support\Str;
 
 return [
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => in_array(env('DB_CONNECTION'), ['mysql', 'sqlite', 'pgsql', 'sqlsrv']) ? env('DB_CONNECTION') : 'mysql',
 
     'connections' => [
 
@@ -19,9 +19,9 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => (int) env('DB_PORT', 3306),
-            'database' => env('DB_DATABASE', 'db_escm_marmer'),
+            'host' => env('DB_HOST', (str_contains(env('DB_CONNECTION', ''), '.') ? env('DB_CONNECTION') : '127.0.0.1')),
+            'port' => (int) env('DB_PORT', 4000),
+            'database' => env('DB_DATABASE', 'test'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
