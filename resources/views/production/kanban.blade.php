@@ -172,18 +172,131 @@
 
             @foreach($colCompleted as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-emerald-300 shadow-sm space-y-2">
-                <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    @if($spk->shipment)
+                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded {{ $spk->shipment->delivery_status === 'delivered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
+                        {{ strtoupper($spk->shipment->delivery_status) }}
+                    </span>
+                    @else
+                    <span class="text-[9px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Menunggu SJ</span>
+                    @endif
+                </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
-                <p class="text-[11px] text-slate-500">{{ $spk->customer->company_name ?? 'Stok Gudang' }}</p>
+                <p class="text-[11px] text-slate-500">{{ $spk->customer->company_name ?? ($spk->customer->name ?? 'Stok Gudang') }}</p>
                 <div class="text-[10px] text-emerald-700 font-semibold pt-1 border-t flex items-center gap-1">
                     <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> {{ $spk->completed_quantity }} Unit (Packing Krat Kayu)
                 </div>
+
+                @if($spk->shipment)
+                <div class="bg-slate-50 border border-slate-200 rounded p-1.5 text-[10px] text-slate-600 flex items-center justify-between">
+                    <span class="font-mono font-bold text-purple-700">{{ $spk->shipment->shipment_code }}</span>
+                    <a href="{{ route('distribution.index') }}" class="text-purple-600 hover:underline flex items-center gap-0.5 font-semibold">
+                        Lihat SJ <i data-lucide="arrow-right" class="w-2.5 h-2.5"></i>
+                    </a>
+                </div>
+                @else
+                <button type="button" onclick="openAccShipmentModal({{ $spk->id }}, '{{ $spk->spk_number }}', {{ $spk->customer_id ?? 'null' }}, '{{ addslashes($spk->customer->company_name ?? $spk->customer->name ?? 'Stok Gudang') }}', '{{ addslashes($spk->product->name ?? 'Wastafel') }}', {{ $spk->completed_quantity }})" class="w-full py-1.5 px-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-lg text-[10px] flex items-center justify-center gap-1 shadow-sm transition">
+                    <i data-lucide="truck" class="w-3.5 h-3.5"></i> ACC Pengiriman & Buat SJ
+                </button>
+                @endif
             </div>
             @endforeach
         </div>
 
     </div>
 
+</div>
+
+<!-- MODAL ACC & TERBITKAN SURAT JALAN LANGSUNG DARI KANBAN -->
+<div id="modal-acc-shipment" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+        <div class="flex items-center justify-between border-b pb-3">
+            <div class="flex items-center gap-2">
+                <div class="p-2 bg-purple-100 rounded-lg text-purple-700">
+                    <i data-lucide="truck" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">ACC & Terbitkan Surat Jalan Pengiriman</h4>
+                    <p class="text-[11px] text-slate-500">Persetujuan pengiriman produk jadi & verifikasi packing krat kayu</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('modal-acc-shipment').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('distribution.shipment.store') }}" method="POST" class="space-y-3">
+            @csrf
+            <input type="hidden" name="work_order_id" id="acc_work_order_id">
+
+            <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Nomor SPK Selesai:</span>
+                    <span class="font-mono font-bold text-purple-700" id="acc_spk_text">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Item Produk:</span>
+                    <span class="font-bold text-slate-800" id="acc_product_text">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Total Qty Siap Kirim:</span>
+                    <span class="font-bold text-emerald-700" id="acc_qty_text">-</span>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[11px] font-bold text-slate-600">Pelanggan / Destinasi Pengiriman</label>
+                <select name="customer_id" id="acc_customer_id" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                    @foreach($customers as $c)
+                    <option value="{{ $c->id }}">{{ $c->name }} - {{ $c->company_name ?? $c->city }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Tanggal Pengiriman</label>
+                    <input type="date" name="shipment_date" value="{{ date('Y-m-d') }}" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Nama Ekspedisi / Kargo</label>
+                    <input type="text" name="expedition_name" value="Ekspedisi Bali Mandiri Express" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">No. Polisi Truk</label>
+                    <input type="text" name="vehicle_plate" placeholder="AG 8899 AB" class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600">Nama Sopir</label>
+                    <input type="text" name="driver_name" placeholder="Pak Yatno" class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+            </div>
+
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="packing_verified" value="1" checked required class="rounded text-purple-600">
+                    <span class="text-xs font-bold text-amber-900">Verifikasi Packing Peti Kayu Solid Lolos Standar</span>
+                </label>
+                <p class="text-[10px] text-amber-700 mt-1">Checklist: Wastafel dilapisi Bubble Wrap tebal, dilapisi sterofoam, dan dipaku kuat dalam krat kayu.</p>
+            </div>
+
+            <div>
+                <label class="text-[11px] font-bold text-slate-600">Catatan Surat Jalan</label>
+                <textarea name="notes" rows="2" placeholder="Contoh: Titip ke gudang Seminyak sebelum jam 17.00 WITA" class="w-full text-xs mt-1 border rounded-lg p-2"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t">
+                <button type="button" onclick="document.getElementById('modal-acc-shipment').classList.add('hidden')" class="text-xs px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="text-xs px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-sm flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i> ACC & Cetak Surat Jalan
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <!-- MODAL ADD SPK -->
@@ -255,4 +368,17 @@
         </form>
     </div>
 </div>
+
+<script>
+function openAccShipmentModal(spkId, spkNumber, customerId, customerName, productName, qty) {
+    document.getElementById('acc_work_order_id').value = spkId;
+    document.getElementById('acc_spk_text').innerText = spkNumber;
+    document.getElementById('acc_product_text').innerText = productName;
+    document.getElementById('acc_qty_text').innerText = qty + ' Unit';
+    if (customerId) {
+        document.getElementById('acc_customer_id').value = customerId;
+    }
+    document.getElementById('modal-acc-shipment').classList.remove('hidden');
+}
+</script>
 @endsection

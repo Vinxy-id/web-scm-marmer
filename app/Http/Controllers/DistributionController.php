@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class DistributionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $shipments = Shipment::with(['customer', 'creator', 'workOrder'])
+        $shipments = Shipment::with(['customer', 'creator', 'workOrder.product'])
             ->orderBy('shipment_date', 'desc')
             ->paginate(10);
 
@@ -21,7 +21,23 @@ class DistributionController extends Controller
         $readyProducts = Product::where('ready_stock', '>', 0)->get();
         $workOrders = WorkOrder::whereIn('status', ['completed', 'qc_phase'])->get();
 
-        return view('distribution.index', compact('shipments', 'customers', 'readyProducts', 'workOrders'));
+        // SPK yang siap kirim (status completed) tapi belum diterbitkan surat jalan
+        $pendingShipmentOrders = WorkOrder::with(['product', 'customer'])
+            ->where('status', 'completed')
+            ->whereDoesntHave('shipment')
+            ->orderBy('due_date', 'desc')
+            ->get();
+
+        $stats = [
+            'pending_approval' => $pendingShipmentOrders->count(),
+            'packed' => Shipment::where('delivery_status', 'packed')->count(),
+            'in_transit' => Shipment::where('delivery_status', 'in_transit')->count(),
+            'delivered' => Shipment::where('delivery_status', 'delivered')->count(),
+        ];
+
+        $prefillSpkId = $request->query('spk_id');
+
+        return view('distribution.index', compact('shipments', 'customers', 'readyProducts', 'workOrders', 'pendingShipmentOrders', 'stats', 'prefillSpkId'));
     }
 
     public function storeShipment(Request $request)

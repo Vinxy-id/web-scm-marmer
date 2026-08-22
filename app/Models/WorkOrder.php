@@ -64,6 +64,11 @@ class WorkOrder extends Model
         return $this->hasMany(WasteLog::class);
     }
 
+    public function shipment()
+    {
+        return $this->hasOne(Shipment::class);
+    }
+
     public function getProgressPercentageAttribute(): int
     {
         if ($this->target_quantity == 0) return 0;
