@@ -47,15 +47,20 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'supplier_id' => ['nullable', 'exists:suppliers,id'],
-            'material_code' => ['required', 'string', 'max:50', 'unique:materials,material_code'],
+            'material_code' => ['required', 'string', 'max:50', 'regex:/^[A-Za-z0-9\-\_]+$/', 'unique:materials,material_code'],
             'name' => ['required', 'string', 'max:150'],
             'type' => ['required', 'in:marmer,onix,batu_kali,bahan_penolong'],
             'grade' => ['required', 'in:grade_a_super,grade_b_standard,grade_c_ekonomis'],
             'dimension_info' => ['nullable', 'string', 'max:100'],
             'unit' => ['required', 'string', 'max:20'],
-            'current_stock' => ['required', 'numeric', 'min:0'],
-            'minimum_stock' => ['required', 'numeric', 'min:0'],
-            'unit_cost' => ['required', 'numeric', 'min:0'],
+            'current_stock' => ['required', 'integer', 'min:0'],
+            'minimum_stock' => ['required', 'integer', 'min:0'],
+            'unit_cost' => ['required', 'integer', 'min:0'],
+        ], [
+            'material_code.regex' => 'Kode material hanya boleh berisi huruf, angka, tanda minus (-), dan garis bawah (_).',
+            'current_stock.integer' => 'Stok awal harus berupa angka bulat (tidak boleh menggunakan koma/desimal).',
+            'minimum_stock.integer' => 'Batas minimum stok harus berupa angka bulat (tidak boleh menggunakan koma/desimal).',
+            'unit_cost.integer' => 'Harga satuan harus berupa angka bulat.',
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -85,8 +90,11 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'material_id' => ['required', 'exists:materials,id'],
             'type' => ['required', 'in:in,out'],
-            'quantity' => ['required', 'numeric', 'min:0.01'],
+            'quantity' => ['required', 'integer', 'min:1'],
             'notes' => ['nullable', 'string'],
+        ], [
+            'quantity.integer' => 'Jumlah mutasi stok harus berupa angka bulat.',
+            'quantity.min' => 'Jumlah mutasi stok minimal 1.',
         ]);
 
         $material = Material::findOrFail($validated['material_id']);
@@ -127,8 +135,11 @@ class MaterialController extends Controller
             'type' => ['required', 'in:marmer,onix,batu_kali,bahan_penolong'],
             'grade' => ['required', 'in:grade_a_super,grade_b_standard,grade_c_ekonomis'],
             'dimension_info' => ['nullable', 'string', 'max:100'],
-            'minimum_stock' => ['required', 'numeric', 'min:0'],
-            'unit_cost' => ['required', 'numeric', 'min:0'],
+            'minimum_stock' => ['required', 'integer', 'min:0'],
+            'unit_cost' => ['required', 'integer', 'min:0'],
+        ], [
+            'minimum_stock.integer' => 'Batas minimum stok harus berupa angka bulat (tidak boleh menggunakan koma/desimal).',
+            'unit_cost.integer' => 'Harga satuan harus berupa angka bulat.',
         ]);
 
         $material->update($validated);

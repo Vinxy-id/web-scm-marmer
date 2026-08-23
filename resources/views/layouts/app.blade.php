@@ -17,6 +17,16 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .kanban-col { min-height: 520px; }
+
+        /* Hide spinner arrows / steppers on number inputs */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
     @yield('styles')
 </head>
@@ -97,6 +107,51 @@
             if (backdrop) {
                 backdrop.classList.toggle('hidden');
             }
+        }
+
+        // Global Real-time Input Validation & Warning System
+        function validateIntegerInput(input) {
+            let originalVal = input.value;
+            if (originalVal.includes('.') || originalVal.includes(',') || originalVal.includes('-') || isNaN(originalVal)) {
+                input.value = originalVal.replace(/[^0-9]/g, '');
+                showInputWarning(input, '⚠️ Angka harus bulat (tanpa koma/titik)!');
+            } else {
+                hideInputWarning(input);
+            }
+        }
+
+        function validateCodeInput(input) {
+            let originalVal = input.value;
+            if (/[^a-zA-Z0-9\-\_]/.test(originalVal)) {
+                input.value = originalVal.replace(/[^a-zA-Z0-9\-\_]/g, '');
+                showInputWarning(input, '⚠️ Karakter tidak diperbolehkan (hanya huruf, angka, - dan _)!');
+            } else {
+                hideInputWarning(input);
+            }
+        }
+
+        function showInputWarning(input, msg) {
+            let warningId = 'warning-' + (input.id || input.name || Math.random().toString(36).substring(7));
+            let warningEl = document.getElementById(warningId);
+            if (!warningEl) {
+                warningEl = document.createElement('p');
+                warningEl.id = warningId;
+                warningEl.className = 'text-[10px] text-red-600 font-bold mt-1 flex items-center gap-1 animate-pulse';
+                input.parentNode.appendChild(warningEl);
+            }
+            warningEl.textContent = msg;
+            input.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            setTimeout(() => {
+                if (warningEl) warningEl.remove();
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            }, 3000);
+        }
+
+        function hideInputWarning(input) {
+            let warningId = 'warning-' + (input.id || input.name);
+            let warningEl = document.getElementById(warningId);
+            if (warningEl) warningEl.remove();
+            input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
         }
     </script>
     @yield('scripts')

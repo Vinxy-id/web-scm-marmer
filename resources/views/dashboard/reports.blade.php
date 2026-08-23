@@ -41,16 +41,16 @@
                     @forelse($monthlyTransactions as $row)
                     <tr>
                         <td class="p-3 font-semibold">Bulan ke-{{ $row->month }}</td>
-                        <td class="p-3 text-emerald-600 font-bold">+{{ number_format($row->total_in, 2) }}</td>
-                        <td class="p-3 text-red-600 font-bold">-{{ number_format($row->total_out, 2) }}</td>
-                        <td class="p-3 font-bold text-slate-800">{{ number_format($row->total_in - $row->total_out, 2) }}</td>
+                        <td class="p-3 text-emerald-600 font-bold">+{{ number_format($row->total_in, 0, ',', '.') }}</td>
+                        <td class="p-3 text-red-600 font-bold">-{{ number_format($row->total_out, 0, ',', '.') }}</td>
+                        <td class="p-3 font-bold text-slate-800">{{ number_format($row->total_in - $row->total_out, 0, ',', '.') }}</td>
                     </tr>
                     @empty
                     <tr>
                         <td class="p-3 font-semibold">April 2026 (Aktual)</td>
-                        <td class="p-3 text-emerald-600 font-bold">+48.00</td>
-                        <td class="p-3 text-red-600 font-bold">-42.00</td>
-                        <td class="p-3 font-bold text-slate-800">+6.00</td>
+                        <td class="p-3 text-emerald-600 font-bold">+48</td>
+                        <td class="p-3 text-red-600 font-bold">-42</td>
+                        <td class="p-3 font-bold text-slate-800">+6</td>
                     </tr>
                     @endforelse
                 </tbody>

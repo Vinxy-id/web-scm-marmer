@@ -80,9 +80,9 @@
                         </td>
                         <td class="p-3 text-slate-500">{{ $mat->dimension_info ?? '-' }}</td>
                         <td class="p-3 font-bold {{ $mat->stock_status === 'kritis' ? 'text-red-600' : 'text-slate-800' }}">
-                            {{ number_format($mat->current_stock, 2) }} {{ $mat->unit }}
+                            {{ number_format($mat->current_stock, 0, ',', '.') }} {{ $mat->unit }}
                         </td>
-                        <td class="p-3 text-slate-500">{{ number_format($mat->minimum_stock, 2) }} {{ $mat->unit }}</td>
+                        <td class="p-3 text-slate-500">{{ number_format($mat->minimum_stock, 0, ',', '.') }} {{ $mat->unit }}</td>
                         <td class="p-3 text-slate-700">Rp {{ number_format($mat->unit_cost, 0, ',', '.') }}</td>
                         <td class="p-3">
                             @if($mat->stock_status === 'kritis')
@@ -144,7 +144,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Kode Material</label>
-                    <input type="text" name="material_code" placeholder="MAT-MRM-002" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="text" name="material_code" placeholder="MAT-MRM-002" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateCodeInput(this)">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Jenis Batuan</label>
@@ -185,11 +185,11 @@
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Stok Awal</label>
-                    <input type="number" step="0.01" name="current_stock" value="10" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="0" name="current_stock" value="10" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Batas Min (Alert)</label>
-                    <input type="number" step="0.01" name="minimum_stock" value="5" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="0" name="minimum_stock" value="5" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Satuan</label>
@@ -204,7 +204,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Harga Satuan (Rp)</label>
-                    <input type="number" name="unit_cost" value="450000" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="0" name="unit_cost" value="450000" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
             </div>
 
@@ -266,7 +266,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Batas Min (Alert)</label>
-                    <input type="number" step="0.01" id="edit_minimum_stock" name="minimum_stock" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="0" id="edit_minimum_stock" name="minimum_stock" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
             </div>
 
@@ -277,7 +277,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Harga Satuan (Rp)</label>
-                    <input type="number" id="edit_unit_cost" name="unit_cost" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="0" id="edit_unit_cost" name="unit_cost" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
             </div>
 
@@ -305,7 +305,7 @@
                 <label class="text-[11px] font-bold text-slate-600">Pilih Material</label>
                 <select name="material_id" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
                     @foreach($materials as $m)
-                    <option value="{{ $m->id }}">{{ $m->material_code }} - {{ $m->name }} (Sisa: {{ $m->current_stock }} {{ $m->unit }})</option>
+                    <option value="{{ $m->id }}">{{ $m->material_code }} - {{ $m->name }} (Sisa: {{ number_format($m->current_stock, 0, ',', '.') }} {{ $m->unit }})</option>
                     @endforeach
                 </select>
             </div>
@@ -320,7 +320,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Jumlah (Qty)</label>
-                    <input type="number" step="0.01" name="quantity" value="1.00" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="1" min="1" name="quantity" value="1" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
                 </div>
             </div>
 
