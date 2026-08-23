@@ -44,7 +44,7 @@ return [
             'strict' => true,
             'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', file_exists('/etc/ssl/certs/ca-certificates.crt') ? '/etc/ssl/certs/ca-certificates.crt' : null),
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', (str_contains($cleanHost, 'tidbcloud.com') && file_exists('/etc/ssl/certs/ca-certificates.crt')) ? '/etc/ssl/certs/ca-certificates.crt' : null),
                 PDO::ATTR_TIMEOUT => 10,
             ]) : [],
         ],
