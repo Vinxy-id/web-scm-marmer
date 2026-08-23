@@ -28,7 +28,7 @@
         <!-- Filter & Search Form -->
         <form method="GET" action="{{ route('catalog') }}" class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm mb-8 space-y-4">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 
                 <!-- Search Box -->
                 <div class="lg:col-span-1">
@@ -64,6 +64,16 @@
                         <option value="marmer" {{ request('material') == 'marmer' ? 'selected' : '' }}>Batu Marmer Tulungagung</option>
                         <option value="onix" {{ request('material') == 'onix' ? 'selected' : '' }}>Batu Onyx Tembus Cahaya</option>
                         <option value="batu_kali" {{ request('material') == 'batu_kali' ? 'selected' : '' }}>Batu Kali Alami</option>
+                    </select>
+                </div>
+
+                <!-- Stock Filter (CAT-01 SOLVED) -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Ketersediaan Stok</label>
+                    <select name="stock" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="">Semua Ketersediaan</option>
+                        <option value="ready" {{ request('stock') == 'ready' ? 'selected' : '' }}>Ready Stock (Siap Kirim)</option>
+                        <option value="preorder" {{ request('stock') == 'preorder' ? 'selected' : '' }}>Pre-Order Pengrajin</option>
                     </select>
                 </div>
 

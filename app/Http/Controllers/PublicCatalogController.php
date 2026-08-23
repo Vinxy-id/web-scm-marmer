@@ -55,7 +55,18 @@ class PublicCatalogController extends Controller
                 throw new \Exception('Database empty, use fallback');
             }
 
-            // 4. Cluster Statistics
+            // 3. Select Hero Highlight Product (Onyx or First Featured)
+            $heroProduct = $featuredProducts->firstWhere('material_type', 'onix') ?? $featuredProducts->first();
+
+            // 4. Calculate Material Counts for Filter Tabs
+            $materialCounts = [
+                'all' => $featuredProducts->count(),
+                'marmer' => $featuredProducts->where('material_type', 'marmer')->count(),
+                'onix' => $featuredProducts->where('material_type', 'onix')->count(),
+                'batu_kali' => $featuredProducts->where('material_type', 'batu_kali')->count(),
+            ];
+
+            // 5. Cluster Statistics
             $stats = [
                 'total_products' => Product::count(),
                 'ready_units' => Product::sum('ready_stock'),
@@ -66,6 +77,13 @@ class PublicCatalogController extends Controller
             // Fallback empirical dummy data if cloud DB is offline
             $categories = $this->getFallbackCategories();
             $featuredProducts = $this->getFallbackProducts()->take(8);
+            $heroProduct = $featuredProducts->firstWhere('material_type', 'onix') ?? $featuredProducts->first();
+            $materialCounts = [
+                'all' => $featuredProducts->count(),
+                'marmer' => $featuredProducts->where('material_type', 'marmer')->count(),
+                'onix' => $featuredProducts->where('material_type', 'onix')->count(),
+                'batu_kali' => $featuredProducts->where('material_type', 'batu_kali')->count(),
+            ];
             $stats = [
                 'total_products' => 8,
                 'ready_units' => 54,
@@ -74,7 +92,7 @@ class PublicCatalogController extends Controller
             ];
         }
 
-        return view('public.index', compact('categories', 'featuredProducts', 'ikmProfiles', 'stats'));
+        return view('public.index', compact('categories', 'featuredProducts', 'heroProduct', 'materialCounts', 'ikmProfiles', 'stats'));
     }
 
     /**
@@ -221,10 +239,34 @@ class PublicCatalogController extends Controller
         try {
             $relatedProducts = Product::with('category')
                 ->where('id', '!=', $product->id)
+                ->where(function ($q) use ($product) {
+                    $q->where('category_id', $product->category_id)
+                      ->orWhere('material_type', $product->material_type);
+                })
                 ->take(3)
                 ->get();
+
+            if ($relatedProducts->count() < 3) {
+                $excludeIds = $relatedProducts->pluck('id')->push($product->id);
+                $additional = Product::with('category')
+                    ->whereNotIn('id', $excludeIds)
+                    ->take(3 - $relatedProducts->count())
+                    ->get();
+                $relatedProducts = $relatedProducts->concat($additional);
+            }
         } catch (\Throwable $e) {
-            $relatedProducts = $this->getFallbackProducts()->where('id', '!=', $product->id)->take(3);
+            $relatedProducts = $this->getFallbackProducts()
+                ->where('id', '!=', $product->id)
+                ->where(function ($item) use ($product) {
+                    return ($item->category_id ?? null) === ($product->category_id ?? null) || 
+                           ($item->material_type ?? null) === ($product->material_type ?? null);
+                })
+                ->take(3);
+
+            if ($relatedProducts->count() < 3) {
+                $fallbackRest = $this->getFallbackProducts()->where('id', '!=', $product->id)->take(3);
+                $relatedProducts = $relatedProducts->concat($fallbackRest)->unique('id')->take(3);
+            }
         }
 
         return view('public.detail', compact('product', 'relatedProducts', 'artisan'));

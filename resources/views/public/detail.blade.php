@@ -130,9 +130,21 @@
                                 <span class="text-slate-500">Diameter Lubang Afur</span>
                                 <b class="text-slate-900">4.5 cm (Standar Afur Wastafel Universal)</b>
                             </div>
+@php
+    $pNameLower = strtolower($product->name ?? '');
+    if (str_contains($pNameLower, 'stepping') || str_contains($pNameLower, 'pijakan')) {
+        $weightEst = '6 - 9 kg (Batu Kali Flat Padat)';
+    } elseif (str_contains($pNameLower, 'lampu')) {
+        $weightEst = '8 - 12 kg (Batuan Kali Berongga)';
+    } elseif (str_contains($pNameLower, 'pedestal') || str_contains($pNameLower, 'meja')) {
+        $weightEst = '35 - 55 kg (Bongkahan Utuh Padat)';
+    } else {
+        $weightEst = '14 - 18 kg (Batuan Utuh Padat)';
+    }
+@endphp
                             <div class="grid grid-cols-2 p-3 bg-white">
                                 <span class="text-slate-500">Estimasi Bobot Fisik</span>
-                                <b class="text-slate-900">14 - 18 kg (Padat Murni)</b>
+                                <b class="text-slate-900">{{ $weightEst }}</b>
                             </div>
                             <div class="grid grid-cols-2 p-3 bg-slate-50">
                                 <span class="text-slate-500">Standar Pengemasan</span>
@@ -157,6 +169,19 @@
                             <i data-lucide="video" class="w-4 h-4 text-blue-600"></i>
                             <span>Minta Video Fisik / Foto Serat Batuan Terbaru</span>
                         </a>
+
+                        <!-- Share Buttons (DET-04 SOLVED) -->
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span class="text-xs text-slate-500 font-medium">Bagikan Produk:</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="navigator.clipboard.writeText(window.location.href); alert('Tautan produk berhasil disalin!');" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+                                    <i data-lucide="link" class="w-3.5 h-3.5"></i> Salin Link
+                                </button>
+                                <a href="https://api.whatsapp.com/send?text={{ urlencode('Lihat produk kerajinan marmer: ' . $product->name . ' - ' . url()->current()) }}" target="_blank" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+                                    <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Bagikan WA
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

@@ -78,21 +78,21 @@
 
             </div>
 
-            <!-- Right Hero Card / Product Highlight -->
+            <!-- Right Hero Card / Product Highlight (LP-01 & LP-02 SOLVED: DYNAMIC DATA) -->
             <div class="lg:col-span-5 relative">
                 <div class="bg-gradient-to-b from-slate-800/90 to-slate-900/90 p-5 rounded-3xl border border-slate-700/80 shadow-2xl backdrop-blur-xl relative overflow-hidden group">
                     <div class="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl"></div>
                     
                     <!-- Highlight Image -->
                     <div class="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border border-slate-700/50">
-                        <img src="{{ asset('images/products/wastafel-onyx.svg') }}" alt="Wastafel Onyx Tembus Cahaya" class="w-full h-full object-contain p-4 group-hover:scale-105 transition duration-500">
+                        <img src="{{ asset($heroProduct->image_path ?: 'images/products/wastafel-onyx-tembus-cahaya.webp') }}" alt="{{ $heroProduct->name ?? 'Wastafel Onyx' }}" class="w-full h-full object-contain p-4 group-hover:scale-105 transition duration-500">
                         
                         <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 font-extrabold text-[11px] px-2.5 py-1 rounded-full shadow">
                             ★ Unggulan Ekspor
                         </span>
 
                         <span class="absolute bottom-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-200 text-xs px-3 py-1 rounded-lg border border-slate-700">
-                            Batu Onyx Transparan
+                            {{ ucfirst(str_replace('_', ' ', $heroProduct->material_type ?? 'Batu Alam')) }}
                         </span>
                     </div>
 
@@ -100,17 +100,19 @@
                     <div class="mt-5 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-blue-400">UD Cahaya Onix</span>
-                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Ready Bahan Baku</span>
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">
+                                {{ ($heroProduct->ready_stock ?? 0) > 0 ? 'Ready Stock: ' . $heroProduct->ready_stock . ' Unit' : 'Pre-Order Pengrajin' }}
+                            </span>
                         </div>
-                        <h3 class="text-lg font-bold text-white leading-snug">Wastafel Onyx Tembus Cahaya Eksklusif</h3>
-                        <p class="text-xs text-slate-400">Efek pendar cahaya alami saat disinari lampu, finishing poles kaca super glossy.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">{{ $heroProduct->name ?? 'Wastafel Onyx Tembus Cahaya Eksklusif' }}</h3>
+                        <p class="text-xs text-slate-400">{{ $heroProduct->dimension_spec ?? 'D: 42 cm, T: 14 cm' }} • Finishing: {{ $heroProduct->finishing_type ?? 'Hi-Glossy Translucent' }}</p>
                         
                         <div class="pt-3 flex items-center justify-between border-t border-slate-800">
                             <div>
                                 <p class="text-[10px] text-slate-400 uppercase tracking-wider">Harga Pengrajin</p>
-                                <p class="text-lg font-black text-amber-400">Rp 950.000</p>
+                                <p class="text-lg font-black text-amber-400">Rp {{ number_format($heroProduct->selling_price ?? 950000, 0, ',', '.') }}</p>
                             </div>
-                            <button onclick="openProductModal(9)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                            <button onclick="openProductModal({{ $heroProduct->id ?? 9 }})" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
                                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                 <span>Lihat Spesifikasi</span>
                             </button>
@@ -172,8 +174,8 @@
                 </div>
 
                 <div class="mt-6 flex items-center justify-between">
-                    <a href="{{ route('catalog', ['material' => 'onix']) }}" class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1">
-                        <span>Lihat Produk UD Cahaya Onix</span>
+                    <a href="{{ route('catalog') }}" class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1">
+                        <span>Lihat Koleksi Pengrajin</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
                     <a href="https://wa.me/6281234567890?text=Halo%20UD%20Cahaya%20Onix,%20saya%20ingin%20tanya%20produk%20marmer/onix." target="_blank" class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
@@ -193,19 +195,19 @@
                     </span>
                 </div>
 
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900">
-                    Spesialis Batu Kali Alam & Hilirisasi Residu Ramah Lingkungan
+                <h3 class="text-lg font-bold text-slate-900">
+                    Spesialis Wastafel Batu Kali Alami, Kap Lampu & Stepping Stone
                 </h3>
                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Dipimpin oleh <b>Efri Saputra</b>, UD Putra Abadi memproses batuan kali alami menjadi wastafel bernuansa rustic alami, batu pijakan taman (stepping stone), kap lampu taman, serta mengolah limbah potongan menjadi *wall cladding* dinding bernilai ekonomi tinggi.
+                    Dipimpin oleh <b>Efri Saputra</b>, UD Putra Abadi mengangkat potensi batuan kali alam dari aliran sungai Tulungagung menjadi wastafel bernuansa natural tropis, pijakan taman artistik, serta hilirisasi residu potongan batu menjadi wall cladding ramah lingkungan.
                 </p>
 
                 <div class="mt-4 pt-4 border-t border-emerald-100">
                     <p class="text-[11px] font-bold text-slate-700 mb-2">Katalog Spesialisasi:</p>
                     <div class="flex flex-wrap gap-1.5">
                         <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Wastafel Batu Kali Alami</span>
-                        <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Stepping Stone Anti-Slip</span>
-                        <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Kap Lampu Hias Batu</span>
+                        <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Stepping Stone Taman</span>
+                        <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Kap Lampu Hias Minimalis</span>
                         <span class="text-[11px] bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-md font-medium">Wall Cladding Residu</span>
                     </div>
                 </div>
@@ -227,44 +229,43 @@
 </section>
 
 <!-- ============================================================================ -->
-<!-- 3. INTERACTIVE PRODUCT CATALOG SHOWCASE (ETALASE)                            -->
+<!-- 3. ETALASE PRODUK UNGGULAN (KATALOG RINGKAS)                                 -->
 <!-- ============================================================================ -->
-<section id="katalog" class="py-16 bg-slate-50">
+<section id="katalog-unggulan" class="py-16 bg-slate-50 border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
             <div>
                 <span class="text-xs font-bold text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                    Etalase Unggulan
+                    Etalase Hasil Karya Pengrajin
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
-                    Katalog Produk Kerajinan Marmer & Batu
+                    Koleksi Kerajinan Marmer & Onix Unggulan
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-600 mt-1">
-                    Pilihan produk siap kirim (*Ready Stock*) maupun pemesanan ukuran khusus (*Custom Dimension*).
+                <p class="text-slate-600 text-xs sm:text-sm mt-1">
+                    Beli langsung dari pengrajin Campurdarat Tulungagung dengan harga tangan pertama, berstandar ekspor, dan garansi packing kayu solid.
                 </p>
             </div>
-
-            <!-- Full Catalog Link -->
-            <a href="{{ route('catalog') }}" class="inline-flex items-center gap-2 bg-white border border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-900 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition">
+            
+            <a href="{{ route('catalog') }}" class="inline-flex items-center gap-2 text-xs font-bold text-blue-800 hover:text-blue-950 bg-white border border-slate-300 hover:border-blue-500 px-4 py-2.5 rounded-xl shadow-sm transition flex-shrink-0">
                 <span>Buka Seluruh Katalog ({{ $stats['total_products'] }} Produk)</span>
                 <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
             </a>
         </div>
 
-        <!-- Filter Tab Buttons (Interactive Filtering) -->
+        <!-- Filter Tab Buttons with Dynamic Count Badges (LP-03 SOLVED) -->
         <div class="flex items-center gap-2 overflow-x-auto pb-3 custom-scrollbar mb-6">
             <button onclick="filterCatalog('all')" id="tab-all" class="catalog-tab px-4 py-2 rounded-xl text-xs font-bold transition bg-blue-900 text-white shadow-sm flex-shrink-0">
-                Semua Produk ({{ $featuredProducts->count() }})
+                Semua Produk ({{ $materialCounts['all'] ?? $featuredProducts->count() }})
             </button>
             <button onclick="filterCatalog('marmer')" id="tab-marmer" class="catalog-tab px-4 py-2 rounded-xl text-xs font-bold transition bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 flex-shrink-0">
-                Wastafel Marmer
+                Wastafel Marmer ({{ $materialCounts['marmer'] ?? 0 }})
             </button>
             <button onclick="filterCatalog('onix')" id="tab-onix" class="catalog-tab px-4 py-2 rounded-xl text-xs font-bold transition bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 flex-shrink-0">
-                Wastafel Onyx Tembus Cahaya
+                Wastafel Onyx Tembus Cahaya ({{ $materialCounts['onix'] ?? 0 }})
             </button>
             <button onclick="filterCatalog('batu_kali')" id="tab-batu_kali" class="catalog-tab px-4 py-2 rounded-xl text-xs font-bold transition bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 flex-shrink-0">
-                Batu Kali & Stepping Stone
+                Batu Kali & Stepping Stone ({{ $materialCounts['batu_kali'] ?? 0 }})
             </button>
         </div>
 

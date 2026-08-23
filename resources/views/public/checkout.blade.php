@@ -163,6 +163,20 @@
                             </div>
                         </div>
 
+                        <!-- CHK-04 SOLVED: Pre-Order Lead Time Info -->
+                        @if(($product->ready_stock ?? 0) <= 0)
+                        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 space-y-1">
+                            <div class="flex items-center gap-2 font-bold text-amber-800">
+                                <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
+                                <span>Status Pemesanan: Pre-Order Pengrajin</span>
+                            </div>
+                            <p class="text-[11px] text-amber-700 leading-relaxed">
+                                Unit siap kirim saat ini sedang kosong. Pesanan Anda akan dikerjakan langsung oleh pengrajin sentra Campurdarat dengan estimasi pengerjaan <b>3–7 hari kerja</b> setelah pembayaran diverifikasi.
+                            </p>
+                        </div>
+                        @endif
+
+                        <!-- Payment Method Options (CHK-02 & CHK-03 SOLVED: RENDER $banks FROM CONTROLLER) -->
                         <div class="space-y-3">
                             <!-- QRIS -->
                             <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
@@ -176,41 +190,19 @@
                                 <span class="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Auto QR</span>
                             </label>
 
-                            <!-- BCA -->
+                            <!-- Dynamic Bank Options -->
+                            @foreach($banks as $bKey => $bank)
                             <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
                                 <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="bank_bca" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <input type="radio" name="payment_method" value="{{ $bKey }}" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
                                     <div>
-                                        <p class="text-xs font-bold text-slate-900">Transfer Bank BCA</p>
-                                        <p class="text-[10px] text-slate-500">Rek: 180-889-7721 a/n UD CAHAYA ONIX / PUTRA ABADI</p>
+                                        <p class="text-xs font-bold text-slate-900">Transfer {{ $bank['name'] }}</p>
+                                        <p class="text-[10px] text-slate-500">Rek: <b class="font-mono text-slate-800">{{ $bank['number'] }}</b> a/n {{ $bank['holder'] }}</p>
                                     </div>
                                 </div>
-                                <span class="text-[10px] font-bold text-blue-700">BCA</span>
+                                <span class="text-[10px] font-bold text-blue-700 uppercase">{{ str_replace('bank_', '', $bKey) }}</span>
                             </label>
-
-                            <!-- BRI -->
-                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="bank_bri" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-900">Transfer Bank BRI</p>
-                                        <p class="text-[10px] text-slate-500">Rek: 0129-01-004819-53-8 a/n IKM MARMER TULUNGAGUNG</p>
-                                    </div>
-                                </div>
-                                <span class="text-[10px] font-bold text-blue-700">BRI</span>
-                            </label>
-
-                            <!-- Mandiri -->
-                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="bank_mandiri" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-900">Transfer Bank Mandiri</p>
-                                        <p class="text-[10px] text-slate-500">Rek: 144-00-1928374-1 a/n UD CAHAYA ONIX MARMER</p>
-                                    </div>
-                                </div>
-                                <span class="text-[10px] font-bold text-blue-700">MANDIRI</span>
-                            </label>
+                            @endforeach
                         </div>
                     </div>
 
@@ -228,7 +220,7 @@
                         <!-- Product Mini Card -->
                         <div class="flex gap-4 items-center">
                             <div class="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200 overflow-hidden">
-                                <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih-b1.webp') }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                             </div>
                             <div class="space-y-1">
                                 <span class="text-[10px] font-bold text-blue-700 uppercase bg-blue-50 px-2 py-0.5 rounded">
@@ -240,12 +232,12 @@
                             </div>
                         </div>
 
-                        <!-- Quantity Selector -->
+                        <!-- Quantity Selector (CHK-05 SOLVED: EDITABLE & CLAMPED) -->
                         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-700">Jumlah Pesanan:</span>
                             <div class="flex items-center gap-2">
                                 <button type="button" onclick="changeQty(-1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 font-bold text-slate-700 hover:bg-slate-100 flex items-center justify-center">-</button>
-                                <input type="number" id="qty-input" name="quantity" value="1" min="1" max="50" class="w-12 text-center text-xs font-bold rounded-xl border-slate-300 p-1.5" readonly>
+                                <input type="number" id="qty-input" name="quantity" value="1" min="1" max="50" onchange="onQtyChange(this.value)" class="w-14 text-center text-xs font-bold rounded-xl border-slate-300 p-1.5 focus:ring-2 focus:ring-blue-500 outline-none">
                                 <button type="button" onclick="changeQty(1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 font-bold text-slate-700 hover:bg-slate-100 flex items-center justify-center">+</button>
                             </div>
                         </div>
@@ -308,6 +300,15 @@
 
     function changeQty(delta) {
         currentQty = Math.max(1, Math.min(50, currentQty + delta));
+        document.getElementById('qty-input').value = currentQty;
+        updateCalculations();
+    }
+
+    function onQtyChange(val) {
+        let parsed = parseInt(val, 10);
+        if (isNaN(parsed) || parsed < 1) parsed = 1;
+        if (parsed > 50) parsed = 50;
+        currentQty = parsed;
         document.getElementById('qty-input').value = currentQty;
         updateCalculations();
     }
