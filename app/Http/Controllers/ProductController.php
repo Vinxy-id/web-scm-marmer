@@ -95,10 +95,10 @@ class ProductController extends Controller
         } else {
             // Default placeholder image based on material
             $imagePath = match ($validated['material_type']) {
-                'marmer' => 'images/products/wastafel-marmer-putih.svg',
-                'onix' => 'images/products/wastafel-onyx.svg',
-                'batu_kali' => 'images/products/wastafel-batu-kali.svg',
-                default => 'images/products/wastafel-marmer-putih.svg',
+                'marmer' => 'images/products/wastafel-marmer-putih-b1.webp',
+                'onix' => 'images/products/wastafel-onyx-tembus-cahaya.webp',
+                'batu_kali' => 'images/products/wastafel-batu-kali-alami.webp',
+                default => 'images/products/wastafel-marmer-putih-b1.webp',
             };
         }
 

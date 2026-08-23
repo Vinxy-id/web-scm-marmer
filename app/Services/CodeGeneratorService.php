@@ -2,12 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Shipment;
-use App\Models\WorkOrder;
-use App\Models\StockTransaction;
-use App\Models\Customer;
-use App\Models\Material;
-use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class CodeGeneratorService
@@ -29,7 +23,12 @@ class CodeGeneratorService
             $seq = intval($matches[1]) + 1;
         }
 
-        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $code = $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('shipments')->where('shipment_code', $code)->exists());
+
+        return $code;
     }
 
     /**
@@ -40,7 +39,7 @@ class CodeGeneratorService
         $prefix = 'SPK-' . date('Ym') . '-';
         
         $lastCode = DB::table('work_orders')
-            ->where('spk_number', 'like', "%" . date('Ym') . "%")
+            ->where('spk_number', 'like', "{$prefix}%")
             ->orderBy('id', 'desc')
             ->value('spk_number');
 
@@ -55,7 +54,12 @@ class CodeGeneratorService
             $seq = max(1, $countThisMonth + 1);
         }
 
-        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $spkNumber = $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('work_orders')->where('spk_number', $spkNumber)->exists());
+
+        return $spkNumber;
     }
 
     /**
@@ -83,7 +87,12 @@ class CodeGeneratorService
             $seq = intval($matches[1]) + 1;
         }
 
-        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $code = $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('stock_transactions')->where('transaction_code', $code)->exists());
+
+        return $code;
     }
 
     /**
@@ -105,7 +114,12 @@ class CodeGeneratorService
             $seq = DB::table('customers')->count() + 1;
         }
 
-        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $code = $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('customers')->where('customer_code', $code)->exists());
+
+        return $code;
     }
 
     /**
@@ -133,7 +147,12 @@ class CodeGeneratorService
             $seq = DB::table('materials')->where('material_code', 'like', "{$typePrefix}%")->count() + 1;
         }
 
-        return $typePrefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $code = $typePrefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('materials')->where('material_code', $code)->exists());
+
+        return $code;
     }
 
     /**
@@ -160,6 +179,11 @@ class CodeGeneratorService
             $seq = DB::table('products')->count() + 1;
         }
 
-        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+        do {
+            $code = $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
+            $seq++;
+        } while (DB::table('products')->where('product_code', $code)->exists());
+
+        return $code;
     }
 }

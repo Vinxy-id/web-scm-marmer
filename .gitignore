@@ -55,6 +55,32 @@ htmlcov/
 Bima2026.ipynb
 
 # -----------------------------------------------------------------------------
+# Dokumen Privat, Invoice & Backup Database
+# -----------------------------------------------------------------------------
+*.pdf
+*invoice*
+*Invoice*
+*.sql
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# -----------------------------------------------------------------------------
+# Arsip Mentah Dokumentasi Foto Lapangan & Video (HEIC / MP4 / Raw)
+# -----------------------------------------------------------------------------
+/Docs/Observasi Dosen/Dokumentasi Foto Lapangan/
+/Docs/**/Dokumentasi Foto Lapangan/
+*.heic
+*.HEIC
+*.mp4
+*.MP4
+
+# -----------------------------------------------------------------------------
 # Editor & Sistem Operasi
 # -----------------------------------------------------------------------------
 .DS_Store

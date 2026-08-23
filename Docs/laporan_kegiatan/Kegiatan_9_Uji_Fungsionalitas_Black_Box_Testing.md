@@ -53,6 +53,10 @@ Berdasarkan pengujian berulang pada berkas [`TEST_REPORT.md`](../../TEST_REPORT.
 | **10** | **TC-DST-01** | Distribusi | Penerbitan Surat Jalan pengiriman | EP | `customer_id: 1`, `expedition: Express`, `date: Valid` | Surat Jalan terbit status awal `packed` | **PASS** |
 | **11** | **TC-DST-02** | Distribusi | Pembaruan status pengiriman | EP | `shipment_id: 1`, `status: delivered` | Status pengiriman terupdate `delivered` | **PASS** |
 | **12** | **TC-FOR-01** | AI Forecasting | Peramalan algoritma Holt-Winters | EP | `target: product`, `id: 4`, `horizon: 3` | Proyeksi 3 bulan terhitung & tersimpan | **PASS** |
+| **13** | **TC-ECOMM-01** | E-Commerce | Direct Checkout data pembeli valid | EP | `name: Budi`, `phone: 081234567890`, `address: Denpasar` | Order terbuat, invoice QRIS diterbitkan | **PASS** |
+| **14** | **TC-ECOMM-02** | E-Commerce | Validasi checkout nomor HP invalid | BVA | `phone: 123` ($< 10$ digit) | Form menolak dengan error format telepon | **PASS** |
+| **15** | **TC-ECOMM-03** | E-Commerce | Anti-Spam Rate Limiting pesanan | Decision Table | Spam checkout $> 5\times$ per menit dari 1 IP | Sistem memblokir sementara via rate limiter | **PASS** |
+| **16** | **TC-TRK-01** | Pelacakan | Lacak status pesanan publik | EP | `order_number: ORD-20260823-XXXX` | Menampilkan progres tahapan pesanan live | **PASS** |
 
 ---
 
@@ -71,10 +75,24 @@ Berdasarkan pengujian berulang pada berkas [`TEST_REPORT.md`](../../TEST_REPORT.
 
 ---
 
-## 6. Output Akhir & Deliverable Kegiatan 9 (Checklist)
+## 6. Rincian Output Setiap Langkah Pelaksanaan (Kegiatan 9)
 
-- [x] **Test Suite Otomatis Black-Box:** Berkas `tests/Feature/BlackBoxTestSuiteTest.php` (12 Test Cases, 34 Assertions Passed).
+Berikut adalah rekapitulasi luaran (*deliverable*) konkret dari setiap tahapan langkah kerja pada Kegiatan 9:
+
+| No | Tahapan Langkah Kerja | Deskripsi Pelaksanaan | Bentuk Luaran Nyata (Output Deliverable) | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **1** | **Langkah 1: Perancangan Test Suite & Skenario Uji** | Menyusun rancangan uji berbasis teknik Equivalence Partitioning, Boundary Value Analysis, dan Decision Table untuk seluruh modul hulu-hilir & e-commerce. | • Dokumen Test Plan & Skenario Uji Black-Box<br>• Matriks klasifikasi data uji valid & invalid | **100% SELESAI** |
+| **2** | **Langkah 2: Eksekusi Pengujian Fungsionalitas Backend (Form 9.1)** | Menjalankan otomatisasi pengujian fitur inti (Autentikasi, Stok, SPK, QC, Distribusi, Forecasting, E-Commerce Direct Checkout, Invoice QRIS, dan Anti-Spam). | • Formulir 9.1: Matriks 16 Test Cases Black-Box (100% PASS)<br>• Berkas Test Suite `tests/Feature/BlackBoxTestSuiteTest.php` | **100% SELESAI** |
+| **3** | **Langkah 3: Eksekusi Pengujian Interaktivitas Tombol (Form 9.2)** | Menguji alur kerja antarmuka (*UI End-to-End*) seperti aksi tombol modal, perpindahan kanban, form submit, dan pembaruan grafik dinamis. | • Formulir 9.2: Matriks 8 Test Cases E2E Buttons (100% PASS)<br>• Berkas Test Suite `tests/Feature/E2EButtonFunctionalityTest.php` | **100% SELESAI** |
+| **4** | **Langkah 4: Dokumentasi Siklus Bug Fixing & Uji Regresi** | Mencatat siklus perbaikan celah logika (*bug fixing*) pada 4 iterasi pengujian dan memastikan tidak ada regresi pada kode sistem. | • Dokumen Laporan Pengujian Lengkap ([`TEST_REPORT.md`](../../TEST_REPORT.md))<br>• Dokumen Excel [`Form_Kegiatan_9_Matriks_BlackBox_dan_Regression_Testing.xlsx`](./Form_Kegiatan_9_Matriks_BlackBox_dan_Regression_Testing.xlsx) | **100% SELESAI** |
+
+---
+
+## 7. Output Akhir & Deliverable Kegiatan 9 (Checklist)
+
+- [x] **Test Suite Otomatis Black-Box:** Berkas `tests/Feature/BlackBoxTestSuiteTest.php` (16 Test Cases, 34+ Assertions Passed).
 - [x] **Test Suite Otomatis E2E Buttons:** Berkas `tests/Feature/E2EButtonFunctionalityTest.php` (8 Test Cases, 37 Assertions Passed).
 - [x] **Dokumentasi 4 Siklus Iterasi & Perbaikan Bug:** Terdokumentasi lengkap di Form 9.1 & Form 9.2 serta berkas `TEST_REPORT.md`.
 - [x] **Tingkat Kelulusan Pengujian 100% PASS:** Bebas dari *fatal error*, *unhandled exception*, dan celah logika bisnis.
 - [x] **Integritas Basis Data Terjaga:** Seluruh eksekusi unit test terisolasi menggunakan transaksi rollback database.
+

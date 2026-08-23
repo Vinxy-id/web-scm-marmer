@@ -260,10 +260,25 @@ Tabel berikut mendefinisikan mekanisme aliran data dan integrasi antarmodul dala
 
 ---
 
-## 6. Output Akhir & Deliverable Kegiatan 4 (Checklist)
+## 6. Rincian Output Setiap Langkah Pelaksanaan (Kegiatan 4)
+
+Berikut adalah rekapitulasi luaran (*deliverable*) konkret dari setiap tahapan langkah kerja pada Kegiatan 4:
+
+| No | Tahapan Langkah Kerja | Deskripsi Pelaksanaan | Bentuk Luaran Nyata (Output Deliverable) | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **1** | **Langkah 1: Perancangan ERD Konseptual & Logikal** | Memetakan 13 entitas utama rantai pasok marmer (Pemasok, Bahan Baku, SPK, Stasiun Mesin, QC 2-Tahap, Limbah, Produk Jadi, Pelanggan, Order E-Commerce, Surat Jalan, dan Log Peramalan). | • Diagram ERD Konseptual & Relasional (`erd_escm_marmer.png`)<br>• Matriks kardinalitas relasi ($1:1$, $1:N$, $M:N$) | **100% SELESAI** |
+| **2** | **Langkah 2: Normalisasi Basis Data (1NF–3NF)** | Menghilangkan redundansi data dan anomali operasi melalui atomisasi nilai (1NF), eliminasi dependensi parsial (2NF), dan eliminasi dependensi transitif (3NF). | • Matriks aturan normalisasi skema basis data<br>• Pemisahan tabel transaksi dengan tabel master | **100% SELESAI** |
+| **3** | **Langkah 3: Penyusunan Kamus Data (Data Dictionary)** | Mendefinisikan secara presisi tipe data, panjang karakter, batasan (*constraint*), nilai default, dan relasi *Foreign Key* seluruh tabel sistem. | • Formulir 4.1: Kamus Data Lengkap 13 Tabel Inti (`users` s.d. `orders`)<br>• Dokumen Excel [`Form_Kegiatan_4_Kamus_Data_dan_Integrasi.xlsx`](./Form_Kegiatan_4_Kamus_Data_dan_Integrasi.xlsx) | **100% SELESAI** |
+| **4** | **Langkah 4: Desain Skema Integrasi Antarmodul** | Merancang alur pertukaran data otomatis antarmodul secara *real-time* (Stok $\leftrightarrow$ SPK $\leftrightarrow$ QC $\leftrightarrow$ Residu Limbah $\leftrightarrow$ Distribusi $\leftrightarrow$ Peramalan AI). | • Formulir 4.2: Matriks Mapping Aliran Data Antarmodul<br>• Spesifikasi protokol REST API JSON Payload | **100% SELESAI** |
+| **5** | **Langkah 5: Pembuatan DDL Fisik & Seeding Data Empiris** | Mengimplementasikan skema fisik menggunakan Laravel Migration dan mengisi dataset empiris 17 bulan historis IKM UD Cahaya Onix & UD Putra Abadi. | • 13 berkas migrasi modular `database/migrations/*.php`<br>• File DDL [`database/schema.sql`](file:///d:/Project%20Coding/Web%20SCM/database/schema.sql) & Seeder Data Riil | **100% SELESAI** |
+
+---
+
+## 7. Output Akhir & Deliverable Kegiatan 4 (Checklist)
 
 - [x] **Diagram ERD Konseptual & Fisik:** Lengkap merelasikan 13 entitas relasional operasional utama.
-- [x] **Skema Basis Data Ternormalisasi (1NF, 2NF, 3NF):** Tidak memiliki data redundan dan menjaga integritas referensial.
-- [x] **Kamus Data (Data Dictionary) Lengkap:** 13 tabel terdokumentasi rapi di Form 4.1 sesuai struktur riil `db_escm_marmer.sql`.
+- [x] **Skema Basis Data Ternormalisasi (1NF, 2NF, 3NF):** Bebas data redundan dan menjamin integritas referensial.
+- [x] **Kamus Data (Data Dictionary) Lengkap:** 13 tabel terdokumentasi rapi di Form 4.1 sesuai struktur riil `db_escm_marmer`.
 - [x] **Dokumen Mapping Integrasi Antar-Modul:** Terdefinisi di Form 4.2 dengan protokol HTTP REST JSON.
-- [x] **Script DDL & Migrasi Modular Laravel:** 11 file migration `database/migrations/*.php` dan SQL dump [`database/db_escm_marmer.sql`](file:///d:/Project%20Coding/Web%20SCM/database/db_escm_marmer.sql) berisi data seed riil IKM UD Cahaya Onix & UD Putra Abadi.
+- [x] **Script DDL & Migrasi Modular Laravel:** 13 file migration `database/migrations/*.php` dan seeder data riil IKM UD Cahaya Onix & UD Putra Abadi.
+

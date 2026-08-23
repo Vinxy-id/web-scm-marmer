@@ -28,9 +28,16 @@ class BlackBoxTestSuiteTest extends TestCase
             $this->seed(\Database\Seeders\DatabaseSeeder::class);
         }
 
-        $this->ownerUser = User::where('email', 'owner@cahayaonix.com')->first() 
-            ?? User::where('role', 'owner')->first() 
-            ?? User::first();
+        $this->ownerUser = User::updateOrCreate(
+            ['email' => 'owner@cahayaonix.com'],
+            [
+                'name' => 'M. Ilham Nur Amali (Owner)',
+                'password' => \Illuminate\Support\Facades\Hash::make('role123'),
+                'role' => 'owner',
+                'ikm_name' => 'UD Cahaya Onix',
+                'is_active' => true,
+            ]
+        );
 
         $this->gudangUser = User::where('email', 'gudang@cahayaonix.com')->first() 
             ?? User::where('role', 'gudang')->first() 

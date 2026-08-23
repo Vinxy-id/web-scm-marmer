@@ -118,10 +118,26 @@ Telah dibangun prototipe berbasis web interaktif mandiri pada berkas:
 
 ---
 
-## 7. Output Akhir Kegiatan 6 (Checklist)
+---
 
-- [x] **Dokumen User Persona & Journey Map Lengkap (Form 6.1):** 4 profil pengguna riil IKM.
+## 7. Rincian Output Setiap Langkah Pelaksanaan (Kegiatan 6)
+
+Berikut adalah rekapitulasi luaran (*deliverable*) konkret dari setiap tahapan langkah kerja pada Kegiatan 6:
+
+| No | Tahapan Langkah Kerja | Deskripsi Pelaksanaan | Bentuk Luaran Nyata (Output Deliverable) | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **1** | **Langkah 1: Analisis User Persona & User Journey Map** | Mengidentifikasi profil 4 pengguna riil IKM (Owner/Manajer, Mandor Bubut, Logistik Distribusi, dan Pembeli Publik) beserta *pain points* dan alur interaksinya. | • Formulir 6.1: Profil 4 User Persona & User Journey Map<br>• Matriks kebutuhan fungsional per peran pengguna | **100% SELESAI** |
+| **2** | **Langkah 2: Perancangan Arsitektur Informasi & Sitemap** | Menyusun struktur hierarki navigasi 6 modul utama operasional hulu-hilir, dashboard monitoring, serta etalase katalog publik. | • Diagram Information Architecture (IA) & Sitemap<br>• Skema *Role-Based Access Navigation* | **100% SELESAI** |
+| **3** | **Langkah 3: Pembuatan Design System & Prototype Interaktif** | Mengembangkan sistem komponen visual bertema batuan marmer & onyx (palet warna slate/emerald/amber, tipografi, kartu KPI, kanban) dan prototipe web interaktif. | • UI Design System & Panduan Gaya ([`UI_GUIDE.md`](../../UI_GUIDE.md))<br>• Berkas Prototipe Interaktif [`public/index.html`](file:///d:/Project%20Coding/Web%20SCM/public/index.html) | **100% SELESAI** |
+| **4** | **Langkah 4: Pelaksanaan Usability Testing Skenario Tugas** | Menguji kemudahan antarmuka pada 5 skenario tugas operasional utama bersama perwakilan pengrajin dan manajer IKM mitra di Campurdarat. | • Formulir 6.2: Matriks Hasil Usability Testing 5 Skenario<br>• Dokumen Excel [`Form_Kegiatan_6_Persona_dan_Usability_Testing.xlsx`](./Form_Kegiatan_6_Persona_dan_Usability_Testing.xlsx) | **100% SELESAI** |
+
+---
+
+## 8. Output Akhir Kegiatan 6 (Checklist)
+
+- [x] **Dokumen User Persona & Journey Map Lengkap (Form 6.1):** 4 profil pengguna riil IKM mitra di Campurdarat.
 - [x] **Information Architecture & Sitemap:** 6 modul utama dengan navigasi intuitif.
 - [x] **Design System & Standar Warna:** Sesuai karakteristik lingkungan pengrajin marmer.
 - [x] **Prototype Interaktif Siap Uji:** File [`public/index.html`](file:///d:/Project%20Coding/Web%20SCM/public/index.html) berbasis HTML5, Tailwind, Chart.js, dan Lucide Icons.
-- [x] **Hasil Usability Testing Awal (Form 6.2):** 100% skenario tugas dasar berhasil diselesaikan dengan waktu respon cepat.
+- [x] **Hasil Usability Testing Awal (Form 6.2):** 100% skenario tugas dasar berhasil diselesaikan dengan tingkat kelulusan *100% PASS*.
+
