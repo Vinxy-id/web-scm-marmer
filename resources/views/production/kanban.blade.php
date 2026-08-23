@@ -70,9 +70,10 @@
                     <span class="text-[9px] bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.5 rounded">Slep</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
-                <p class="text-[11px] text-slate-500">Operator: Pak Slamet (Slep)</p>
+                <p class="text-[11px] text-slate-500">Stasiun: {{ $spk->steps->firstWhere('status', 'running')->machine_number ?? 'Mesin Slep Utama' }}</p>
+                @php $pctSlep = max(25, $spk->progress_percentage > 0 ? $spk->progress_percentage : 30); @endphp
                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-blue-600 h-full w-2/5"></div>
+                    <div class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: {{ $pctSlep }}%"></div>
                 </div>
                 <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
                     <span>Target: <b>{{ $spk->target_quantity }} Unit</b></span>
@@ -105,12 +106,13 @@
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
                     <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
-                    <span class="text-[9px] bg-amber-100 text-amber-700 font-semibold px-1.5 py-0.5 rounded">Bubut 1-4</span>
+                    <span class="text-[9px] bg-amber-100 text-amber-700 font-semibold px-1.5 py-0.5 rounded">Bubut</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
-                <p class="text-[11px] text-slate-500">4 Operator (Mesin 1-4)</p>
+                <p class="text-[11px] text-slate-500">Stasiun: {{ $spk->steps->firstWhere('status', 'running')->machine_number ?? 'Mesin Bubut 1-4' }}</p>
+                @php $pctBubut = max(55, $spk->progress_percentage > 0 ? $spk->progress_percentage : 65); @endphp
                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-amber-500 h-full w-3/4"></div>
+                    <div class="bg-amber-500 h-full rounded-full transition-all duration-300" style="width: {{ $pctBubut }}%"></div>
                 </div>
                 <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
                     <span>Target: <b>{{ $spk->target_quantity }} Unit</b></span>
@@ -142,15 +144,16 @@
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
                     <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded">QC 2 Poles</span>
+                    <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded">QC & Poles</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
-                <p class="text-[11px] text-slate-500">Inspeksi Lubang Afur</p>
+                <p class="text-[11px] text-slate-500">Inspeksi Mutu & Lubang Afur</p>
+                @php $pctQc = max(85, $spk->progress_percentage > 0 ? $spk->progress_percentage : 90); @endphp
                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-emerald-500 h-full w-11/12"></div>
+                    <div class="bg-emerald-500 h-full rounded-full transition-all duration-300" style="width: {{ $pctQc }}%"></div>
                 </div>
                 <div class="flex justify-between items-center text-[10px] text-slate-600 pt-1 border-t">
-                    <span>Lolos QC: <b>{{ $spk->completed_quantity }}/{{ $spk->target_quantity }}</b></span>
+                    <span>Target: <b>{{ $spk->target_quantity }} Unit</b></span>
                     <span>Tambal: {{ $spk->scrap_quantity }}</span>
                 </div>
                 <a href="{{ route('qc.index') }}" class="block text-center text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1 rounded">

@@ -154,8 +154,12 @@
                             @endif
                         </td>
                         <td class="p-3">
+                            @php
+                                $activeStep = $wo->steps->firstWhere('status', 'running') ?? $wo->steps->firstWhere('status', 'pending');
+                                $stationName = $activeStep ? $activeStep->machine_number : ($wo->status === 'qc_phase' ? 'Meja QC & Finishing' : 'Mesin Bubut Utama');
+                            @endphp
                             <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-semibold text-[10px]">
-                                Mesin Bubut 1-4
+                                {{ $stationName }}
                             </span>
                         </td>
                         <td class="p-3 w-44">

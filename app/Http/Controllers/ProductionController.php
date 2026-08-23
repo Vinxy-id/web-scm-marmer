@@ -39,19 +39,17 @@ class ProductionController extends Controller
                 ->whereDoesntHave('steps', function ($q) {
                     $q->where('step_name', 'pembubutan_bentuk')
                       ->where('status', 'running');
-                });
+                })
+                ->orWhereDoesntHave('steps'); // New in_progress defaults to initial Slep step
             })
             ->get();
 
-        // Col 3: In Bubut (in_progress AND bubut is running)
+        // Col 3: In Bubut (PRD-01 SOLVED: Only when bubut step is running)
         $colBubut = WorkOrder::with(['product', 'customer', 'steps'])
             ->where('status', 'in_progress')
-            ->where(function ($query) {
-                $query->whereHas('steps', function ($q) {
-                    $q->where('step_name', 'pembubutan_bentuk')
-                      ->where('status', 'running');
-                })
-                ->orWhereDoesntHave('steps');
+            ->whereHas('steps', function ($q) {
+                $q->where('step_name', 'pembubutan_bentuk')
+                  ->where('status', 'running');
             })
             ->get();
 
@@ -106,11 +104,20 @@ class ProductionController extends Controller
                 'created_by' => Auth::id() ?? 1,
             ]);
 
-            // Create standard steps
+            // PRD-07 SOLVED: Create standard 5 steps matching database schema and workshop flow
+            ProductionStep::create([
+                'work_order_id' => $wo->id,
+                'step_name' => 'pembelahan_bongkahan',
+                'sequence_order' => 1,
+                'machine_number' => 'Mesin Sawmill Pembelah',
+                'input_qty' => $wo->target_quantity,
+                'status' => 'pending',
+            ]);
+
             ProductionStep::create([
                 'work_order_id' => $wo->id,
                 'step_name' => 'pemotongan_slep',
-                'sequence_order' => 1,
+                'sequence_order' => 2,
                 'machine_number' => 'Mesin Slep Utama',
                 'input_qty' => $wo->target_quantity,
                 'status' => 'pending',
@@ -119,7 +126,7 @@ class ProductionController extends Controller
             ProductionStep::create([
                 'work_order_id' => $wo->id,
                 'step_name' => 'pembubutan_bentuk',
-                'sequence_order' => 2,
+                'sequence_order' => 3,
                 'machine_number' => 'Mesin Bubut 1-4',
                 'input_qty' => $wo->target_quantity,
                 'status' => 'pending',
@@ -128,8 +135,17 @@ class ProductionController extends Controller
             ProductionStep::create([
                 'work_order_id' => $wo->id,
                 'step_name' => 'penghalusan_poles',
-                'sequence_order' => 3,
+                'sequence_order' => 4,
                 'machine_number' => 'Mesin Bubut Poles',
+                'input_qty' => $wo->target_quantity,
+                'status' => 'pending',
+            ]);
+
+            ProductionStep::create([
+                'work_order_id' => $wo->id,
+                'step_name' => 'inspeksi_qc',
+                'sequence_order' => 5,
+                'machine_number' => 'Meja QC 2-Tahap',
                 'input_qty' => $wo->target_quantity,
                 'status' => 'pending',
             ]);
@@ -145,29 +161,37 @@ class ProductionController extends Controller
             'step' => ['nullable', 'string'],
         ]);
 
-        $updateData = ['status' => $validated['status']];
-        if ($validated['status'] === 'completed' && !$workOrder->completion_date) {
-            $updateData['completion_date'] = now()->toDateString();
-            $updateData['completed_quantity'] = $workOrder->target_quantity - $workOrder->scrap_quantity;
+        DB::transaction(function () use ($validated, $workOrder, $request) {
+            $isBecomingCompleted = ($validated['status'] === 'completed' && $workOrder->status !== 'completed' && !$workOrder->completion_date);
 
-            // Auto-increment ready stock on product
-            $workOrder->product->increment('ready_stock', $updateData['completed_quantity']);
-        }
+            $updateData = ['status' => $validated['status']];
 
-        $workOrder->update($updateData);
+            // PRD-02 SOLVED: Protected from double increment
+            if ($isBecomingCompleted) {
+                $updateData['completion_date'] = now()->toDateString();
+                $completedQty = max(0, $workOrder->target_quantity - $workOrder->scrap_quantity);
+                $updateData['completed_quantity'] = $completedQty;
 
-        // Advance steps accordingly
-        if ($request->input('step') === 'slep' || ($validated['status'] === 'in_progress' && !$request->filled('step'))) {
-            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'running']);
-            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'pending']);
-        } elseif ($request->input('step') === 'bubut') {
-            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
-            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'running']);
-        } elseif ($validated['status'] === 'qc_phase') {
-            $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
-            $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'completed']);
-            $workOrder->steps()->where('step_name', 'penghalusan_poles')->update(['status' => 'running']);
-        }
+                $workOrder->product->increment('ready_stock', $completedQty);
+            }
+
+            $workOrder->update($updateData);
+
+            // Advance steps accordingly
+            if ($request->input('step') === 'slep' || ($validated['status'] === 'in_progress' && !$request->filled('step'))) {
+                $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'running']);
+                $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'pending']);
+            } elseif ($request->input('step') === 'bubut') {
+                $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
+                $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'running']);
+            } elseif ($validated['status'] === 'qc_phase') {
+                $workOrder->steps()->where('step_name', 'pemotongan_slep')->update(['status' => 'completed']);
+                $workOrder->steps()->where('step_name', 'pembubutan_bentuk')->update(['status' => 'completed']);
+                $workOrder->steps()->where('step_name', 'penghalusan_poles')->update(['status' => 'running']);
+            } elseif ($validated['status'] === 'completed') {
+                $workOrder->steps()->update(['status' => 'completed']);
+            }
+        });
 
         return redirect()->route('production.kanban')->with('success', 'Status SPK ' . $workOrder->spk_number . ' berhasil diperbarui.');
     }
@@ -182,22 +206,31 @@ class ProductionController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $updateData = [
-            'completed_quantity' => $validated['completed_quantity'],
-            'scrap_quantity' => $validated['scrap_quantity'] ?? $workOrder->scrap_quantity,
-            'status' => $validated['status'],
-        ];
+        DB::transaction(function () use ($validated, $workOrder) {
+            $isBecomingCompleted = ($validated['status'] === 'completed' && $workOrder->status !== 'completed' && !$workOrder->completion_date);
 
-        if (!empty($validated['notes'])) {
-            $updateData['notes'] = $validated['notes'];
-        }
+            $updateData = [
+                'completed_quantity' => $validated['completed_quantity'],
+                'scrap_quantity' => $validated['scrap_quantity'] ?? $workOrder->scrap_quantity,
+                'status' => $validated['status'],
+            ];
 
-        if ($validated['status'] === 'completed' && !$workOrder->completion_date) {
-            $updateData['completion_date'] = now()->toDateString();
-            $workOrder->product->increment('ready_stock', $validated['completed_quantity']);
-        }
+            if (!empty($validated['notes'])) {
+                $updateData['notes'] = $validated['notes'];
+            }
 
-        $workOrder->update($updateData);
+            // PRD-02 SOLVED: Double increment guarded
+            if ($isBecomingCompleted) {
+                $updateData['completion_date'] = now()->toDateString();
+                $workOrder->product->increment('ready_stock', $validated['completed_quantity']);
+            }
+
+            $workOrder->update($updateData);
+
+            if ($validated['status'] === 'completed') {
+                $workOrder->steps()->update(['status' => 'completed']);
+            }
+        });
 
         return redirect()->back()->with('success', 'Progres WIP untuk SPK ' . $workOrder->spk_number . ' berhasil diperbarui.');
     }
