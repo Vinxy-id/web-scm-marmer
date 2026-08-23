@@ -64,6 +64,7 @@ Bima2026.ipynb
 *.sql.gz
 *.dump
 *.sqlite
+!database/database.sqlite
 *.sqlite-journal
 *.sqlite-shm
 *.sqlite-wal

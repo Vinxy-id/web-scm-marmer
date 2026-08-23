@@ -25,8 +25,12 @@ foreach ($tmpDirs as $dir) {
 $sqliteSource = __DIR__ . '/../database/database.sqlite';
 $sqliteDest = '/tmp/database.sqlite';
 if (file_exists($sqliteSource)) {
-    if (!file_exists($sqliteDest) || (@filesize($sqliteDest) !== @filesize($sqliteSource))) {
+    if (!file_exists($sqliteDest) || (@filesize($sqliteDest) === 0)) {
         @copy($sqliteSource, $sqliteDest);
+    }
+} else {
+    if (!file_exists($sqliteDest)) {
+        @touch($sqliteDest);
     }
 }
 
@@ -46,6 +50,15 @@ foreach ($legacyCookies as $cName) {
 if (empty($_ENV['APP_KEY'])) {
     $_ENV['APP_KEY'] = 'base64:IhDKGEhZ4YlerAkEn6Q3nAbOh/11KjtnL7/7TDCbw04=';
     putenv('APP_KEY=base64:IhDKGEhZ4YlerAkEn6Q3nAbOh/11KjtnL7/7TDCbw04=');
+}
+
+if (empty($_ENV['DB_CONNECTION'])) {
+    $_ENV['DB_CONNECTION'] = 'sqlite';
+    putenv('DB_CONNECTION=sqlite');
+}
+if (empty($_ENV['DB_DATABASE'])) {
+    $_ENV['DB_DATABASE'] = '/tmp/database.sqlite';
+    putenv('DB_DATABASE=/tmp/database.sqlite');
 }
 
 $_ENV['CACHE_STORE'] = 'array';
