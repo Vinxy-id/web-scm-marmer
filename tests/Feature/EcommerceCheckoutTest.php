@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\WorkOrder;
 use App\Models\Customer;
+use App\Models\User;
 
 class EcommerceCheckoutTest extends TestCase
 {
@@ -16,8 +17,8 @@ class EcommerceCheckoutTest extends TestCase
     {
         parent::setUp();
 
-        if (\App\Models\User::count() === 0) {
-            \App\Models\User::create([
+        if (User::count() === 0) {
+            User::create([
                 'name' => 'Admin SCM',
                 'email' => 'admin@scm-marmer.com',
                 'password' => bcrypt('password123'),
@@ -43,8 +44,10 @@ class EcommerceCheckoutTest extends TestCase
         $response->assertSee('Lunas 100%');
     }
 
-    public function test_guest_can_submit_checkout_and_generate_spk()
+    public function test_guest_can_submit_checkout_without_polluting_work_orders()
     {
+        $initialWorkOrdersCount = WorkOrder::count();
+
         $payload = [
             'product_id' => $this->product->id,
             'quantity' => 2,
@@ -64,7 +67,12 @@ class EcommerceCheckoutTest extends TestCase
         $this->assertEquals(2, $order->quantity);
         $this->assertEquals('dp_50', $order->payment_scheme);
         $this->assertEquals('qris', $order->payment_method);
-        $this->assertNotNull($order->work_order_id);
+        $this->assertEquals('pending_payment', $order->order_status);
+        $this->assertNull($order->work_order_id); // Gate 1: NOT in workshop yet!
+        $this->assertNotNull($order->expires_at);
+
+        // Verify that NO new WorkOrder was added to the workshop floor!
+        $this->assertEquals($initialWorkOrdersCount, WorkOrder::count());
 
         $response->assertRedirect(route('checkout.invoice', $order->order_number));
     }
@@ -73,7 +81,7 @@ class EcommerceCheckoutTest extends TestCase
     {
         $order = Order::first();
         if (!$order) {
-            $this->test_guest_can_submit_checkout_and_generate_spk();
+            $this->test_guest_can_submit_checkout_without_polluting_work_orders();
             $order = Order::latest()->first();
         }
 
@@ -87,7 +95,7 @@ class EcommerceCheckoutTest extends TestCase
     {
         $order = Order::first();
         if (!$order) {
-            $this->test_guest_can_submit_checkout_and_generate_spk();
+            $this->test_guest_can_submit_checkout_without_polluting_work_orders();
             $order = Order::latest()->first();
         }
 

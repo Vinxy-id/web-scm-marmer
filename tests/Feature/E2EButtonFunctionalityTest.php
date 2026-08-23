@@ -35,6 +35,7 @@ class E2EButtonFunctionalityTest extends TestCase
     {
         $pages = [
             '/dashboard',
+            '/orders',
             '/supply-chain-flow',
             '/materials',
             '/production/kanban',
