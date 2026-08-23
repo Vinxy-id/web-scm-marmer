@@ -143,8 +143,8 @@
             @csrf
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="text-[11px] font-bold text-slate-600">Kode Material</label>
-                    <input type="text" name="material_code" placeholder="MAT-MRM-002" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateCodeInput(this)">
+                    <label class="text-[11px] font-bold text-slate-600">Kode Material <span class="text-slate-400 font-normal">(Otomatis/Opsional)</span></label>
+                    <input type="text" name="material_code" placeholder="Otomatis (MAT-MRM-xxx)" class="w-full text-xs mt-1 border rounded-lg p-2 bg-slate-50 focus:bg-white" oninput="validateCodeInput(this)">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Jenis Batuan</label>

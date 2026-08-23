@@ -31,6 +31,9 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::delete('/{order}', [\App\Http\Controllers\AdminOrderController::class, 'destroy'])->name('destroy');
 });
 
+// Admin / Owner Product Management (CRUD Master Produk)
+Route::resource('products', \App\Http\Controllers\ProductController::class)->except(['create', 'show', 'edit']);
+
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';
 require __DIR__ . '/modules/materials.php';    // Dikelola Alvin

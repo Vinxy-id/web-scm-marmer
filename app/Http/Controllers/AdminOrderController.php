@@ -81,8 +81,8 @@ class AdminOrderController extends Controller
             $paidTarget = $isDp ? ($order->total_amount * 0.5) : $order->total_amount;
             $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
 
-            // 2. Generate SPK Number
-            $spkNumber = 'SPK-' . date('Y') . '-' . str_pad((WorkOrder::count() + 1), 3, '0', STR_PAD_LEFT);
+            // 2. Generate Standard SPK Number (SPK-YYYYMM-001)
+            $spkNumber = \App\Services\CodeGeneratorService::generateSpkNumber();
 
             // 3. Create WorkOrder in Workshop Kanban
             $workOrder = WorkOrder::create([

@@ -97,7 +97,7 @@ class CheckoutController extends Controller
             $customer = Customer::firstOrCreate(
                 ['phone' => $cleanPhone],
                 [
-                    'customer_code' => 'CUST-' . strtoupper(Str::random(6)),
+                    'customer_code' => \App\Services\CodeGeneratorService::generateCustomerCode(),
                     'name' => $validated['receiver_name'],
                     'phone' => $cleanPhone,
                     'address' => $validated['shipping_address'],

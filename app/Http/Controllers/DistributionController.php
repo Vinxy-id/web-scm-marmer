@@ -55,7 +55,7 @@ class DistributionController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $shipmentCode = 'SJ/' . date('Y/m/') . str_pad(Shipment::count() + 1, 4, '0', STR_PAD_LEFT);
+        $shipmentCode = \App\Services\CodeGeneratorService::generateShipmentCode();
 
         Shipment::create([
             'shipment_code' => $shipmentCode,

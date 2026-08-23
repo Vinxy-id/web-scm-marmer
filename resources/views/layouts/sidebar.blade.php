@@ -56,6 +56,15 @@
             <i data-lucide="git-merge" class="w-4 h-4 text-emerald-400"></i> Alur Rantai Pasok
         </a>
 
+        <a href="{{ route('products.index') }}" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('products.*') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            <div class="flex items-center gap-3">
+                <i data-lucide="package" class="w-4 h-4 text-sky-400"></i> Katalog & Produk
+            </div>
+            <span class="inline-flex items-center bg-blue-500/20 text-blue-300 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                Owner
+            </span>
+        </a>
+
         <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Operasional Hulu</div>
 
         <a href="{{ route('materials.index') }}" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('materials.*') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">

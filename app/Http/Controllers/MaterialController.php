@@ -47,7 +47,7 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'supplier_id' => ['nullable', 'exists:suppliers,id'],
-            'material_code' => ['required', 'string', 'max:50', 'regex:/^[A-Za-z0-9\-\_]+$/', 'unique:materials,material_code'],
+            'material_code' => ['nullable', 'string', 'max:50', 'regex:/^[A-Za-z0-9\-\_]+$/', 'unique:materials,material_code'],
             'name' => ['required', 'string', 'max:150'],
             'type' => ['required', 'in:marmer,onix,batu_kali,bahan_penolong'],
             'grade' => ['required', 'in:grade_a_super,grade_b_standard,grade_c_ekonomis'],
@@ -63,12 +63,16 @@ class MaterialController extends Controller
             'unit_cost.integer' => 'Harga satuan harus berupa angka bulat.',
         ]);
 
+        if (empty($validated['material_code'])) {
+            $validated['material_code'] = \App\Services\CodeGeneratorService::generateMaterialCode($validated['type']);
+        }
+
         DB::transaction(function () use ($validated) {
             $material = Material::create($validated);
 
             if ($material->current_stock > 0) {
                 StockTransaction::create([
-                    'transaction_code' => 'TX-OPN-' . time(),
+                    'transaction_code' => \App\Services\CodeGeneratorService::generateStockTransactionCode('opening'),
                     'material_id' => $material->id,
                     'user_id' => Auth::id() ?? 1,
                     'type' => 'opening',
@@ -82,7 +86,7 @@ class MaterialController extends Controller
             }
         });
 
-        return redirect()->route('materials.index')->with('success', 'Bahan baku baru berhasil ditambahkan.');
+        return redirect()->route('materials.index')->with('success', 'Bahan baku baru ' . $validated['material_code'] . ' berhasil ditambahkan.');
     }
 
     public function recordTransaction(Request $request)
@@ -111,7 +115,7 @@ class MaterialController extends Controller
             $material->update(['current_stock' => $afterStock]);
 
             StockTransaction::create([
-                'transaction_code' => 'TX-' . strtoupper($validated['type']) . '-' . time(),
+                'transaction_code' => \App\Services\CodeGeneratorService::generateStockTransactionCode($validated['type']),
                 'material_id' => $material->id,
                 'user_id' => Auth::id() ?? 1,
                 'type' => $validated['type'],

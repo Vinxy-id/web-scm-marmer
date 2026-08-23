@@ -88,7 +88,7 @@ class ProductionController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $spkNumber = 'SPK/' . date('Y/m/') . str_pad(WorkOrder::count() + 1, 3, '0', STR_PAD_LEFT);
+        $spkNumber = \App\Services\CodeGeneratorService::generateSpkNumber();
 
         DB::transaction(function () use ($validated, $spkNumber) {
             $wo = WorkOrder::create([
