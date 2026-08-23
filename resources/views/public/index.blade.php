@@ -280,8 +280,9 @@
                 $artisanPhone = $isPutraAbadi ? '6281298765432' : '6281234567890';
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
-            <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between" 
-                 data-material="{{ $item->material_type }}">
+            <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer" 
+                 data-material="{{ $item->material_type }}"
+                 onclick="openProductModal({{ $item->id }})">
                 
                 <div>
                     <!-- Product Image Box -->
@@ -307,12 +308,11 @@
                         </div>
 
                         <!-- Quick View Overlay Button -->
-                        <button onclick="openProductModal({{ $item->id }})" 
-                                class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs gap-1.5 backdrop-blur-[2px]">
+                        <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs gap-1.5 backdrop-blur-[2px]">
                             <span class="bg-slate-900/90 px-3 py-1.5 rounded-lg shadow flex items-center gap-1.5">
-                                <i data-lucide="eye" class="w-4 h-4"></i> Detail Cepat
+                                <i data-lucide="eye" class="w-4 h-4"></i> Lihat Detail Produk
                             </span>
-                        </button>
+                        </div>
                     </div>
 
                     <!-- Product Content -->
@@ -323,9 +323,7 @@
                         </div>
 
                         <h3 class="font-bold text-sm text-slate-800 leading-snug line-clamp-2 min-h-[2.5rem]">
-                            <a href="{{ route('catalog.show', $item->id) }}" class="hover:text-blue-700 transition">
-                                {{ $item->name }}
-                            </a>
+                            {{ $item->name }}
                         </h3>
 
                         <!-- Tech Specs Pills -->
@@ -343,7 +341,7 @@
                 </div>
 
                 <!-- Product Footer / Price & Order -->
-                <div class="p-4 pt-0">
+                <div class="p-4 pt-0" onclick="event.stopPropagation()">
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div>
                             <p class="text-[10px] text-slate-400 uppercase font-semibold">Harga</p>
@@ -352,12 +350,19 @@
                             </p>
                         </div>
 
-                        <a href="https://wa.me/{{ $artisanPhone }}?text={{ urlencode($waMessage) }}" 
-                           target="_blank" 
-                           class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
-                            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-                            <span>Pesan WA</span>
-                        </a>
+                        <div class="flex items-center gap-1.5">
+                            <a href="{{ route('checkout.show', $item->id) }}" 
+                               class="bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
+                                <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+                                <span>Beli</span>
+                            </a>
+                            <a href="https://wa.me/{{ $artisanPhone }}?text={{ urlencode($waMessage) }}" 
+                               target="_blank" 
+                               title="Tanya Serat via WhatsApp"
+                               class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold p-2 rounded-xl transition flex items-center justify-center">
+                                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -554,14 +559,25 @@
             </div>
 
             <!-- Modal Action -->
-            <div class="flex items-center justify-between gap-4 pt-2 border-t border-slate-100">
-                <button onclick="closeProductModal()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-4 py-2.5">
-                    Tutup
-                </button>
-                <a id="modal-wa-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-6 py-3 rounded-xl transition flex items-center gap-2 shadow">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    <span>Pesan Langsung via WhatsApp</span>
-                </a>
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeProductModal()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-3 py-2">
+                        Tutup
+                    </button>
+                    <a id="modal-detail-btn" href="#" class="text-xs font-semibold text-blue-700 hover:underline px-2 py-2">
+                        Lihat Halaman Lengkap &rarr;
+                    </a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a id="modal-wa-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Tanya WA</span>
+                    </a>
+                    <a id="modal-checkout-btn" href="#" class="bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md shadow-blue-700/20">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span>Beli / Checkout</span>
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -616,6 +632,8 @@
                     document.getElementById('modal-finishing').innerText = data.finishing_type;
                     document.getElementById('modal-location').innerText = data.artisan.location;
                     document.getElementById('modal-wa-btn').href = data.wa_link;
+                    document.getElementById('modal-checkout-btn').href = data.checkout_url || `{{ url('/checkout') }}/${data.id}`;
+                    document.getElementById('modal-detail-btn').href = data.detail_url || `{{ url('/katalog') }}/${data.id}`;
 
                     // Stock badge
                     const stockContainer = document.getElementById('modal-stock-badge');

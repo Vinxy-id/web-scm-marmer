@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PublicCatalogController;
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,12 @@ use App\Http\Controllers\PublicCatalogController;
 Route::get('/', [PublicCatalogController::class, 'index'])->name('home');
 Route::get('/katalog', [PublicCatalogController::class, 'catalog'])->name('catalog');
 Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('catalog.show');
+
+// E-Commerce Direct Checkout, Digital Invoice & Order Tracking
+Route::get('/checkout/{id}', [CheckoutController::class, 'show'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/order/invoice/{orderNumber}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
+Route::get('/lacak-pesanan', [CheckoutController::class, 'tracking'])->name('order.tracking');
 
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';

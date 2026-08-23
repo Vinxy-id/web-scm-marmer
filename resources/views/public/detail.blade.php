@@ -143,12 +143,17 @@
 
                     <!-- Order Action CTA Buttons -->
                     <div class="space-y-3 pt-2">
-                        <a href="{{ $waLink }}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm py-4 px-6 rounded-2xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i>
-                            <span>Pesan / Konsultasi via WhatsApp ({{ $artisan['name'] }})</span>
+                        <a href="{{ route('checkout.show', $product->id) }}" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-extrabold text-sm py-4 px-6 rounded-2xl transition shadow-lg shadow-blue-700/20 flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            <span>Beli / Checkout Online (Opsi DP 50% / Lunas)</span>
                         </a>
 
-                        <a href="https://wa.me/{{ $artisan['phone'] }}?text={{ urlencode('Halo ' . $artisan['name'] . ', saya ingin meminta video fisik atau foto serat terbaru untuk produk ' . $product->name) }}" target="_blank" class="w-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs py-3 px-4 rounded-xl border border-slate-200 transition flex items-center justify-center gap-2">
+                        <a href="{{ $waLink }}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl transition shadow-md flex items-center justify-center gap-2">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            <span>Tanya Serat & Real Pic via WhatsApp ({{ $artisan['name'] }})</span>
+                        </a>
+
+                        <a href="https://wa.me/{{ $artisan['phone'] }}?text={{ urlencode('Halo ' . $artisan['name'] . ', saya ingin meminta video fisik atau foto serat terbaru untuk produk ' . $product->name) }}" target="_blank" class="w-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl border border-slate-200 transition flex items-center justify-center gap-2">
                             <i data-lucide="video" class="w-4 h-4 text-blue-600"></i>
                             <span>Minta Video Fisik / Foto Serat Batuan Terbaru</span>
                         </a>

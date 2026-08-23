@@ -89,21 +89,21 @@
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center gap-8">
+                <nav class="hidden md:flex items-center gap-7">
                     <a href="{{ route('home') }}" class="text-sm font-semibold transition {{ request()->routeIs('home') ? 'text-blue-900 font-bold border-b-2 border-blue-900 pb-1' : 'text-slate-600 hover:text-blue-900' }}">
                         Beranda
                     </a>
-                    <a href="{{ route('catalog') }}" class="text-sm font-semibold transition {{ request()->routeIs('catalog*') ? 'text-blue-900 font-bold border-b-2 border-blue-900 pb-1' : 'text-slate-600 hover:text-blue-900' }}">
+                    <a href="{{ route('catalog') }}" class="text-sm font-semibold transition {{ request()->routeIs('catalog*') || request()->routeIs('checkout*') ? 'text-blue-900 font-bold border-b-2 border-blue-900 pb-1' : 'text-slate-600 hover:text-blue-900' }}">
                         Katalog Produk
                     </a>
+                    <a href="{{ route('order.tracking') }}" class="text-sm font-semibold transition {{ request()->routeIs('order.tracking') ? 'text-blue-900 font-bold border-b-2 border-blue-900 pb-1' : 'text-slate-600 hover:text-blue-900' }}">
+                        Lacak Pesanan
+                    </a>
                     <a href="{{ route('home') }}#profil-ikm" class="text-sm font-semibold text-slate-600 hover:text-blue-900 transition">
-                        Profil IKM Mitra
+                        Profil IKM
                     </a>
                     <a href="{{ route('home') }}#alur-rantai-pasok" class="text-sm font-semibold text-slate-600 hover:text-blue-900 transition">
-                        Alur Rantai Pasok
-                    </a>
-                    <a href="{{ route('home') }}#kontak" class="text-sm font-semibold text-slate-600 hover:text-blue-900 transition">
-                        Kontak & Lokasi
+                        Alur SCM
                     </a>
                 </nav>
 
@@ -137,6 +137,9 @@
             </a>
             <a href="{{ route('catalog') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold {{ request()->routeIs('catalog*') ? 'bg-blue-50 text-blue-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 Katalog Produk
+            </a>
+            <a href="{{ route('order.tracking') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold {{ request()->routeIs('order.tracking') ? 'bg-blue-50 text-blue-900' : 'text-slate-700 hover:bg-slate-50' }}">
+                Lacak Pesanan Live
             </a>
             <a href="{{ route('home') }}#profil-ikm" class="block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Profil IKM Mitra

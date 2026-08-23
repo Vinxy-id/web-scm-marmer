@@ -209,6 +209,8 @@ class PublicCatalogController extends Controller
                     'formatted_price' => 'Rp ' . number_format($product->selling_price, 0, ',', '.'),
                     'image_url' => asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg'),
                     'artisan' => $artisan,
+                    'checkout_url' => route('checkout.show', $product->id),
+                    'detail_url' => route('catalog.show', $product->id),
                     'wa_link' => 'https://wa.me/' . $artisan['phone'] . '?text=' . urlencode(
                         "Halo {$artisan['name']}, saya tertarik dengan produk *{$product->name}* (Kode: {$product->product_code}) yang ada di katalog E-SCM. Apakah stok ready atau bisa custom ukuran?"
                     ),
