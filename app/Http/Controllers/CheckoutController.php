@@ -202,6 +202,7 @@ class CheckoutController extends Controller
     {
         $searchNumber = trim($request->input('order_number', ''));
         $order = null;
+        $workOrder = null;
 
         if (!empty($searchNumber)) {
             $order = Order::with(['product.category', 'customer', 'workOrder.shipment', 'workOrder.steps'])
@@ -214,8 +215,15 @@ class CheckoutController extends Controller
             if ($order && $order->isExpired() && $order->order_status === 'pending_payment') {
                 $order->update(['order_status' => 'expired']);
             }
+
+            if (!$order) {
+                // Fallback: Check directly in standalone WorkOrder (SPK)
+                $workOrder = \App\Models\WorkOrder::with(['product.category', 'customer', 'shipment', 'steps', 'order'])
+                                                  ->where('spk_number', $searchNumber)
+                                                  ->first();
+            }
         }
 
-        return view('public.tracking', compact('order', 'searchNumber'));
+        return view('public.tracking', compact('order', 'workOrder', 'searchNumber'));
     }
 }

@@ -272,4 +272,16 @@ class DistributionAndTrackingFlowTest extends TestCase
         $response->assertSee('BST-JKT-887766');
         $response->assertSee('Terverifikasi Solid Kayu');
     }
+
+    public function test_public_tracking_page_can_track_standalone_work_order_spk(): void
+    {
+        // SPK-CO-202502-002 is already present from DatabaseSeeder
+        $response = $this->get(route('order.tracking', ['order_number' => 'SPK-CO-202502-002']));
+
+        $response->assertStatus(200);
+        $response->assertSee('SPK-CO-202502-002');
+        $response->assertSee('Surat Perintah Kerja');
+        $response->assertSee('Selesai Produksi');
+        $response->assertSee('640 / 640 Unit');
+    }
 }

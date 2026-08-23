@@ -44,18 +44,18 @@
             </form>
         </div>
 
-        @if(!empty($searchNumber) && !$order)
+        @if(!empty($searchNumber) && !$order && !$workOrder)
         <div class="bg-white p-8 rounded-3xl border border-rose-200 text-center space-y-3 shadow-sm">
             <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 mx-auto flex items-center justify-center">
                 <i data-lucide="alert-circle" class="w-6 h-6"></i>
             </div>
             <h3 class="text-sm font-bold text-slate-900">Pesanan Tidak Ditemukan</h3>
             <p class="text-xs text-slate-500 max-w-md mx-auto">
-                Nomor pesanan atau SPK <b class="font-mono text-slate-800">"{{ $searchNumber }}"</b> tidak ditemukan di dalam sistem. Pastikan nomor yang dimasukkan sudah sesuai dengan invoice Anda.
+                Nomor pesanan atau SPK <b class="font-mono text-slate-800">"{{ $searchNumber }}"</b> tidak ditemukan di dalam sistem. Pastikan nomor yang dimasukkan sudah sesuai dengan invoice atau dokumen SPK Anda.
             </p>
         </div>
         @elseif($order)
-        <!-- Tracking Result Card -->
+        <!-- Tracking Result Card (Order Based) -->
         <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden space-y-6 p-6 sm:p-8">
             
             <!-- Header Summary -->
@@ -222,6 +222,175 @@
                     <i data-lucide="file-text" class="w-4 h-4"></i> Lihat Invoice Tagihan
                 </a>
                 <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status pesanan ' . $order->order_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya CS Pengrajin
+                </a>
+            </div>
+
+        </div>
+        @elseif($workOrder)
+        <!-- Standalone Work Order / SPK Tracking Result Card -->
+        @php
+            $woBadge = match($workOrder->status) {
+                'completed' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                'qc_phase' => 'bg-purple-100 text-purple-800 border-purple-200',
+                'in_progress' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                default => 'bg-blue-100 text-blue-800 border-blue-200',
+            };
+            $woLabel = match($workOrder->status) {
+                'completed' => 'Selesai Produksi (Siap Kirim)',
+                'qc_phase' => 'Tahap Pengujian Mutu (QC)',
+                'in_progress' => 'Sedang Dikerjakan di Bengkel',
+                default => 'Dijadwalkan di Papan Produksi',
+            };
+            $woStepWeight = match($workOrder->status) {
+                'scheduled', 'draft' => 1,
+                'in_progress' => 2,
+                'qc_phase' => 3,
+                'completed' => ($workOrder->shipment && in_array($workOrder->shipment->delivery_status, ['in_transit', 'delivered'])) ? 5 : 4,
+            };
+        @endphp
+
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden space-y-6 p-6 sm:p-8">
+            
+            <!-- Header Summary -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+                <div>
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $woBadge }}">
+                        {{ $woLabel }}
+                    </span>
+                    <h2 class="text-xl font-black text-slate-900 mt-2">Surat Perintah Kerja #{{ $workOrder->spk_number }}</h2>
+                    <p class="text-xs text-slate-400">Pemesan / Mitra: <b class="text-slate-700">{{ $workOrder->customer->company_name ?? ($workOrder->customer->name ?? 'Stok Gudang Sentra') }}</b> ({{ $workOrder->customer->city ?? 'Tulungagung' }})</p>
+                </div>
+                <div class="text-left sm:text-right">
+                    <p class="text-xs text-slate-400">Target & Realisasi:</p>
+                    <p class="font-mono text-sm font-bold text-indigo-700">
+                        {{ $workOrder->completed_quantity }} / {{ $workOrder->target_quantity }} Unit
+                    </p>
+                </div>
+            </div>
+
+            <!-- 5-Step Progress Bar -->
+            <div class="py-4">
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-center">
+                    
+                    <!-- Step 1: SPK Created -->
+                    <div class="p-3 rounded-2xl border {{ $woStepWeight >= 1 ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-400' }}">
+                        <div class="w-7 h-7 mx-auto rounded-full {{ $woStepWeight >= 1 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center font-bold text-xs mb-1.5">
+                            1
+                        </div>
+                        <p class="text-xs font-bold">Terbit SPK</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Jadwal Produksi</p>
+                    </div>
+
+                    <!-- Step 2: In Production -->
+                    <div class="p-3 rounded-2xl border {{ $woStepWeight >= 2 ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-400' }}">
+                        <div class="w-7 h-7 mx-auto rounded-full {{ $woStepWeight >= 2 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center font-bold text-xs mb-1.5">
+                            2
+                        </div>
+                        <p class="text-xs font-bold">Papan Produksi</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Slep & Bubut</p>
+                    </div>
+
+                    <!-- Step 3: QC Phase -->
+                    <div class="p-3 rounded-2xl border {{ $woStepWeight >= 3 ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-400' }}">
+                        <div class="w-7 h-7 mx-auto rounded-full {{ $woStepWeight >= 3 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center font-bold text-xs mb-1.5">
+                            3
+                        </div>
+                        <p class="text-xs font-bold">Inspeksi QC</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">2-Tahap Mutu</p>
+                    </div>
+
+                    <!-- Step 4: Packing -->
+                    <div class="p-3 rounded-2xl border {{ $woStepWeight >= 4 ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-400' }}">
+                        <div class="w-7 h-7 mx-auto rounded-full {{ $woStepWeight >= 4 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center font-bold text-xs mb-1.5">
+                            4
+                        </div>
+                        <p class="text-xs font-bold">Packing Peti</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Krat Kayu Solid</p>
+                    </div>
+
+                    <!-- Step 5: Shipped -->
+                    <div class="p-3 rounded-2xl border {{ $woStepWeight >= 5 ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400' }}">
+                        <div class="w-7 h-7 mx-auto rounded-full {{ $woStepWeight >= 5 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center font-bold text-xs mb-1.5">
+                            5
+                        </div>
+                        <p class="text-xs font-bold">Kargo Logistik</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">{{ $workOrder->shipment ? 'Surat Jalan Terbit' : 'Antrean Siap Kirim' }}</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Product & Customer Details -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-100 text-xs">
+                
+                <!-- Product Information -->
+                <div class="space-y-3">
+                    <h4 class="font-bold text-slate-900">Produk yang Diproduksi:</h4>
+                    <div class="flex gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100 items-center">
+                        <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center border border-slate-200 flex-shrink-0 overflow-hidden">
+                            <img src="{{ asset($workOrder->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $workOrder->product->name ?? 'Produk' }}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">{{ $workOrder->product->name ?? 'Kerajinan Marmer' }}</p>
+                            <p class="text-[11px] text-slate-500">Target: {{ $workOrder->target_quantity }} Unit ({{ $workOrder->product->dimension_spec ?: 'Standar' }})</p>
+                            <p class="text-[11px] text-indigo-700 font-semibold">Tenggat: {{ $workOrder->due_date ? $workOrder->due_date->format('d M Y') : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Destination -->
+                <div class="space-y-3">
+                    <h4 class="font-bold text-slate-900">Pelanggan / Destinasi Mitra:</h4>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-1">
+                        <p class="font-bold text-slate-800">{{ $workOrder->customer->name ?? 'Stok Gudang Sentra' }} ({{ $workOrder->customer->phone ?? '-' }})</p>
+                        <p class="text-slate-600 leading-relaxed">{{ $workOrder->customer->address ?? 'Kawasan Industri Marmer' }}, {{ $workOrder->customer->city ?? 'Tulungagung' }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Live Shipment Info if available -->
+            @if($workOrder->shipment)
+            @php $sh = $workOrder->shipment; @endphp
+            <div class="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200/80 rounded-2xl space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-200/50 pb-2">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="truck" class="w-4 h-4 text-purple-700"></i>
+                        <h4 class="font-bold text-slate-900 text-xs">Informasi Logistik & Surat Jalan Pengiriman</h4>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded border border-purple-200">
+                        {{ $sh->shipment_code }}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Ekspedisi Kargo</span>
+                        <span class="font-bold text-slate-800">{{ $sh->expedition_name }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">No. Resi / Surat Jalan</span>
+                        <span class="font-bold text-slate-800 font-mono">{{ $sh->tracking_number ?: $sh->shipment_code }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Armada / Sopir</span>
+                        <span class="font-bold text-slate-800">{{ $sh->vehicle_plate ?: 'Armada Logistik' }} {{ $sh->driver_name ? '(' . $sh->driver_name . ')' : '' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Status Packing Kayu</span>
+                        <span class="font-bold text-emerald-700 flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3 h-3 text-emerald-600"></i> Terverifikasi Solid Kayu
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Action Buttons -->
+            <div class="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
+                <span class="text-xs text-slate-500 font-medium">Batch SPK Resmi Sentra IKM Marmer Tulungagung</span>
+                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status SPK ' . $workOrder->spk_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya CS Pengrajin
                 </a>
             </div>
