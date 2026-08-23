@@ -1,7 +1,8 @@
 """
 Microservice Peramalan (Forecasting) E-SCM IKM Marmer Tulungagung
 Framework: FastAPI (Python 3.10+)
-Model: Moving Average, Holt-Winters Exponential Smoothing, ARIMA
+Model: Moving Average, Holt-Winters Exponential Smoothing, SES, ARIMA(2,0,2)
+Dataset: Empiris 17-Bulan (Bima2026.ipynb)
 """
 
 from fastapi import FastAPI, HTTPException
@@ -10,13 +11,14 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 import numpy as np
 import pandas as pd
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from statsmodels.tsa.holtwinters import ExponentialSmoothing, SimpleExpSmoothing
+from statsmodels.tsa.arima.model import ARIMA
 import math
 
 app = FastAPI(
     title="E-SCM Marmer Forecasting API",
     description="API Peramalan Kebutuhan Bahan Baku & Permintaan Produk IKM Marmer Tulungagung",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 # CORS Configuration
@@ -30,12 +32,12 @@ app.add_middleware(
 
 class TimeSeriesPoint(BaseModel):
     period: str = Field(..., example="2025-01")
-    actual_qty: float = Field(..., example=350.0)
+    actual_qty: float = Field(..., example=2650.0)
 
 class ForecastRequest(BaseModel):
     item_type: str = Field(..., example="material") # 'material' or 'product'
     item_id: int = Field(..., example=1)
-    algorithm: str = Field("holt_winters", example="holt_winters") # 'moving_average', 'holt_winters', 'arima'
+    algorithm: str = Field("arima", example="arima") # 'arima', 'ses', 'holt_winters', 'moving_average'
     forecast_horizon: int = Field(3, ge=1, le=12, example=3)
     history: Optional[List[TimeSeriesPoint]] = None
 
@@ -63,7 +65,7 @@ def root():
         "service": "E-SCM Marmer Forecasting API",
         "status": "online",
         "cluster": "Klaster IKM Marmer Tulungagung",
-        "version": "1.0.0"
+        "version": "1.1.0"
     }
 
 def calculate_mape(actual: np.ndarray, predicted: np.ndarray) -> float:
@@ -77,21 +79,26 @@ def calculate_rmse(actual: np.ndarray, predicted: np.ndarray) -> float:
 
 @app.post("/api/forecast/predict", response_model=ForecastResponse)
 def predict(payload: ForecastRequest):
-    # Data historis default jika tidak dikirim dalam payload (Simulasi 12 Bulan Marmer)
+    # Data historis empiris 17-bulan dari Bima2026.ipynb (Jan 2025 - Mei 2026)
     if not payload.history or len(payload.history) < 4:
         default_data = [
-            {"period": "2025-05", "actual_qty": 320.0},
-            {"period": "2025-06", "actual_qty": 340.0},
-            {"period": "2025-07", "actual_qty": 310.0},
-            {"period": "2025-08", "actual_qty": 360.0},
-            {"period": "2025-09", "actual_qty": 390.0},
-            {"period": "2025-10", "actual_qty": 410.0},
-            {"period": "2025-11", "actual_qty": 380.0},
-            {"period": "2025-12", "actual_qty": 430.0},
-            {"period": "2026-01", "actual_qty": 400.0},
-            {"period": "2026-02", "actual_qty": 420.0},
-            {"period": "2026-03", "actual_qty": 450.0},
-            {"period": "2026-04", "actual_qty": 470.0}
+            {"period": "2025-01", "actual_qty": 2650.0},
+            {"period": "2025-02", "actual_qty": 2780.0},
+            {"period": "2025-03", "actual_qty": 2860.0},
+            {"period": "2025-04", "actual_qty": 2580.0},
+            {"period": "2025-05", "actual_qty": 2920.0},
+            {"period": "2025-06", "actual_qty": 2740.0},
+            {"period": "2025-07", "actual_qty": 2880.0},
+            {"period": "2025-08", "actual_qty": 2630.0},
+            {"period": "2025-09", "actual_qty": 2760.0},
+            {"period": "2025-10", "actual_qty": 2950.0},
+            {"period": "2025-11", "actual_qty": 2810.0},
+            {"period": "2025-12", "actual_qty": 2700.0},
+            {"period": "2026-01", "actual_qty": 2750.0},
+            {"period": "2026-02", "actual_qty": 2850.0},
+            {"period": "2026-03", "actual_qty": 2900.0},
+            {"period": "2026-04", "actual_qty": 2650.0},
+            {"period": "2026-05", "actual_qty": 3000.0}
         ]
         history_points = [TimeSeriesPoint(**p) for p in default_data]
     else:
@@ -104,7 +111,87 @@ def predict(payload: ForecastRequest):
     algo = payload.algorithm.lower()
     predictions = []
     
-    if algo == "moving_average" or n < 6:
+    if algo == "arima":
+        # Model ARIMA(2,0,2) Terunggul sesuai Bima2026.ipynb (MAPE 5.73%)
+        try:
+            model = ARIMA(series, order=(2, 0, 2))
+            fit = model.fit()
+            forecast_res = fit.get_forecast(steps=payload.forecast_horizon)
+            forecast_vals = forecast_res.predicted_mean
+            conf_int = forecast_res.conf_int(alpha=0.05)
+            fitted = fit.fittedvalues
+
+            mape = calculate_mape(series, fitted)
+            rmse = calculate_rmse(series, fitted)
+            used_name = "ARIMA(2,0,2) Model AI"
+
+            for h in range(payload.forecast_horizon):
+                val = float(max(0, forecast_vals[h]))
+                lower_b = float(max(0, conf_int[h, 0])) if hasattr(conf_int, 'shape') else max(0, val - 1.96 * rmse)
+                upper_b = float(conf_int[h, 1]) if hasattr(conf_int, 'shape') else val + 1.96 * rmse
+                
+                predictions.append(PredictionPoint(
+                    period=f"Period +{h+1}",
+                    predicted_qty=round(val, 2),
+                    lower_bound=round(lower_b, 2),
+                    upper_bound=round(upper_b, 2)
+                ))
+        except Exception as e:
+            # Fallback jika ordo ARIMA(2,0,2) bermasalah pada sampel kecil
+            model = ARIMA(series, order=(1, 0, 0))
+            fit = model.fit()
+            forecast_vals = fit.forecast(steps=payload.forecast_horizon)
+            fitted = fit.fittedvalues
+            mape = calculate_mape(series, fitted)
+            rmse = calculate_rmse(series, fitted)
+            used_name = "ARIMA(1,0,0) Fallback"
+
+            for h, f_val in enumerate(forecast_vals, 1):
+                val = float(max(0, f_val))
+                predictions.append(PredictionPoint(
+                    period=f"Period +{h}",
+                    predicted_qty=round(val, 2),
+                    lower_bound=round(max(0, val - 1.96 * rmse), 2),
+                    upper_bound=round(val + 1.96 * rmse, 2)
+                ))
+
+    elif algo == "ses" or algo == "single_exponential_smoothing":
+        # Single Exponential Smoothing (Optimal Alpha Search)
+        best_alpha = 0.5
+        min_mape = float("inf")
+        best_fit = None
+
+        for alpha in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+            try:
+                model = SimpleExpSmoothing(series, initialization_method="estimated").fit(smoothing_level=alpha, optimized=False)
+                m_mape = calculate_mape(series, model.fittedvalues)
+                if m_mape < min_mape:
+                    min_mape = m_mape
+                    best_alpha = alpha
+                    best_fit = model
+            except:
+                continue
+
+        if best_fit is None:
+            best_fit = SimpleExpSmoothing(series, initialization_method="estimated").fit()
+            best_alpha = round(float(best_fit.model.params.get('smoothing_level', 0.5)), 2)
+
+        forecast_vals = best_fit.forecast(payload.forecast_horizon)
+        fitted = best_fit.fittedvalues
+        mape = calculate_mape(series, fitted)
+        rmse = calculate_rmse(series, fitted)
+        used_name = f"Single Exponential Smoothing (Alpha={best_alpha})"
+
+        for h, f_val in enumerate(forecast_vals, 1):
+            val = float(max(0, f_val))
+            predictions.append(PredictionPoint(
+                period=f"Period +{h}",
+                predicted_qty=round(val, 2),
+                lower_bound=round(max(0, val - 1.96 * rmse), 2),
+                upper_bound=round(val + 1.96 * rmse, 2)
+            ))
+
+    elif algo == "moving_average" or n < 6:
         # Single Moving Average (k=3)
         k = 3
         fitted = np.full(n, np.nan)

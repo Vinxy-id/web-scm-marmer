@@ -50,6 +50,8 @@ __pycache__/
 .coverage
 htmlcov/
 *.log
+*.ipynb
+Bima2026.ipynb
 
 # -----------------------------------------------------------------------------
 # Editor & Sistem Operasi

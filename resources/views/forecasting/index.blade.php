@@ -2,7 +2,7 @@
 
 @section('title', 'Peramalan Permintaan AI')
 @section('page-title', 'Peramalan Permintaan & AI Assistant')
-@section('page-subtitle', 'Integrasi Model Deret Waktu Holt-Winters & Moving Average Python FastAPI')
+@section('page-subtitle', 'Integrasi Model Deret Waktu ARIMA(2,0,2), Single Exponential Smoothing (SES), Holt-Winters & Moving Average')
 
 @section('content')
 <div class="space-y-6">
@@ -12,11 +12,11 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <span class="bg-blue-500/30 text-blue-200 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-400/30">
-                    Model Deret Waktu {{ $latestForecast->algorithm_used ?? 'Holt-Winters (Exponential Smoothing)' }}
+                    Model AI {{ $latestForecast->algorithm_used ?? 'ARIMA(2,0,2) Model AI' }}
                 </span>
                 <h3 class="text-xl font-bold mt-2">Peramalan Permintaan & Kebutuhan Bahan Baku</h3>
                 <p class="text-xs text-slate-300 mt-1 max-w-2xl">
-                    Proyeksi kebutuhan bongkahan marmer dan produk jadi otomatis berdasarkan pola musiman dan tren historis 12 bulan terakhir untuk mencegah *stockout*.
+                    Proyeksi kebutuhan bongkahan marmer dan produk jadi otomatis berdasarkan pola musiman dan tren historis 17 bulan terakhir (Jan 2025 - Mei 2026) dari dataset empiris IKM.
                 </p>
             </div>
 
@@ -41,7 +41,9 @@
                 </select>
 
                 <select name="model_type" class="bg-slate-800 text-white text-xs rounded-xl px-3 py-2 border border-slate-700 focus:ring-1 focus:ring-blue-400">
-                    <option value="holt_winters" selected>Holt-Winters</option>
+                    <option value="arima" selected>ARIMA(2,0,2) (Terbaik - MAPE 5.73%)</option>
+                    <option value="ses">Single Exponential Smoothing (SES)</option>
+                    <option value="holt_winters">Holt-Winters</option>
                     <option value="moving_average">Moving Average</option>
                 </select>
 
@@ -57,23 +59,23 @@
             <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
                 <p class="text-xs text-slate-300">Estimasi Kebutuhan Periode Depan</p>
                 <h4 class="text-2xl font-bold text-white mt-1">
-                    {{ end($forecastValues) ? number_format(end($forecastValues), 1) : '485.0' }} Unit
+                    {{ end($forecastValues) ? number_format(end($forecastValues), 0, ',', '.') : '2.850' }} Unit
                 </h4>
-                <p class="text-[11px] text-blue-300 mt-0.5">Target: {{ $latestForecast->item_name ?? 'Batu Marmer Putih' }}</p>
+                <p class="text-[11px] text-blue-300 mt-0.5">Target: {{ $latestForecast->item_name ?? 'Stepping Batu Kali' }}</p>
             </div>
             <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
                 <p class="text-xs text-slate-300">Akurasi Model (MAPE)</p>
                 <h4 class="text-2xl font-bold text-emerald-400 mt-1">
-                    {{ number_format($latestForecast->mape_score ?? 6.42, 2) }} %
+                    {{ number_format($latestForecast->mape_score ?? 5.73, 2) }} %
                 </h4>
-                <p class="text-[11px] text-emerald-300 mt-0.5">Kategori: Sangat Akurat (&lt;10%)</p>
+                <p class="text-[11px] text-emerald-300 mt-0.5">Kategori: Sangat Presisi (&lt;10%)</p>
             </div>
             <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
                 <p class="text-xs text-slate-300">Horizon Proyeksi</p>
                 <h4 class="text-2xl font-bold text-amber-300 mt-1">
                     {{ $latestForecast->forecast_horizon_months ?? 3 }} Bulan ke Depan
                 </h4>
-                <p class="text-[11px] text-amber-200 mt-0.5">Model: {{ $latestForecast->algorithm_used ?? 'Holt-Winters' }}</p>
+                <p class="text-[11px] text-amber-200 mt-0.5">Model: {{ $latestForecast->algorithm_used ?? 'ARIMA(2,0,2)' }}</p>
             </div>
         </div>
     </div>
