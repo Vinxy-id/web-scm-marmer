@@ -61,7 +61,7 @@
             <!-- Header Summary -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
-                    <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full uppercase">
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $order->status_badge_class }}">
                         {{ $order->order_status_label }}
                     </span>
                     <h2 class="text-xl font-black text-slate-900 mt-2">Pesanan #{{ $order->order_number }}</h2>
@@ -69,14 +69,26 @@
                 </div>
                 <div class="text-left sm:text-right">
                     <p class="text-xs text-slate-400">Nomor SPK Produksi:</p>
-                    <p class="font-mono text-sm font-bold text-slate-800">{{ $order->workOrder->spk_number ?? 'SPK-SCHEDULED' }}</p>
+                    <p class="font-mono text-sm font-bold {{ $order->work_order_id ? 'text-indigo-700' : 'text-amber-600' }}">
+                        {{ $order->workOrder->spk_number ?? 'Menunggu Verifikasi DP' }}
+                    </p>
                 </div>
             </div>
 
+            @if($order->isCancelled())
+            <div class="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-xs flex items-center gap-3">
+                <i data-lucide="x-circle" class="w-5 h-5 text-rose-600 flex-shrink-0"></i>
+                <div>
+                    <p class="font-bold">Status Pesanan: {{ $order->order_status_label }}</p>
+                    <p class="text-[11px] text-rose-700 mt-0.5">Alasan: {{ $order->cancellation_reason ?: 'Melewati batas waktu pembayaran 1x24 jam.' }}</p>
+                </div>
+            </div>
+            @else
             <!-- 5-Step Progress Bar -->
             @php
                 $statusWeights = [
                     'pending_payment' => 1,
+                    'verified' => 1,
                     'in_production' => 2,
                     'qc_phase' => 3,
                     'packing' => 4,
@@ -95,7 +107,7 @@
                             1
                         </div>
                         <p class="text-xs font-bold">Pesanan Masuk</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Verifikasi Invoice</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">{{ $order->work_order_id ? 'DP Terverifikasi' : 'Verifikasi Invoice' }}</p>
                     </div>
 
                     <!-- Step 2: In Production -->
@@ -136,13 +148,14 @@
 
                 </div>
             </div>
+            @endif
 
             <!-- Product & Timeline Details -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-100 text-xs">
                 
                 <!-- Product Information -->
                 <div class="space-y-3">
-                    <h4 class="font-bold text-slate-900">Barang yang Sedang Diproses:</h4>
+                    <h4 class="font-bold text-slate-900">Barang yang Dipesan:</h4>
                     <div class="flex gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100 items-center">
                         <div class="w-16 h-16 bg-white rounded-xl p-1.5 flex items-center justify-center border border-slate-200 flex-shrink-0">
                             <img src="{{ asset($order->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $order->product->name }}" class="w-full h-full object-contain">

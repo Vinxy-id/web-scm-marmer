@@ -38,6 +38,20 @@
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
         </a>
 
+        <a href="{{ route('orders.index') }}" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('orders.*') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            <div class="flex items-center gap-3">
+                <i data-lucide="shopping-bag" class="w-4 h-4 text-amber-400"></i> Pesanan Masuk
+            </div>
+            @php
+                $pendingCount = \App\Models\Order::where('order_status', 'pending_payment')->count();
+            @endphp
+            @if($pendingCount > 0)
+            <span class="inline-flex items-center bg-amber-500 text-slate-950 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full animate-pulse">
+                {{ $pendingCount }}
+            </span>
+            @endif
+        </a>
+
         <a href="{{ route('supply-chain-flow') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('supply-chain-flow') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             <i data-lucide="git-merge" class="w-4 h-4 text-emerald-400"></i> Alur Rantai Pasok
         </a>

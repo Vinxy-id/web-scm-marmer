@@ -17,11 +17,19 @@ Route::get('/', [PublicCatalogController::class, 'index'])->name('home');
 Route::get('/katalog', [PublicCatalogController::class, 'catalog'])->name('catalog');
 Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('catalog.show');
 
-// E-Commerce Direct Checkout, Digital Invoice & Order Tracking
+// E-Commerce Direct Checkout, Digital Invoice & Order Tracking (Protected with Anti-Spam Rate Limiter)
 Route::get('/checkout/{id}', [CheckoutController::class, 'show'])->name('checkout.show');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:5,10');
 Route::get('/order/invoice/{orderNumber}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
 Route::get('/lacak-pesanan', [CheckoutController::class, 'tracking'])->name('order.tracking');
+
+// Admin E-Commerce Order Management & 2-Gate SPK Verification
+Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\AdminOrderController::class, 'index'])->name('index');
+    Route::post('/{order}/verify-spk', [\App\Http\Controllers\AdminOrderController::class, 'verifyAndGenerateSpk'])->name('verify-spk');
+    Route::post('/{order}/cancel', [\App\Http\Controllers\AdminOrderController::class, 'cancel'])->name('cancel');
+    Route::delete('/{order}', [\App\Http\Controllers\AdminOrderController::class, 'destroy'])->name('destroy');
+});
 
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';
