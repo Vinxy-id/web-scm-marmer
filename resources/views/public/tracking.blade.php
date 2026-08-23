@@ -150,7 +150,7 @@
             </div>
             @endif
 
-            <!-- Product & Timeline Details -->
+            <!-- Product & Shipping Details -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-100 text-xs">
                 
                 <!-- Product Information -->
@@ -178,6 +178,43 @@
                 </div>
 
             </div>
+
+            <!-- DST-01 SOLVED: Live Shipment & Logistics Tracking Info Card -->
+            @if($order->workOrder && $order->workOrder->shipment)
+            @php $sh = $order->workOrder->shipment; @endphp
+            <div class="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200/80 rounded-2xl space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-200/50 pb-2">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="truck" class="w-4 h-4 text-purple-700"></i>
+                        <h4 class="font-bold text-slate-900 text-xs">Informasi Logistik & Surat Jalan Pengiriman</h4>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded border border-purple-200">
+                        {{ $sh->shipment_code }}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Ekspedisi Kargo</span>
+                        <span class="font-bold text-slate-800">{{ $sh->expedition_name }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">No. Resi / Surat Jalan</span>
+                        <span class="font-bold text-slate-800 font-mono">{{ $sh->tracking_number ?: $sh->shipment_code }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Armada / Sopir</span>
+                        <span class="font-bold text-slate-800">{{ $sh->vehicle_plate ?: 'Armada Logistik' }} {{ $sh->driver_name ? '(' . $sh->driver_name . ')' : '' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-[10px]">Status Packing Kayu</span>
+                        <span class="font-bold text-emerald-700 flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3 h-3 text-emerald-600"></i> Terverifikasi Solid Kayu
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endif
 
             <!-- Action Buttons -->
             <div class="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">

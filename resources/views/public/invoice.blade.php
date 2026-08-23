@@ -228,6 +228,9 @@
                         </p>
                         <p class="text-slate-600">Pengrajin IKM: <b>{{ $artisan['name'] }}</b></p>
                         <p class="text-slate-600">Status Alur: <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">{{ $order->order_status_label }}</span></p>
+                        @if($order->workOrder && $order->workOrder->shipment)
+                        <p class="text-slate-600">Ekspedisi: <b>{{ $order->workOrder->shipment->expedition_name }}</b> (Resi/SJ: <b class="font-mono text-purple-700">{{ $order->workOrder->shipment->tracking_number ?: $order->workOrder->shipment->shipment_code }}</b>)</p>
+                        @endif
                     </div>
                 </div>
 

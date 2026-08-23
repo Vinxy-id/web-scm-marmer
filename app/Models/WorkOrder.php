@@ -69,6 +69,11 @@ class WorkOrder extends Model
         return $this->hasOne(Shipment::class);
     }
 
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+
     public function getProgressPercentageAttribute(): int
     {
         if ($this->target_quantity == 0) return 0;

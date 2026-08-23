@@ -169,25 +169,40 @@
                             </span>
                             @endif
                         </td>
-                        <td class="p-3 text-right">
+                        <td class="p-3 text-right space-x-1">
                             @if($sh->delivery_status === 'packed')
                             <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="delivery_status" value="in_transit">
-                                <button type="submit" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-2 py-1 rounded transition flex items-center gap-1 ml-auto">
+                                <button type="submit" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1">
                                     <i data-lucide="truck" class="w-3 h-3"></i> Kirim Kargo
                                 </button>
                             </form>
                             @elseif($sh->delivery_status === 'in_transit')
-                            <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('PATCH')
-                                <input type="hidden" name="delivery_status" value="delivered">
-                                <button type="submit" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2 py-1 rounded transition flex items-center gap-1 ml-auto">
-                                    <i data-lucide="check" class="w-3 h-3"></i> Tandai Diterima
-                                </button>
-                            </form>
+                            <div class="flex items-center justify-end gap-1">
+                                <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="delivery_status" value="delivered">
+                                    <button type="submit" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1">
+                                        <i data-lucide="check" class="w-3 h-3"></i> Diterima
+                                    </button>
+                                </form>
+                                <!-- DST-10 SOLVED: Action button for returned shipments -->
+                                <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline" onsubmit="return confirm('Tandai pengiriman ini sebagai RETUR / DIKEMBALIKAN?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="delivery_status" value="returned">
+                                    <button type="submit" class="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1" title="Barang Retur / Dikembalikan">
+                                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Retur
+                                    </button>
+                                </form>
+                            </div>
+                            @elseif($sh->delivery_status === 'returned')
+                            <span class="text-[10px] text-rose-600 font-semibold flex items-center justify-end gap-0.5">
+                                <i data-lucide="alert-triangle" class="w-3 h-3"></i> Retur Selesai
+                            </span>
                             @else
                             <span class="text-[10px] text-emerald-600 font-semibold flex items-center justify-end gap-0.5">
                                 <i data-lucide="check-check" class="w-3 h-3"></i> Selesai
@@ -230,10 +245,20 @@
             </button>
         </div>
 
+        <!-- DST-11 SOLVED: SPK Confirmation Summary Card in Modal -->
+        <div id="modal_spk_summary_card" class="hidden p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs text-purple-900 space-y-1">
+            <div class="flex justify-between items-center">
+                <span class="font-bold font-mono text-purple-700" id="modal_summary_spk_num">SPK-XXX</span>
+                <span class="bg-purple-200/80 text-purple-800 px-2 py-0.5 rounded text-[10px] font-bold" id="modal_summary_qty">0 Unit</span>
+            </div>
+            <p class="font-bold text-slate-800" id="modal_summary_product">Produk</p>
+            <p class="text-[11px] text-slate-600" id="modal_summary_customer">Pelanggan</p>
+        </div>
+
         <form action="{{ route('distribution.shipment.store') }}" method="POST" class="space-y-3">
             @csrf
             <div>
-                <label class="text-[11px] font-bold text-slate-600">Pilih Batch SPK (Opsional)</label>
+                <label class="text-[11px] font-bold text-slate-600">Pilih Batch SPK (Wajib Lulus QC)</label>
                 <select name="work_order_id" id="modal_work_order_id" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
                     <option value="">-- Pengiriman Stok Reguler Gudang --</option>
                     @foreach($workOrders as $wo)
@@ -259,19 +284,34 @@
                     <input type="date" name="shipment_date" value="{{ date('Y-m-d') }}" required class="w-full text-xs mt-1 border rounded-lg p-2">
                 </div>
                 <div>
+                    <!-- DST-08 SOLVED: Dynamic expedition datalist -->
                     <label class="text-[11px] font-bold text-slate-600">Nama Ekspedisi / Kargo</label>
-                    <input type="text" name="expedition_name" value="Ekspedisi Bali Mandiri Express" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="text" name="expedition_name" list="expedition_options" placeholder="Pilih atau ketik nama kargo..." required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
+                    <datalist id="expedition_options">
+                        <option value="Armada Truk Sentra Marmer Tulungagung">
+                        <option value="Ekspedisi Bali Mandiri Express">
+                        <option value="Baraka Sarana Tama (BST Cargo)">
+                        <option value="Dakota Kargo Jawa-Bali">
+                        <option value="J&T Cargo / JTR Trucking">
+                        <option value="Indah Logistik Cargo">
+                        <option value="Armada Pick-up Sendiri">
+                    </datalist>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-3 gap-2">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">No. Polisi Truk</label>
                     <input type="text" name="vehicle_plate" placeholder="AG 8899 AB" class="w-full text-xs mt-1 border rounded-lg p-2">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Nama Sopir</label>
-                    <input type="text" name="driver_name" placeholder="Pak Yatno" class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="text" name="driver_name" placeholder="Pak Slamet" class="w-full text-xs mt-1 border rounded-lg p-2">
+                </div>
+                <div>
+                    <!-- DST-09 SOLVED: Input tracking number in create modal -->
+                    <label class="text-[11px] font-bold text-slate-600">No. Resi Kargo</label>
+                    <input type="text" name="tracking_number" placeholder="Resi jika ada" class="w-full text-xs mt-1 border rounded-lg p-2">
                 </div>
             </div>
 
@@ -304,6 +344,17 @@ function openAccShipmentModal(spkId, spkNumber, customerId, customerName, produc
     if (customerId) {
         document.getElementById('modal_customer_id').value = customerId;
     }
+    
+    // DST-11 SOLVED: Populate SPK summary confirmation in modal
+    const summaryCard = document.getElementById('modal_spk_summary_card');
+    if (summaryCard) {
+        document.getElementById('modal_summary_spk_num').innerText = spkNumber;
+        document.getElementById('modal_summary_qty').innerText = qty + ' Unit Siap Kirim';
+        document.getElementById('modal_summary_product').innerText = productName;
+        document.getElementById('modal_summary_customer').innerText = 'Destinasi: ' + customerName;
+        summaryCard.classList.remove('hidden');
+    }
+    
     document.getElementById('modal-add-shipment').classList.remove('hidden');
 }
 </script>

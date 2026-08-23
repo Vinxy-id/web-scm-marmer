@@ -204,7 +204,7 @@ class CheckoutController extends Controller
         $order = null;
 
         if (!empty($searchNumber)) {
-            $order = Order::with(['product.category', 'customer', 'workOrder'])
+            $order = Order::with(['product.category', 'customer', 'workOrder.shipment', 'workOrder.steps'])
                           ->where('order_number', $searchNumber)
                           ->orWhereHas('workOrder', function ($q) use ($searchNumber) {
                               $q->where('spk_number', $searchNumber);
