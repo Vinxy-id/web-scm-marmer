@@ -6,27 +6,39 @@
 
 @section('topbar-actions')
     @php $role = auth()->user()->role ?? 'owner'; @endphp
-    @if(in_array($role, ['owner', 'admin']))
-        <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+    <div class="flex items-center gap-2">
+        <a href="{{ route('catalog') }}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-300 shadow-sm transition">
+            <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-500"></i> Lihat Web Publik
         </a>
-    @elseif($role === 'gudang')
-        <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="arrow-down-up" class="w-4 h-4"></i> Catat Mutasi Stok
-        </a>
-    @elseif($role === 'produksi')
-        <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
-        </a>
-    @elseif($role === 'qc')
-        <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="shield-check" class="w-4 h-4"></i> Form Inspeksi QC
-        </a>
-    @elseif($role === 'distribusi')
-        <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="truck" class="w-4 h-4"></i> Buat Surat Jalan
-        </a>
-    @endif
+
+        @if(in_array($role, ['owner', 'admin']))
+            @if(isset($pendingOrdersCount) && $pendingOrdersCount > 0)
+                <a href="{{ route('orders.index') }}" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Pesanan Masuk
+                    <span class="bg-white text-amber-800 text-[10px] font-bold px-1.5 py-0.2 rounded-full">{{ $pendingOrdersCount }}</span>
+                </a>
+            @endif
+            <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+            </a>
+        @elseif($role === 'gudang')
+            <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="arrow-down-up" class="w-4 h-4"></i> Catat Mutasi Stok
+            </a>
+        @elseif($role === 'produksi')
+            <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+            </a>
+        @elseif($role === 'qc')
+            <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Form Inspeksi QC
+            </a>
+        @elseif($role === 'distribusi')
+            <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="truck" class="w-4 h-4"></i> Buat Surat Jalan
+            </a>
+        @endif
+    </div>
 @endsection
 
 @section('content')
@@ -72,8 +84,14 @@
         <!-- Role Quick Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
             @if(in_array($role ?? '', ['owner', 'admin']))
+                <a href="{{ route('orders.index') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
+                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-amber-400"></i> Kelola Pesanan
+                </a>
                 <a href="{{ route('supply-chain-flow') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
                     <i data-lucide="git-merge" class="w-3.5 h-3.5 text-emerald-400"></i> Alur SCM
+                </a>
+                <a href="{{ route('reports') }}" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-700 transition">
+                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-cyan-400"></i> Laporan PCE
                 </a>
                 <a href="{{ route('forecasting.index') }}" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
                     <i data-lucide="trending-up" class="w-3.5 h-3.5 text-yellow-300"></i> AI Forecast
@@ -104,8 +122,25 @@
         </div>
     </div>
 
+    <!-- ALERT BANNER 1: PENDING E-COMMERCE ORDERS (GAP-01 & GAP-02 SOLVED) -->
+    @if(isset($pendingOrdersCount) && $pendingOrdersCount > 0)
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-amber-100 text-amber-700 rounded-full">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-amber-900">Pesanan E-Commerce Masuk! ({{ $pendingOrdersCount }} Perlu Verifikasi)</h4>
+                <p class="text-xs text-amber-800">Terdapat pesanan dari pembeli online yang telah membayar DP/Lunas dan siap diterbitkan SPK ke lantai produksi.</p>
+            </div>
+        </div>
+        <a href="{{ route('orders.index') }}" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-1.5 rounded-md transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="clipboard-check" class="w-4 h-4"></i> Verifikasi & Buat SPK
+        </a>
+    </div>
+    @endif
 
-    <!-- ALERT BANNER: CRITICAL STOCK -->
+    <!-- ALERT BANNER 2: CRITICAL STOCK -->
     @if($criticalMaterials->isNotEmpty())
     <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -114,7 +149,7 @@
             </div>
             <div>
                 <h4 class="text-sm font-bold text-red-900">Peringatan Stok Kritis Terdeteksi!</h4>
-                <p class="text-xs text-red-700">Terdapat <b>{{ $criticalMaterials->count() }} material</b> yang berada di bawah ambang batas minimum stok. Segera lakukan pemesanan pengadaan.</p>
+                <p class="text-xs text-red-700">Terdapat <b>{{ $criticalMaterials->count() }} material</b> yang berada di bawah ambang batas minimum stok. Segera lakukan pengadaan.</p>
             </div>
         </div>
         <a href="{{ route('materials.index') }}" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1">
@@ -123,53 +158,71 @@
     </div>
     @endif
 
-    <!-- 4 KPI CARDS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+    <!-- 5 CLICKABLE KPI CARDS (GAP-01, GAP-02, GAP-07 SOLVED) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- KPI 1: Bahan Mentah -->
+        <a href="{{ route('materials.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Bahan Mentah</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-amber-700 transition">Bahan Mentah</p>
                 <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ number_format($totalRawMaterials, 0) }} Blok</h3>
                 <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-                    <i data-lucide="trending-up" class="w-3 h-3"></i> +12% bln ini
+                    <i data-lucide="trending-up" class="w-3 h-3"></i> Gudang Batu
                 </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 group-hover:bg-amber-100 text-amber-600 flex items-center justify-center transition">
                 <i data-lucide="mountain" class="w-6 h-6"></i>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <!-- KPI 2: SPK Produksi Aktif -->
+        <a href="{{ route('production.kanban') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">SPK Produksi Aktif</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-indigo-700 transition">SPK Produksi</p>
                 <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $activeWorkOrders }} Batch</h3>
-                <p class="text-[11px] text-blue-600 font-semibold mt-1">Mesin Bubut: 7/7 Beroperasi</p>
+                <p class="text-[11px] text-blue-600 font-semibold mt-1">7 Mesin Aktif</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 flex items-center justify-center transition">
                 <i data-lucide="cog" class="w-6 h-6"></i>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <!-- KPI 3: Barang Jadi Siap Kirim -->
+        <a href="{{ route('products.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Barang Jadi Siap Kirim</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition">Barang Jadi</p>
                 <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $totalReadyGoods }} Unit</h3>
-                <p class="text-[11px] text-emerald-600 font-semibold mt-1">Lolos Standar QC 2</p>
+                <p class="text-[11px] text-emerald-600 font-semibold mt-1">Lolos QC Tahap 2</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 group-hover:bg-emerald-100 text-emerald-600 flex items-center justify-center transition">
                 <i data-lucide="package-check" class="w-6 h-6"></i>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <!-- KPI 4: Pesanan E-Commerce (BARU) -->
+        <a href="{{ route('orders.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Nilai Inventori</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">Rp {{ number_format($totalInventoryValue / 1000000, 1) }} Jt</h3>
-                <p class="text-[11px] text-slate-500 mt-1">Bahan Baku + Barang Jadi</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-blue-700 transition">E-Commerce</p>
+                <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $totalOrdersCount ?? 0 }} Order</h3>
+                <p class="text-[11px] {{ ($pendingOrdersCount ?? 0) > 0 ? 'text-amber-600 font-bold' : 'text-slate-500' }} mt-1">
+                    {{ $pendingOrdersCount ?? 0 }} Perlu Verifikasi
+                </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100 text-blue-600 flex items-center justify-center transition">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            </div>
+        </a>
+
+        <!-- KPI 5: Total Nilai Inventori -->
+        <a href="{{ route('reports') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-purple-400 hover:shadow-md transition flex items-center justify-between">
+            <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-purple-700 transition">Nilai Inventori</p>
+                <h3 class="text-2xl font-bold text-slate-800 mt-1">Rp {{ number_format($totalInventoryValue / 1000000, 1) }} Jt</h3>
+                <p class="text-[11px] text-slate-500 mt-1">Bahan + Produk Jadi</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 group-hover:bg-purple-100 text-purple-600 flex items-center justify-center transition">
                 <i data-lucide="coins" class="w-6 h-6"></i>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- INTERACTIVE SUPPLY CHAIN FLOW (8 TAHAP MARMER) -->
@@ -237,8 +290,8 @@
                 <span class="inline-block mt-1.5 text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold">Bebas Retak</span>
             </a>
 
-            <!-- Stage 6 -->
-            <a href="{{ route('production.kanban') }}" class="group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition block">
+            <!-- Stage 6: Fixed route to production.wip (Poles is a WIP sub-station) -->
+            <a href="{{ route('production.wip') }}" class="group p-3 bg-slate-50 hover:bg-blue-50 border hover:border-blue-300 rounded-lg text-center transition block">
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                 </div>
@@ -253,7 +306,7 @@
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">7. QC Tahap 2</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Uji Afur</p>
+                <p class="text-[10px] text-slate-500 mt-0.5">Uji Afur Air</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-semibold">Siap Gudang</span>
             </a>
 
@@ -264,20 +317,23 @@
                 </div>
                 <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">8. Distribusi</h5>
                 <p class="text-[10px] text-slate-500 mt-0.5">Packing Kayu</p>
-                <span class="inline-block mt-1.5 text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-semibold">Kirim Buyer</span>
+                <span class="inline-block mt-1.5 text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-semibold">Kirim Ekspedisi</span>
             </a>
         </div>
     </div>
 
-    <!-- CHARTS & SUMMARY SECTION -->
+    <!-- CHARTS & SUMMARY SECTION (GAP-08 SOLVED: DYNAMIC DATA) -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Chart 1: Tren Pengadaan vs Output -->
         <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <h4 class="text-sm font-bold text-slate-800">Tren Pengadaan Bahan vs Output Produksi (6 Bulan)</h4>
-                    <p class="text-xs text-slate-500">Perbandingan volume material masuk (blok) vs wastafel selesai (unit)</p>
+                    <p class="text-xs text-slate-500">Perbandingan volume material masuk (blok) vs barang jadi selesai (unit)</p>
                 </div>
+                <a href="{{ route('reports') }}" class="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1">
+                    Detail PCE <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
             </div>
             <div class="h-64">
                 <canvas id="trendChart"></canvas>
@@ -301,7 +357,84 @@
         </div>
     </div>
 
-    <!-- TABEL MATERIAL KRITIS & STATUS MESIN -->
+    <!-- 5 SPK PRODUKSI TERKINI (GAP-09 SOLVED: RENDERING $recentWorkOrders) -->
+    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="clipboard-list" class="w-4 h-4 text-indigo-600"></i> SPK Produksi Terkini (Lantai Bengkel)
+                </h4>
+                <p class="text-xs text-slate-500">Daftar batch pengerjaan surat perintah kerja yang sedang aktif atau baru dibuat.</p>
+            </div>
+            <a href="{{ route('production.kanban') }}" class="text-xs bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-semibold px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1">
+                Buka Papan Kanban <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b">
+                    <tr>
+                        <th class="p-2.5">No. SPK</th>
+                        <th class="p-2.5">Produk yang Dikerjakan</th>
+                        <th class="p-2.5">Pelanggan / Tujuan</th>
+                        <th class="p-2.5">Target & Selesai</th>
+                        <th class="p-2.5">Status Pengerjaan</th>
+                        <th class="p-2.5 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($recentWorkOrders as $wo)
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="p-2.5 font-bold text-indigo-600">{{ $wo->spk_number }}</td>
+                        <td class="p-2.5 font-medium text-slate-800">
+                            {{ $wo->product->name ?? 'Produk Custom' }}
+                            <span class="block text-[10px] text-slate-400 font-normal">{{ $wo->product->product_code ?? '-' }}</span>
+                        </td>
+                        <td class="p-2.5 text-slate-600">{{ $wo->customer->name ?? 'Stok Buffer IKM' }}</td>
+                        <td class="p-2.5 text-slate-700 font-semibold">
+                            {{ $wo->completed_quantity }} / {{ $wo->target_quantity }} Unit
+                        </td>
+                        <td class="p-2.5">
+                            @php
+                                $badgeColor = match($wo->status) {
+                                    'draft' => 'bg-slate-100 text-slate-700 border-slate-200',
+                                    'scheduled' => 'bg-blue-100 text-blue-800 border-blue-200',
+                                    'in_progress' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                    'qc_phase' => 'bg-purple-100 text-purple-800 border-purple-200',
+                                    'completed' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                    default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                };
+                                $statusLabel = match($wo->status) {
+                                    'draft' => 'Draf Baru',
+                                    'scheduled' => 'Terjadwal Slep',
+                                    'in_progress' => 'Proses Bubut & Poles',
+                                    'qc_phase' => 'Uji QC 2-Tahap',
+                                    'completed' => 'Selesai (Gudang)',
+                                    default => ucfirst($wo->status)
+                                };
+                            @endphp
+                            <span class="inline-block px-2 py-0.5 text-[10px] font-bold rounded border {{ $badgeColor }}">
+                                {{ $statusLabel }}
+                            </span>
+                        </td>
+                        <td class="p-2.5 text-right">
+                            <a href="{{ route('production.wip') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-xs inline-flex items-center gap-0.5">
+                                Pantau WIP <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-slate-400">Belum ada SPK produksi yang aktif.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TABEL MATERIAL KRITIS & STATUS MESIN (GAP-05 SOLVED: INTERACTIVE MACHINE WIDGET) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Tabel Stok Kritis -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -347,50 +480,53 @@
             </div>
         </div>
 
-        <!-- Status 7 Mesin Bubut UD Cahaya Onix -->
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <!-- Status 7 Mesin Bubut UD Cahaya Onix (Clickable to WIP) -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between mb-3">
                 <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <i data-lucide="gauge" class="w-4 h-4 text-indigo-500"></i> Status Utilisasi 7 Mesin Bubut (UD Cahaya Onix)
+                    <i data-lucide="gauge" class="w-4 h-4 text-indigo-500"></i> Status 7 Stasiun Mesin (UD Cahaya Onix)
                 </h4>
-                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">100% Aktif</span>
+                <a href="{{ route('production.wip') }}" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded font-semibold border border-indigo-200 transition flex items-center gap-1">
+                    Buka Detail WIP <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                </a>
             </div>
+            
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 1</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer D40</p>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 2</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer B1</p>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (80m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 3</p>
-                    <p class="text-[10px] text-amber-600 mt-0.5">Onyx Oval</p>
+                    <p class="text-[10px] text-amber-600 mt-0.5">Wastafel Onix Oval</p>
                     <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Poles (90m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 4</p>
                     <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Mangkok</p>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (75m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 5</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel D40</p>
+                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer Bakar</p>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center">
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 6</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Kotak</p>
+                    <p class="text-[10px] text-blue-600 mt-0.5">Pedestal Wastafel</p>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (90m)</span>
-                </div>
-                <div class="p-2.5 bg-slate-50 border rounded-lg text-center col-span-2 sm:col-span-2">
-                    <p class="font-bold text-slate-800">Mesin Bubut 7 & Mesin Slep</p>
-                    <p class="text-[10px] text-slate-600 mt-0.5">Persiapan Batch SPK-2026-04</p>
+                </a>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center col-span-2 sm:col-span-2 transition block">
+                    <p class="font-bold text-slate-800">Mesin Bubut 7 & Mesin Slep Sawmill</p>
+                    <p class="text-[10px] text-slate-600 mt-0.5">Pemotongan Balok Marmer & Batu Kali</p>
                     <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Potong Slep (60m)</span>
-                </div>
+                </a>
             </div>
         </div>
     </div>
@@ -401,24 +537,24 @@
 @section('scripts')
 <script>
     window.addEventListener('DOMContentLoaded', () => {
-        // Trend Chart
+        // Trend Chart (Dynamic Data from Controller)
         const ctxTrend = document.getElementById('trendChart')?.getContext('2d');
         if (ctxTrend) {
             new Chart(ctxTrend, {
                 type: 'bar',
                 data: {
-                    labels: ['Nov 25', 'Des 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                    labels: @json($chartLabels),
                     datasets: [
                         {
                             label: 'Bahan Baku Masuk (Blok)',
-                            data: [35, 42, 38, 45, 52, 48],
-                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            data: @json($chartMaterialsIn),
+                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
                             borderRadius: 6
                         },
                         {
-                            label: 'Wastafel Selesai (Unit)',
-                            data: [70, 84, 76, 90, 104, 96],
-                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            label: 'Barang Jadi Selesai (Unit)',
+                            data: @json($chartOutputs),
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
                             borderRadius: 6
                         }
                     ]
@@ -431,7 +567,7 @@
             });
         }
 
-        // Composition Chart
+        // Composition Chart (Dynamic Doughnut)
         const ctxComp = document.getElementById('compositionChart')?.getContext('2d');
         if (ctxComp) {
             new Chart(ctxComp, {
