@@ -335,7 +335,7 @@
                             Inventory Acc. 99.2%
                         </td>
                         <td class="p-3.5 text-slate-600">
-                            <span class="text-slate-700 font-medium">Stok Marmer Putih Besole aman</span>, pasokan batu kali Boyolangu lancar.
+                            <span class="text-slate-700 font-medium">Stok Marmer Putih Campurdarat aman</span>, pasokan batu kali Boyolangu lancar.
                         </td>
                         <td class="p-3.5 text-right">
                             <a href="{{ route('materials.index') }}" class="text-[11px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition inline-flex items-center gap-1">

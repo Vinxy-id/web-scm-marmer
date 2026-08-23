@@ -88,7 +88,7 @@ Setiap kartu metrik menampilkan:
 | (D40 T15, Rp 450k) (Onix Translucent) (Batu Kali Alami)  (Stepping Taman)         |
 +-----------------------------------------------------------------------------------+
 | [ALUR TRANSPARANSI SCM]                                                           |
-| 1. Tambang Besole -> 2. Bubut Presisi -> 3. QC 2-Tahap -> 4. Peti Kayu Ekspedisi |
+| 1. Tambang Campurdarat -> 2. Bubut Presisi -> 3. QC 2-Tahap -> 4. Peti Kayu Ekspedisi |
 +-----------------------------------------------------------------------------------+
 ```
 

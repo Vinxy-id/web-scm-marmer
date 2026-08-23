@@ -57,7 +57,7 @@
                 <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 font-semibold px-2 py-0.5 rounded-full text-[10px]">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Terverifikasi E-SCM
                 </span>
-                <span>Sentra Pengrajin Marmer & Onyx Asli Besole & Campurdarat, Tulungagung</span>
+                <span>Sentra Pengrajin Marmer & Onyx Asli Campurdarat, Tulungagung</span>
             </div>
             <div class="flex items-center gap-4 text-[11px]">
                 <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20konsultasi%20pemesanan%20produk." target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
@@ -212,7 +212,7 @@
                         <li class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800">
                             <p class="font-bold text-white">UD Cahaya Onix</p>
                             <p class="text-[11px] text-slate-400">Spesialis Wastafel Marmer & Onyx Tembus Cahaya</p>
-                            <p class="text-[10px] text-blue-400 mt-1">Pimpinan: M. Ilham Nur Amali (Besole)</p>
+                            <p class="text-[10px] text-blue-400 mt-1">Pimpinan: M. Ilham Nur Amali (Campurdarat)</p>
                         </li>
                         <li class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800">
                             <p class="font-bold text-white">UD Putra Abadi</p>
@@ -240,7 +240,7 @@
                     <div class="space-y-2.5 text-xs text-slate-400">
                         <div class="flex items-start gap-2">
                             <i data-lucide="map-pin" class="w-4 h-4 text-slate-500 mt-0.5 flex-shrink-0"></i>
-                            <span>Kawasan Industri Kerajinan Marmer Besole & Campurdarat, Kabupaten Tulungagung, Jawa Timur 66272</span>
+                            <span>Kawasan Industri Kerajinan Marmer Campurdarat, Kabupaten Tulungagung, Jawa Timur 66272</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <i data-lucide="phone" class="w-4 h-4 text-slate-500 flex-shrink-0"></i>

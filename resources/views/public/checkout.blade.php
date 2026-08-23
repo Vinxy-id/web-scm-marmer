@@ -227,8 +227,8 @@
 
                         <!-- Product Mini Card -->
                         <div class="flex gap-4 items-center">
-                            <div class="w-20 h-20 bg-slate-100 rounded-2xl p-2 flex items-center justify-center flex-shrink-0 border border-slate-200">
-                                <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $product->name }}" class="w-full h-full object-contain">
+                            <div class="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200 overflow-hidden">
+                                <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                             </div>
                             <div class="space-y-1">
                                 <span class="text-[10px] font-bold text-blue-700 uppercase bg-blue-50 px-2 py-0.5 rounded">

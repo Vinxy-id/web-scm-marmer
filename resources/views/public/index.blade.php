@@ -29,7 +29,7 @@
                 </h1>
 
                 <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-                    Etalase produk langsung dari sentra pengrajin binaan <b>UD Cahaya Onix</b> & <b>UD Putra Abadi</b>. Dipahat dengan presisi dari tambang batuan alam Besole & Campurdarat, menghadirkan kemewahan wastafel, onix tembus cahaya, dan ornamen alami ke hunian Anda.
+                    Etalase produk langsung dari sentra pengrajin binaan <b>UD Cahaya Onix</b> & <b>UD Putra Abadi</b>. Dipahat dengan presisi dari tambang batuan alam Campurdarat, menghadirkan kemewahan wastafel, onix tembus cahaya, dan ornamen alami ke hunian Anda.
                 </p>
 
                 <!-- Dual Action CTAs -->
@@ -150,7 +150,7 @@
                         UD CAHAYA ONIX
                     </span>
                     <span class="text-xs text-slate-500 font-medium flex items-center gap-1">
-                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-600"></i> Besole, Tulungagung
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-600"></i> Campurdarat, Tulungagung
                     </span>
                 </div>
 
@@ -158,7 +158,7 @@
                     Spesialis Wastafel Marmer Putih & Onyx Mewah
                 </h3>
                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Dipimpin oleh <b>M. Ilham Nur Amali</b>, UD Cahaya Onix mengolah bongkahan marmer putih B1 dan batu onyx transparan dari lereng bukit Besole menjadi wastafel washi bowl, pedestal kamar mandi hotel, dan meja marmer berpola urat alami eksotis.
+                    Dipimpin oleh <b>M. Ilham Nur Amali</b>, UD Cahaya Onix mengolah bongkahan marmer putih B1 dan batu onyx transparan dari pegunungan Campurdarat menjadi wastafel washi bowl, pedestal kamar mandi hotel, dan meja marmer berpola urat alami eksotis.
                 </p>
 
                 <div class="mt-4 pt-4 border-t border-blue-100">
@@ -285,11 +285,11 @@
                  onclick="openProductModal({{ $item->id }})">
                 
                 <div>
-                    <!-- Product Image Box -->
-                    <div class="relative h-48 bg-slate-100 flex items-center justify-center p-3 overflow-hidden">
+                    <!-- Product Image Box (1:1 Ratio) -->
+                    <div class="relative aspect-square w-full bg-slate-100 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset($item->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" 
                              alt="{{ $item->name }}" 
-                             class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         
                         <!-- Badges -->
                         <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
@@ -400,7 +400,7 @@
                 </div>
                 <h4 class="font-bold text-sm text-slate-900">Penambangan Batuan Alami</h4>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                    Pengambilan bongkahan marmer putih & hitam dari tambang Besole dan seleksi batuan kali berkualitas tinggi di Campurdarat.
+                    Pengambilan bongkahan marmer putih & hitam dari tambang batuan alam serta seleksi batuan kali berkualitas tinggi di Campurdarat.
                 </p>
                 <div class="mt-3 text-[11px] font-semibold text-blue-700 flex items-center gap-1">
                     <i data-lucide="check" class="w-3.5 h-3.5"></i> Bahan Baku Legal & Terdata
@@ -502,9 +502,9 @@
         <div class="p-6 sm:p-8 space-y-6">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <!-- Modal Image -->
-                <div class="bg-slate-100 rounded-2xl h-56 flex items-center justify-center p-4 border border-slate-200 overflow-hidden">
-                    <img id="modal-img" src="" alt="Product Image" class="w-full h-full object-contain">
+                <!-- Modal Image (1:1 Ratio) -->
+                <div class="bg-slate-100 rounded-2xl aspect-square w-full flex items-center justify-center border border-slate-200 overflow-hidden">
+                    <img id="modal-img" src="" alt="Product Image" class="w-full h-full object-cover">
                 </div>
 
                 <!-- Modal Header Details -->

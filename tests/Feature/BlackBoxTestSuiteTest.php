@@ -75,7 +75,7 @@ class BlackBoxTestSuiteTest extends TestCase
         $code = 'MAT-TEST-' . rand(1000, 9999);
         $response = $this->actingAs($this->gudangUser)->post(route('materials.store'), [
             'material_code' => $code,
-            'name' => 'Bongkahan Marmer Hitam Besole Test',
+            'name' => 'Bongkahan Marmer Hitam Campurdarat Test',
             'type' => 'marmer',
             'grade' => 'grade_b_standard',
             'dimension_info' => '60x60x80 cm',

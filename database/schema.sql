@@ -46,7 +46,7 @@ CREATE TABLE `suppliers` (
     `contact_person` VARCHAR(100) NULL,
     `phone` VARCHAR(20) NULL,
     `address` TEXT NULL,
-    `quarry_location` VARCHAR(150) NULL COMMENT 'Lokasi Tambang (misal: Besole, Campurdarat)',
+    `quarry_location` VARCHAR(150) NULL COMMENT 'Lokasi Tambang (misal: Campurdarat)',
     `material_category` VARCHAR(100) NULL COMMENT 'Jenis bahan yang disuplai',
     `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -332,7 +332,7 @@ INSERT INTO `users` (`name`, `email`, `password`, `role`, `phone`, `ikm_name`) V
 
 -- 2. Insert Suppliers
 INSERT INTO `suppliers` (`supplier_code`, `name`, `contact_person`, `phone`, `quarry_location`, `material_category`) VALUES
-('SUP-BSL-01', 'Tambang Marmer Besole Jaya', 'Pak Sukir', '085233112233', 'Kecamatan Besole, Tulungagung', 'Bongkahan Marmer Putih & Bintik'),
+('SUP-CPD-01', 'Tambang Marmer Campurdarat Jaya', 'Pak Sukir', '085233112233', 'Kecamatan Campurdarat, Tulungagung', 'Bongkahan Marmer Putih & Bintik'),
 ('SUP-CPD-02', 'Penambang Onyx Campurdarat', 'Pak Wahyu', '085244556677', 'Campurdarat, Tulungagung', 'Bongkahan Onyx Tembus Cahaya'),
 ('SUP-KL-03', 'Paguyuban Batu Kali Boyolangu', 'Pak Yatno', '085277889900', 'Boyolangu, Tulungagung', 'Batu Kali Bulat & Pipih');
 

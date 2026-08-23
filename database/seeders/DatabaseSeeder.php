@@ -112,14 +112,14 @@ class DatabaseSeeder extends Seeder
 
         // 2. SEED SUPPLIERS (Penambang Lokal Tulungagung)
         DB::table('suppliers')->insertOrIgnore([
-            ['id' => 1, 'supplier_code' => 'SUP-BSL-01', 'name' => 'Tambang Marmer Besole Jaya', 'contact_person' => 'Pak Sukir', 'phone' => '085233112233', 'address' => 'Desa Besole, Campurdarat', 'quarry_location' => 'Kecamatan Besole, Tulungagung', 'material_category' => 'Bongkahan Marmer Putih & Bintik', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 1, 'supplier_code' => 'SUP-CPD-01', 'name' => 'Tambang Marmer Campurdarat Jaya', 'contact_person' => 'Pak Sukir', 'phone' => '085233112233', 'address' => 'Desa Campurdarat', 'quarry_location' => 'Kecamatan Campurdarat, Tulungagung', 'material_category' => 'Bongkahan Marmer Putih & Bintik', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 2, 'supplier_code' => 'SUP-CPD-02', 'name' => 'Penambang Onyx Campurdarat', 'contact_person' => 'Pak Wahyu', 'phone' => '085244556677', 'address' => 'Desa Campurdarat', 'quarry_location' => 'Campurdarat, Tulungagung', 'material_category' => 'Bongkahan Onyx Tembus Cahaya', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 3, 'supplier_code' => 'SUP-KL-03', 'name' => 'Paguyuban Batu Kali Boyolangu', 'contact_person' => 'Pak Yatno', 'phone' => '085277889900', 'address' => 'Desa Boyolangu', 'quarry_location' => 'Boyolangu, Tulungagung', 'material_category' => 'Batu Kali Bulat & Pipih', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
         // 3. SEED CATEGORIES
         DB::table('categories')->insertOrIgnore([
-            ['id' => 14, 'name' => 'Bahan Baku Marmer', 'slug' => 'bahan-baku-marmer', 'type' => 'material', 'description' => 'Bongkahan batu marmer putih & bintik dari Besole/Campurdarat', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 14, 'name' => 'Bahan Baku Marmer', 'slug' => 'bahan-baku-marmer', 'type' => 'material', 'description' => 'Bongkahan batu marmer putih & bintik dari Campurdarat', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 15, 'name' => 'Bahan Baku Batu Kali', 'slug' => 'bahan-baku-batu-kali', 'type' => 'material', 'description' => 'Batu kali alam untuk stepping, wastafel, dan kap lampu', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 16, 'name' => 'Wastafel Marmer', 'slug' => 'wastafel-marmer', 'type' => 'product', 'description' => 'Wastafel cuci tangan olahan batu marmer, finishing Hi-Glossy', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 17, 'name' => 'Wastafel Batu Kali', 'slug' => 'wastafel-batu-kali', 'type' => 'product', 'description' => 'Wastafel cuci tangan olahan batu kali, finishing Hi-Glossy Alami', 'created_at' => $now, 'updated_at' => $now],
@@ -132,7 +132,7 @@ class DatabaseSeeder extends Seeder
 
         // 4. SEED MATERIALS (Bahan Baku dari Excel Bahan Baku Cahaya Onix & Putra Abadi)
         DB::table('materials')->insertOrIgnore([
-            ['id' => 5, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-001', 'name' => 'Batu Marmer Putih Besole', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '60x60x80 cm', 'unit' => 'Balok', 'current_stock' => 19.00, 'minimum_stock' => 5.00, 'unit_cost' => 180000.00, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-001', 'name' => 'Batu Marmer Putih Campurdarat', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '60x60x80 cm', 'unit' => 'Balok', 'current_stock' => 19.00, 'minimum_stock' => 5.00, 'unit_cost' => 180000.00, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 6, 'supplier_id' => 1, 'material_code' => 'MAT-MRM-002', 'name' => 'Batu Marmer Bintik Hitam', 'type' => 'marmer', 'grade' => 'grade_b_standard', 'dimension_info' => '50x50x70 cm', 'unit' => 'Balok', 'current_stock' => 10.00, 'minimum_stock' => 5.00, 'unit_cost' => 210000.00, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 7, 'supplier_id' => 3, 'material_code' => 'MAT-BKL-001', 'name' => 'Batu Kali Alami Boyolangu', 'type' => 'batu_kali', 'grade' => 'grade_b_standard', 'dimension_info' => 'Diameter 30-50 cm', 'unit' => 'Biji', 'current_stock' => 800.00, 'minimum_stock' => 100.00, 'unit_cost' => 25000.00, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 8, 'supplier_id' => 2, 'material_code' => 'MAT-ONX-001', 'name' => 'Bongkahan Onyx Tembus Cahaya', 'type' => 'onix', 'grade' => 'grade_a_super', 'dimension_info' => '40x40x50 cm', 'unit' => 'Bongkahan', 'current_stock' => 8.00, 'minimum_stock' => 2.00, 'unit_cost' => 450000.00, 'created_at' => $now, 'updated_at' => $now],
@@ -141,14 +141,14 @@ class DatabaseSeeder extends Seeder
 
         // 5. SEED PRODUCTS (Dari Excel Hasil Produksi Cahaya Onix & Putra Abadi)
         DB::table('products')->insertOrIgnore([
-            ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/wastafel-marmer-putih.svg', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/WastafelMarmerPutihB1.jpg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'category_id' => 18, 'product_code' => 'PRD-STP-BKL-01', 'name' => 'Stepping Stone Pijakan Taman Batu Kali', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-35 cm, Tebal: 4 cm', 'finishing_type' => 'Gerinda Halus Anti-Slip', 'ready_stock' => 50, 'safety_stock' => 10, 'standard_cogs' => 25000.00, 'selling_price' => 45000.00, 'image_path' => 'images/products/stepping-stone.svg', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 6, 'category_id' => 17, 'product_code' => 'PRD-WSF-BKL-01', 'name' => 'Wastafel Batu Kali Alami Campurdarat', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 45 cm, T: 16 cm', 'finishing_type' => 'Alami Luar / Halus Dalam', 'ready_stock' => 8, 'safety_stock' => 4, 'standard_cogs' => 220000.00, 'selling_price' => 380000.00, 'image_path' => 'images/products/wastafel-batu-kali.svg', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 6, 'category_id' => 17, 'product_code' => 'PRD-WSF-BKL-01', 'name' => 'Wastafel Batu Kali Alami Campurdarat', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 45 cm, T: 16 cm', 'finishing_type' => 'Alami Luar / Halus Dalam', 'ready_stock' => 8, 'safety_stock' => 4, 'standard_cogs' => 220000.00, 'selling_price' => 380000.00, 'image_path' => 'images/products/WastafelBatuKaliAlamiCampurdarat.jpg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 7, 'category_id' => 19, 'product_code' => 'PRD-LMP-BKL-01', 'name' => 'Kap Lampu Hias Batu Kali Minimalis', 'material_type' => 'batu_kali', 'dimension_spec' => 'T: 25 cm, D: 18 cm', 'finishing_type' => 'Hi-Glossy Alami', 'ready_stock' => 12, 'safety_stock' => 3, 'standard_cogs' => 95000.00, 'selling_price' => 175000.00, 'image_path' => 'images/products/kap-lampu.svg', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 8, 'category_id' => 20, 'product_code' => 'PRD-PDS-MRM-01', 'name' => 'Pedestal Wastafel Marmer Luxury', 'material_type' => 'marmer', 'dimension_spec' => 'T: 85 cm, D: 45 cm', 'finishing_type' => 'Hi-Glossy Kaca', 'ready_stock' => 3, 'safety_stock' => 2, 'standard_cogs' => 1100000.00, 'selling_price' => 1850000.00, 'image_path' => 'images/products/pedestal-marmer.svg', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 8, 'category_id' => 20, 'product_code' => 'PRD-PDS-MRM-01', 'name' => 'Pedestal Wastafel Marmer Luxury', 'material_type' => 'marmer', 'dimension_spec' => 'T: 85 cm, D: 45 cm', 'finishing_type' => 'Hi-Glossy Kaca', 'ready_stock' => 3, 'safety_stock' => 2, 'standard_cogs' => 1100000.00, 'selling_price' => 1850000.00, 'image_path' => 'images/products/PedestalWastafelMarmerLuxury.jpg', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 9, 'category_id' => 21, 'product_code' => 'PRD-WSF-ONX-01', 'name' => 'Wastafel Onyx Tembus Cahaya Eksklusif', 'material_type' => 'onix', 'dimension_spec' => 'D: 42 cm, T: 14 cm', 'finishing_type' => 'Super Hi-Glossy Translucent', 'ready_stock' => 5, 'safety_stock' => 2, 'standard_cogs' => 550000.00, 'selling_price' => 950000.00, 'image_path' => 'images/products/wastafel-onyx.svg', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 10, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-02', 'name' => 'Wastafel Marmer Bakar Antik', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Tekstur Bakar Kasar Eksotis', 'ready_stock' => 6, 'safety_stock' => 3, 'standard_cogs' => 300000.00, 'selling_price' => 490000.00, 'image_path' => 'images/products/wastafel-marmer-bakar.svg', 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 11, 'category_id' => 22, 'product_code' => 'PRD-MJA-MRM-01', 'name' => 'Meja Kopi Bundar Marmer Besole', 'material_type' => 'marmer', 'dimension_spec' => 'D: 60 cm, T: 45 cm', 'finishing_type' => 'Hi-Glossy Urat Abu', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/meja-marmer.svg', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 10, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-02', 'name' => 'Wastafel Marmer Bakar Antik', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Tekstur Bakar Kasar Eksotis', 'ready_stock' => 6, 'safety_stock' => 3, 'standard_cogs' => 300000.00, 'selling_price' => 490000.00, 'image_path' => 'images/products/WastafelMarmerBakarAntik.jpg', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 11, 'category_id' => 22, 'product_code' => 'PRD-MJA-MRM-01', 'name' => 'Meja Kopi Bundar Marmer Campurdarat', 'material_type' => 'marmer', 'dimension_spec' => 'D: 60 cm, T: 45 cm', 'finishing_type' => 'Hi-Glossy Urat Abu', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/meja-marmer.svg', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
         // 6. SEED CUSTOMERS
@@ -254,7 +254,7 @@ class DatabaseSeeder extends Seeder
                 'defect_type' => null,
                 'rework_action' => null,
                 'inspection_date' => '2026-05-05',
-                'notes' => 'QC Tahap 1: Bentuk mentah simetris, urat batu alami Besole kokoh tanpa retak tembus.',
+                'notes' => 'QC Tahap 1: Bentuk mentah simetris, urat batu alami Campurdarat kokoh tanpa retak tembus.',
                 'inspector_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -314,7 +314,7 @@ class DatabaseSeeder extends Seeder
                     'after_stock' => $runningStockPutih + $p['putih'],
                     'reference_type' => 'supplier_invoice',
                     'reference_id' => 1,
-                    'notes' => 'Penerimaan ' . $p['putih'] . ' Balok Batu Marmer Putih dari Tambang Besole',
+                    'notes' => 'Penerimaan ' . $p['putih'] . ' Balok Batu Marmer Putih dari Tambang Campurdarat',
                     'transaction_date' => $p['m'] . '-05',
                     'created_at' => $now,
                     'updated_at' => $now,

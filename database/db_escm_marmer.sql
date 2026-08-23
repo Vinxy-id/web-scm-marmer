@@ -284,7 +284,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `phone`, `ikm_na
 (15, 'Suyanto', 'suyanto.putraabadi@placeholder.local', '$2y$12$K1rKevr6LpQ1Z6Ovh0qPbe58xYQ9Z3j11Wk.v.dF6B.1C7QzFzY1y', 'produksi', '081298765434', 'UD Putra Abadi', 1, NOW(), NOW());
 
 INSERT INTO `suppliers` (`id`, `supplier_code`, `name`, `contact_person`, `phone`, `address`, `quarry_location`, `material_specialization`, `lead_time_days`, `rating`, `created_at`, `updated_at`) VALUES
-(1, 'SUP-BSL-01', 'Tambang Marmer Besole Jaya', 'Pak Sukir', '085233112233', 'Desa Besole, Campurdarat', 'Kecamatan Besole, Tulungagung', 'marmer', 3, 4.90, NOW(), NOW()),
+(1, 'SUP-CPD-01', 'Tambang Marmer Campurdarat Jaya', 'Pak Sukir', '085233112233', 'Desa Campurdarat', 'Kecamatan Campurdarat, Tulungagung', 'marmer', 3, 4.90, NOW(), NOW()),
 (2, 'SUP-CPD-02', 'Penambang Onyx Campurdarat', 'Pak Wahyu', '085244556677', 'Desa Campurdarat', 'Campurdarat, Tulungagung', 'onix', 4, 4.85, NOW(), NOW()),
 (3, 'SUP-KL-03', 'Paguyuban Batu Kali Boyolangu', 'Pak Yatno', '085277889900', 'Desa Boyolangu', 'Boyolangu, Tulungagung', 'batu_kali', 2, 4.95, NOW(), NOW());
 
@@ -305,14 +305,14 @@ INSERT INTO `materials` (`id`, `supplier_id`, `material_code`, `name`, `type`, `
 (7, 3, 'MAT-BKL-001', 'Batu Kali', 'batu_kali', 'grade_b_standard', 'Diameter 30-50 cm', 'biji', 65.00, 10.00, 25000.00, NOW(), NOW());
 
 INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `material_type`, `dimension_spec`, `finishing_type`, `ready_stock`, `safety_stock`, `standard_cogs`, `selling_price`, `image_path`, `created_at`, `updated_at`) VALUES
-(4, 16, 'PRD-WSF-MRM-01', 'Wastafel Marmer Putih B1 (B-One)', 'marmer', 'D: 40 cm, T: 15 cm', 'Hi-Glossy', 14, 5, 280000.00, 450000.00, 'images/products/wastafel-marmer-putih.svg', NOW(), NOW()),
+(4, 16, 'PRD-WSF-MRM-01', 'Wastafel Marmer Putih B1 (B-One)', 'marmer', 'D: 40 cm, T: 15 cm', 'Hi-Glossy', 14, 5, 280000.00, 450000.00, 'images/products/WastafelMarmerPutihB1.jpg', NOW(), NOW()),
 (5, 18, 'PRD-STP-BKL-01', 'Stepping Stone Pijakan Taman Batu Kali', 'batu_kali', 'D: 30-35 cm, Tebal: 4 cm', 'Gerinda Halus Anti-Slip', 50, 10, 25000.00, 45000.00, 'images/products/stepping-stone.svg', NOW(), NOW()),
-(6, 17, 'PRD-WSF-BKL-01', 'Wastafel Batu Kali Alami Campurdarat', 'batu_kali', 'D: 45 cm, T: 16 cm', 'Alami Luar / Halus Dalam', 8, 4, 220000.00, 380000.00, 'images/products/wastafel-batu-kali.svg', NOW(), NOW()),
+(6, 17, 'PRD-WSF-BKL-01', 'Wastafel Batu Kali Alami Campurdarat', 'batu_kali', 'D: 45 cm, T: 16 cm', 'Alami Luar / Halus Dalam', 8, 4, 220000.00, 380000.00, 'images/products/WastafelBatuKaliAlamiCampurdarat.jpg', NOW(), NOW()),
 (7, 19, 'PRD-LMP-BKL-01', 'Kap Lampu Hias Batu Kali Minimalis', 'batu_kali', 'T: 25 cm, D: 18 cm', 'Hi-Glossy Alami', 12, 3, 95000.00, 175000.00, 'images/products/kap-lampu.svg', NOW(), NOW()),
-(8, 20, 'PRD-PDS-MRM-01', 'Pedestal Wastafel Marmer Luxury', 'marmer', 'T: 85 cm, D: 45 cm', 'Hi-Glossy Kaca', 3, 2, 1100000.00, 1850000.00, 'images/products/pedestal-marmer.svg', NOW(), NOW()),
+(8, 20, 'PRD-PDS-MRM-01', 'Pedestal Wastafel Marmer Luxury', 'marmer', 'T: 85 cm, D: 45 cm', 'Hi-Glossy Kaca', 3, 2, 1100000.00, 1850000.00, 'images/products/PedestalWastafelMarmerLuxury.jpg', NOW(), NOW()),
 (9, 21, 'PRD-WSF-ONX-01', 'Wastafel Onyx Tembus Cahaya Eksklusif', 'onix', 'D: 42 cm, T: 14 cm', 'Super Hi-Glossy Translucent', 5, 2, 550000.00, 950000.00, 'images/products/wastafel-onyx.svg', NOW(), NOW()),
-(10, 16, 'PRD-WSF-MRM-02', 'Wastafel Marmer Bakar Antik', 'marmer', 'D: 40 cm, T: 15 cm', 'Tekstur Bakar Kasar Eksotis', 6, 3, 300000.00, 490000.00, 'images/products/wastafel-marmer-bakar.svg', NOW(), NOW()),
-(11, 22, 'PRD-MJA-MRM-01', 'Meja Kopi Bundar Marmer Besole', 'marmer', 'D: 60 cm, T: 45 cm', 'Hi-Glossy Urat Abu', 4, 2, 750000.00, 1350000.00, 'images/products/meja-marmer.svg', NOW(), NOW());
+(10, 16, 'PRD-WSF-MRM-02', 'Wastafel Marmer Bakar Antik', 'marmer', 'D: 40 cm, T: 15 cm', 'Tekstur Bakar Kasar Eksotis', 6, 3, 300000.00, 490000.00, 'images/products/WastafelMarmerBakarAntik.jpg', NOW(), NOW()),
+(11, 22, 'PRD-MJA-MRM-01', 'Meja Kopi Bundar Marmer Campurdarat', 'marmer', 'D: 60 cm, T: 45 cm', 'Hi-Glossy Urat Abu', 4, 2, 750000.00, 1350000.00, 'images/products/meja-marmer.svg', NOW(), NOW());
 
 INSERT INTO `customers` (`id`, `customer_code`, `name`, `company_name`, `phone`, `email`, `address`, `city`, `customer_type`, `created_at`, `updated_at`) VALUES
 (1, 'CUST-BALI-01', 'Bapak Ketut Sukerta', 'Bali Natural Living Gallery', '081338877665', 'ketut@balinaturalliving.com', 'Jl. Sunset Road No. 88, Seminyak', 'Badung - Bali', 'distributor_ekspor', NOW(), NOW()),

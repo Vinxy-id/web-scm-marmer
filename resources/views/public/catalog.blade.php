@@ -114,11 +114,11 @@
                  onclick="openCatalogModal({{ $item->id }})">
                 
                 <div>
-                    <!-- Product Image Box -->
-                    <div class="relative h-48 bg-slate-100 flex items-center justify-center p-3 overflow-hidden">
+                    <!-- Product Image Box (1:1 Ratio) -->
+                    <div class="relative aspect-square w-full bg-slate-100 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset($item->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" 
                              alt="{{ $item->name }}" 
-                             class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         
                         <!-- Badges -->
                         <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
@@ -232,8 +232,8 @@
 
         <div class="p-6 sm:p-8 space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div class="bg-slate-100 rounded-2xl h-56 flex items-center justify-center p-4 border border-slate-200 overflow-hidden">
-                    <img id="cat-modal-img" src="" alt="Product Image" class="w-full h-full object-contain">
+                <div class="bg-slate-100 rounded-2xl aspect-square w-full flex items-center justify-center border border-slate-200 overflow-hidden">
+                    <img id="cat-modal-img" src="" alt="Product Image" class="w-full h-full object-cover">
                 </div>
 
                 <div class="space-y-2">

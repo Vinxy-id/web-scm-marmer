@@ -31,12 +31,12 @@
                 
                 <!-- Left: Product Image & Gallery -->
                 <div class="lg:col-span-6 space-y-4">
-                    <!-- Main Image Display -->
-                    <div class="relative bg-slate-100 rounded-3xl h-80 sm:h-96 flex items-center justify-center p-6 border border-slate-200 overflow-hidden group">
+                    <!-- Main Image Display (1:1 Ratio) -->
+                    <div class="relative bg-slate-100 rounded-3xl aspect-square w-full flex items-center justify-center border border-slate-200 overflow-hidden group">
                         <img id="main-product-img" 
                              src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" 
                              alt="{{ $product->name }}" 
-                             class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         
                         <!-- Badges -->
                         <div class="absolute top-4 left-4 flex flex-col gap-1.5">
@@ -57,18 +57,18 @@
 
                     <!-- 4 Thumbnail Gallery -->
                     <div class="grid grid-cols-4 gap-3">
-                        <button onclick="setMainImage('{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}')" class="h-20 bg-slate-100 rounded-xl p-2 border-2 border-blue-600 hover:opacity-80 transition overflow-hidden">
-                            <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" class="w-full h-full object-contain">
+                        <button onclick="setMainImage('{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}')" class="aspect-square bg-slate-100 rounded-xl border-2 border-blue-600 hover:opacity-80 transition overflow-hidden">
+                            <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" class="w-full h-full object-cover">
                         </button>
-                        <div class="h-20 bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
+                        <div class="aspect-square bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
                             <i data-lucide="disc" class="w-4 h-4 text-blue-600 mb-1"></i>
                             <span>Lubang 4.5cm</span>
                         </div>
-                        <div class="h-20 bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
+                        <div class="aspect-square bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
                             <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 mb-1"></i>
                             <span>Lolos QC 2</span>
                         </div>
-                        <div class="h-20 bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
+                        <div class="aspect-square bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
                             <i data-lucide="package" class="w-4 h-4 text-amber-600 mb-1"></i>
                             <span>Peti Kayu</span>
                         </div>
@@ -182,7 +182,7 @@
             <div id="dcontent-keunggulan" class="dcontent space-y-4 text-xs text-slate-600 leading-relaxed">
                 <h4 class="font-bold text-sm text-slate-900">Karakteristik Alami Batuan Tulungagung</h4>
                 <p>
-                    Setiap wastafel dan kerajinan dipahat dari batuan alam pegunungan selatan Tulungagung (Besole dan Campurdarat). Setiap unit memiliki guratan serat alami yang unik (*one-of-a-kind*) yang tidak mungkin identik dengan unit lainnya.
+                    Setiap wastafel dan kerajinan dipahat dari batuan alam pegunungan selatan Tulungagung (Campurdarat). Setiap unit memiliki guratan serat alami yang unik (*one-of-a-kind*) yang tidak mungkin identik dengan unit lainnya.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
@@ -247,8 +247,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 @foreach($relatedProducts as $rel)
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:shadow-md transition group">
-                    <div class="h-40 bg-slate-100 rounded-xl p-3 flex items-center justify-center overflow-hidden mb-3">
-                        <img src="{{ asset($rel->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $rel->name }}" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+                    <div class="aspect-square bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden mb-3">
+                        <img src="{{ asset($rel->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $rel->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     </div>
                     <p class="text-[10px] font-semibold text-blue-700">{{ $rel->category->name ?? 'Kerajinan' }}</p>
                     <h4 class="font-bold text-xs text-slate-900 truncate mt-1">

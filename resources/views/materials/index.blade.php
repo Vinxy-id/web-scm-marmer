@@ -159,7 +159,7 @@
 
             <div>
                 <label class="text-[11px] font-bold text-slate-600">Nama Bahan Baku</label>
-                <input type="text" name="name" placeholder="Bongkahan Marmer Trotol Besole" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                <input type="text" name="name" placeholder="Bongkahan Marmer Trotol Campurdarat" required class="w-full text-xs mt-1 border rounded-lg p-2">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -326,7 +326,7 @@
 
             <div>
                 <label class="text-[11px] font-bold text-slate-600">Catatan Transaksi</label>
-                <textarea name="notes" rows="2" placeholder="Contoh: Penerimaan 5 truk dari tambang Besole" class="w-full text-xs mt-1 border rounded-lg p-2"></textarea>
+                <textarea name="notes" rows="2" placeholder="Contoh: Penerimaan 5 truk dari tambang Campurdarat" class="w-full text-xs mt-1 border rounded-lg p-2"></textarea>
             </div>
 
             <div class="flex justify-end gap-2 pt-3 border-t">

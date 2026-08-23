@@ -165,8 +165,8 @@
                                 <tr>
                                     <td class="p-3.5">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-12 h-12 bg-slate-100 rounded-lg p-1 flex-shrink-0 flex items-center justify-center">
-                                                <img src="{{ asset($order->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $order->product->name }}" class="w-full h-full object-contain">
+                                            <div class="w-14 h-14 bg-slate-100 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden border border-slate-200">
+                                                <img src="{{ asset($order->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $order->product->name }}" class="w-full h-full object-cover">
                                             </div>
                                             <div>
                                                 <p class="font-bold text-slate-900">{{ $order->product->name }}</p>

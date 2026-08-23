@@ -157,8 +157,8 @@
                 <div class="space-y-3">
                     <h4 class="font-bold text-slate-900">Barang yang Dipesan:</h4>
                     <div class="flex gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100 items-center">
-                        <div class="w-16 h-16 bg-white rounded-xl p-1.5 flex items-center justify-center border border-slate-200 flex-shrink-0">
-                            <img src="{{ asset($order->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $order->product->name }}" class="w-full h-full object-contain">
+                        <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center border border-slate-200 flex-shrink-0 overflow-hidden">
+                            <img src="{{ asset($order->product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $order->product->name }}" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <p class="font-bold text-slate-900">{{ $order->product->name }}</p>

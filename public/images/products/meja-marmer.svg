@@ -47,7 +47,7 @@
     <!-- Top Ellipse Surface -->
     <ellipse cx="300" cy="200" rx="200" ry="65" fill="url(#tableTop)"/>
     
-    <!-- Natural Carrara/Besole Marble Grey Veins -->
+    <!-- Natural Carrara/Campurdarat Marble Grey Veins -->
     <path d="M 140 180 Q 230 225, 330 200 T 470 210" stroke="#94a3b8" stroke-width="3" fill="none" opacity="0.5" stroke-linecap="round"/>
     <path d="M 180 155 Q 260 185, 340 165 T 440 175" stroke="#cbd5e1" stroke-width="2.5" fill="none" opacity="0.6"/>
     <path d="M 220 220 Q 300 240, 380 230" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.45"/>

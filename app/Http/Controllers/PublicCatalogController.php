@@ -22,7 +22,7 @@ class PublicCatalogController extends Controller
                 'tagline' => 'Spesialis Wastafel Marmer Putih, Onix Tembus Cahaya & Pedestal Mewah',
                 'description' => 'Didirikan di sentra batuan Campurdarat Tulungagung, berfokus pada pengolahan marmer putih kristal dan batuan onix transparan berkualitas ekspor dengan standar poles Hi-Glossy.',
                 'phone' => '6281234567890',
-                'location' => 'Desa Besole / Campurdarat, Kabupaten Tulungagung, Jawa Timur',
+                'location' => 'Kecamatan Campurdarat, Kabupaten Tulungagung, Jawa Timur',
                 'specialties' => ['Wastafel Onix Tembus Cahaya', 'Wastafel Marmer Putih B1', 'Pedestal Luxury', 'Meja Marmer'],
                 'color' => 'blue',
             ],
@@ -189,7 +189,7 @@ class PublicCatalogController extends Controller
             'name' => 'UD Cahaya Onix',
             'owner' => 'M. Ilham Nur Amali',
             'phone' => '6281234567890',
-            'location' => 'Besole, Campurdarat, Tulungagung',
+            'location' => 'Campurdarat, Tulungagung',
         ];
 
         // If AJAX / JSON Quick View requested
@@ -261,7 +261,7 @@ class PublicCatalogController extends Controller
                 'ready_stock' => 12,
                 'minimum_stock' => 5,
                 'selling_price' => 450000,
-                'image_path' => 'images/products/wastafel-marmer-putih.svg',
+                'image_path' => 'images/products/WastafelMarmerPutihB1.jpg',
             ],
             (object)[
                 'id' => 2,
@@ -289,7 +289,7 @@ class PublicCatalogController extends Controller
                 'ready_stock' => 8,
                 'minimum_stock' => 4,
                 'selling_price' => 350000,
-                'image_path' => 'images/products/wastafel-batu-kali.svg',
+                'image_path' => 'images/products/WastafelBatuKaliAlamiCampurdarat.jpg',
             ],
             (object)[
                 'id' => 4,
@@ -303,7 +303,7 @@ class PublicCatalogController extends Controller
                 'ready_stock' => 3,
                 'minimum_stock' => 2,
                 'selling_price' => 1800000,
-                'image_path' => 'images/products/pedestal-marmer.svg',
+                'image_path' => 'images/products/PedestalWastafelMarmerLuxury.jpg',
             ],
             (object)[
                 'id' => 5,
@@ -322,7 +322,7 @@ class PublicCatalogController extends Controller
             (object)[
                 'id' => 6,
                 'product_code' => 'PRD-CO-004',
-                'name' => 'Meja Cafe Top Marmer B1 Besole 60x60',
+                'name' => 'Meja Cafe Top Marmer B1 Campurdarat 60x60',
                 'category_id' => 3,
                 'category' => (object)['id' => 3, 'name' => 'Pedestal & Meja'],
                 'material_type' => 'marmer',
@@ -359,7 +359,7 @@ class PublicCatalogController extends Controller
                 'ready_stock' => 7,
                 'minimum_stock' => 3,
                 'selling_price' => 420000,
-                'image_path' => 'images/products/wastafel-marmer-bakar.svg',
+                'image_path' => 'images/products/WastafelMarmerBakarAntik.jpg',
             ],
         ]);
     }

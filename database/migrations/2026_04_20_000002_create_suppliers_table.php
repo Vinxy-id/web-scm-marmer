@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('contact_person', 100)->nullable();
             $table->string('phone', 20)->nullable();
             $table->text('address')->nullable();
-            $table->string('quarry_location', 150)->nullable()->comment('Lokasi Tambang: Besole, Campurdarat, dll');
+            $table->string('quarry_location', 150)->nullable()->comment('Lokasi Tambang: Campurdarat, dll');
             $table->string('material_category', 100)->nullable();
             $table->timestamps();
 

@@ -57,7 +57,7 @@ Kegiatan ini bertujuan untuk merancang antarmuka pengguna (UI/UX) yang mudah dig
 │
 ├── 2. Operasional Hulu (Inbound Supply Chain)
 │   ├── Manajemen Bahan Baku (Filter Kritis/Rendah/Normal, CRUD Bongkahan)
-│   └── Pengadaan / Purchase Order (PO ke Pemasok Tambang Besole/Campurdarat)
+│   └── Pengadaan / Purchase Order (PO ke Pemasok Tambang Campurdarat)
 │
 ├── 3. Lantai Produksi (Shopfloor Operations)
 │   ├── Kanban Board SPK (5 Kolom: Antrian, Potong Slep, Mesin Bubut, QC & Poles, Siap Kirim)

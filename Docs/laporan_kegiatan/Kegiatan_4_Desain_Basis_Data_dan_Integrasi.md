@@ -64,7 +64,7 @@ Berikut adalah spesifikasi detail seluruh tabel dalam skema basis data `db_escm_
 | 4 | `contact_person` | VARCHAR | 100 | NULL | - | Kontak penanggung jawab |
 | 5 | `phone` | VARCHAR | 20 | NULL | - | No. telepon/WA |
 | 6 | `address` | TEXT | - | NULL | - | Alamat kantor/tambang |
-| 7 | `quarry_location` | VARCHAR | 150 | NULL | - | Lokasi bukit (Besole/Campurdarat) |
+| 7 | `quarry_location` | VARCHAR | 150 | NULL | - | Lokasi bukit (Campurdarat) |
 | 8 | `material_category` | VARCHAR | 100 | NULL | - | Jenis batu yang dihasilkan |
 
 ### 4.3 Tabel `materials` (Master Bahan Baku Bongkahan)

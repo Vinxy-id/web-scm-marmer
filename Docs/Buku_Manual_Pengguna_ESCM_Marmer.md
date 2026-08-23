@@ -24,7 +24,7 @@
 ## BAB I: PENDAHULUAN & GAMBARAN UMUM SISTEM
 
 ### 1.1 Latar Belakang
-Industri Kecil dan Menengah (IKM) kerajinan marmer, onyx, dan batu kali di Kabupaten Tulungagung (khususnya wilayah Campurdarat dan Besole) memiliki karakteristik proses bisnis yang khas. Produk kerajinan seperti *Wastafel Batu Kali*, *Kap Lampu Onyx Transparan*, dan *Stepping Stone* merupakan barang bernilai seni (*craftsmanship*) dengan sifat serat alam yang unik pada setiap unitnya.
+Industri Kecil dan Menengah (IKM) kerajinan marmer, onyx, dan batu kali di Kabupaten Tulungagung (khususnya wilayah Campurdarat) memiliki karakteristik proses bisnis yang khas. Produk kerajinan seperti *Wastafel Batu Kali*, *Kap Lampu Onyx Transparan*, dan *Stepping Stone* merupakan barang bernilai seni (*craftsmanship*) dengan sifat serat alam yang unik pada setiap unitnya.
 
 Aplikasi **E-SCM & E-Commerce Marmer & Onyx Tulungagung** dibangun untuk memfasilitasi transaksi digital e-commerce sekaligus mengintegrasikan seluruh alur operasional rantai pasok (*Supply Chain Management*) IKM:
 - Etalase e-commerce publik dengan fitur **Checkout Langsung (Opsi DP 50% / Lunas 100%)** dan **Konsultasi WhatsApp**.
@@ -132,7 +132,7 @@ Halaman ringkasan operasional yang menyajikan metrik penting secara real-time:
 
 ### 4.2 Visualisasi Alur Rantai Pasok (`/supply-chain-flow`)
 Halaman pemetaan interaktif alur rantai pasok marmer & onyx dari hulu ke hilir:
-1. `Bahan Baku Tambang (Besole/Campurdarat)` ➔
+1. `Bahan Baku Tambang (Campurdarat)` ➔
 2. `Penerimaan & Pengujian Kualitas Blok` ➔
 3. `Pesanan E-Commerce / Penerbitan SPK` ➔
 4. `Pemotongan Gergaji & Pembubutan Manual` ➔
