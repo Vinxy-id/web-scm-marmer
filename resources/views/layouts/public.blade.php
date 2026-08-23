@@ -50,21 +50,21 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased custom-scrollbar flex flex-col min-h-screen">
 
-    <!-- 1. TOP ANNOUNCEMENT BAR -->
-    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div class="flex items-center gap-2 text-[11px] sm:text-xs">
-                <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 font-semibold px-2 py-0.5 rounded-full text-[10px]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Terverifikasi E-SCM
+    <!-- 1. TOP ANNOUNCEMENT BAR (MOB-07 SOLVED: Single-line clean mobile bar) -->
+    <div class="bg-slate-900 text-slate-300 text-xs py-1.5 sm:py-2 px-4 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 text-[11px] sm:text-xs truncate">
+                <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 font-semibold px-1.5 py-0.5 rounded-full text-[10px] flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> E-SCM
                 </span>
-                <span>Sentra Pengrajin Marmer & Onyx Asli Campurdarat, Tulungagung</span>
+                <span class="truncate">Sentra Pengrajin Marmer & Onyx Campurdarat, Tulungagung</span>
             </div>
-            <div class="flex items-center gap-4 text-[11px]">
+            <div class="hidden sm:flex items-center gap-4 text-[11px] flex-shrink-0">
                 <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20konsultasi%20pemesanan%20produk." target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
-                    <i data-lucide="phone-call" class="w-3 h-3 text-emerald-400"></i> Hotline WA: 0812-3456-7890
+                    <i data-lucide="phone-call" class="w-3 h-3 text-emerald-400"></i> Hotline: 0812-3456-7890
                 </a>
                 <span class="text-slate-600">|</span>
-                <span class="text-slate-400">Buka: Senin - Sabtu (08:00 - 17:00 WIB)</span>
+                <span class="text-slate-400">Senin - Sabtu (08:00 - 17:00)</span>
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@
                     </div>
                 </a>
 
-                <!-- Desktop Navigation Links -->
+                <!-- Desktop Navigation Links (MOB-11 SOLVED: Added Kontak link) -->
                 <nav class="hidden md:flex items-center gap-7">
                     <a href="{{ route('home') }}" class="text-sm font-semibold transition {{ request()->routeIs('home') ? 'text-blue-900 font-bold border-b-2 border-blue-900 pb-1' : 'text-slate-600 hover:text-blue-900' }}">
                         Beranda
@@ -104,6 +104,9 @@
                     </a>
                     <a href="{{ route('home') }}#alur-rantai-pasok" class="text-sm font-semibold text-slate-600 hover:text-blue-900 transition">
                         Alur SCM
+                    </a>
+                    <a href="{{ route('home') }}#kontak" class="text-sm font-semibold text-slate-600 hover:text-blue-900 transition">
+                        Kontak
                     </a>
                 </nav>
 
@@ -167,7 +170,8 @@
         @yield('content')
     </main>
 
-    <!-- 4. FLOATING WHATSAPP BUTTON -->
+    <!-- 4. FLOATING WHATSAPP BUTTON (MOB-10 SOLVED: Hidden on Checkout page to prevent overlap) -->
+    @if(!request()->routeIs('checkout*'))
     <div class="fixed bottom-6 right-6 z-50">
         <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20tanya%20produk%20dan%20pemesanan%20katalog." 
            target="_blank" 
@@ -179,6 +183,7 @@
             </span>
         </a>
     </div>
+    @endif
 
     <!-- 5. FOOTER -->
     <footer id="kontak" class="bg-slate-950 text-slate-400 border-t border-slate-800 pt-14 pb-8">

@@ -1,5 +1,5 @@
-<!-- BACKDROP OVERLAY FOR MOBILE -->
-<div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
+<!-- BACKDROP OVERLAY FOR MOBILE (MOB-09 SOLVED: Standard backdrop-blur-sm) -->
+<div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
 <!-- SIDEBAR -->
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-200 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 lg:static lg:inset-auto flex-shrink-0 shadow-2xl lg:shadow-none">

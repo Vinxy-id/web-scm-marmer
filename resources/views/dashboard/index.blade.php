@@ -491,41 +491,42 @@
                 </a>
             </div>
             
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+            <!-- MOB-08 SOLVED: Balanced responsive grid for 7 machine stations -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5 text-xs">
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 1</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer D40</p>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
+                    <p class="text-[10px] text-blue-600 mt-0.5 truncate">Wastafel D40</p>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
                 </a>
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 2</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer B1</p>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (80m)</span>
+                    <p class="text-[10px] text-blue-600 mt-0.5 truncate">Wastafel B1</p>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (80m)</span>
                 </a>
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 3</p>
-                    <p class="text-[10px] text-amber-600 mt-0.5">Wastafel Onix Oval</p>
-                    <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Poles (90m)</span>
+                    <p class="text-[10px] text-amber-600 mt-0.5 truncate">Onix Oval</p>
+                    <span class="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Poles (90m)</span>
                 </a>
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 4</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Mangkok</p>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (75m)</span>
+                    <p class="text-[10px] text-blue-600 mt-0.5 truncate">Mangkok</p>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (75m)</span>
                 </a>
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 5</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Wastafel Marmer Bakar</p>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
+                    <p class="text-[10px] text-blue-600 mt-0.5 truncate">Marmer Bakar</p>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (85m)</span>
                 </a>
                 <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center transition block">
                     <p class="font-bold text-slate-800">Mesin Bubut 6</p>
-                    <p class="text-[10px] text-blue-600 mt-0.5">Pedestal Wastafel</p>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (90m)</span>
+                    <p class="text-[10px] text-blue-600 mt-0.5 truncate">Pedestal</p>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Running (90m)</span>
                 </a>
-                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center col-span-2 sm:col-span-2 transition block">
-                    <p class="font-bold text-slate-800">Mesin Bubut 7 & Mesin Slep Sawmill</p>
-                    <p class="text-[10px] text-slate-600 mt-0.5">Pemotongan Balok Marmer & Batu Kali</p>
-                    <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Potong Slep (60m)</span>
+                <a href="{{ route('production.wip') }}" class="p-2.5 bg-slate-50 hover:bg-indigo-50 border hover:border-indigo-300 rounded-lg text-center col-span-2 sm:col-span-3 md:col-span-2 lg:col-span-1 transition block">
+                    <p class="font-bold text-slate-800">Mesin Slep 7</p>
+                    <p class="text-[10px] text-slate-600 mt-0.5 truncate">Potong Sawmill</p>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Potong (60m)</span>
                 </a>
             </div>
         </div>

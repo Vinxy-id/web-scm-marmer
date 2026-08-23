@@ -13,8 +13,8 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- 1. HORIZONTAL 8 STAGES PROGRESSION RIBBON -->
-    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm overflow-hidden">
+    <!-- 1. 8 STAGES PROGRESSION RIBBON (MOB-03 SOLVED: Desktop Horizontal Ribbon + Mobile Vertical Stepper) -->
+    <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm overflow-hidden">
         <div class="flex items-center justify-between mb-4">
             <div>
                 <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
@@ -25,11 +25,12 @@
             </div>
             <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Aliran SCM Aktif
+                <span class="hidden sm:inline">Aliran SCM Aktif</span>
             </span>
         </div>
 
-        <div class="overflow-x-auto pb-2">
+        <!-- Desktop Horizontal Ribbon -->
+        <div class="hidden md:block overflow-x-auto pb-2 custom-scrollbar">
             <div class="flex items-center justify-between min-w-[900px] gap-2">
 
                 <!-- Stage 1: Bahan Baku -->
@@ -190,6 +191,105 @@
                     </a>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Mobile-friendly 2-Column Progression Grid (md:hidden) -->
+        <div class="md:hidden grid grid-cols-2 gap-2.5 pt-1">
+            <!-- Mobile 1 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-purple-600 font-mono">01. Bahan Baku</span>
+                    <i data-lucide="gem" class="w-3.5 h-3.5 text-purple-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">Inv. Acc: <span class="font-bold text-slate-800">99.2%</span></p>
+                <a href="{{ route('materials.index') }}" class="text-[10px] font-bold text-blue-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 2 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-cyan-600 font-mono">02. QC Input</span>
+                    <i data-lucide="microscope" class="w-3.5 h-3.5 text-cyan-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">Pass Rate: <span class="font-bold text-slate-800">98%</span></p>
+                <a href="{{ route('qc.index') }}" class="text-[10px] font-bold text-cyan-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 3 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-amber-600 font-mono">03. Produksi SPK</span>
+                    <i data-lucide="factory" class="w-3.5 h-3.5 text-amber-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">OEE: <span class="font-bold text-slate-800">87%</span></p>
+                <a href="{{ route('production.kanban') }}" class="text-[10px] font-bold text-amber-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 4 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-orange-600 font-mono">04. WIP Mesin</span>
+                    <i data-lucide="cog" class="w-3.5 h-3.5 text-orange-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">Cycle: <span class="font-bold text-slate-800">2.4 Hari</span></p>
+                <a href="{{ route('production.wip') }}" class="text-[10px] font-bold text-orange-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 5 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-emerald-600 font-mono">05. QC Output</span>
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">Defect: <span class="font-bold text-slate-800">0.8%</span></p>
+                <a href="{{ route('qc.index') }}" class="text-[10px] font-bold text-emerald-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 6 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-green-600 font-mono">06. Barang Jadi</span>
+                    <i data-lucide="package" class="w-3.5 h-3.5 text-green-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">Stock: <span class="font-bold text-slate-800">14 Hari</span></p>
+                <a href="{{ route('catalog') }}" class="text-[10px] font-bold text-green-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 7 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-indigo-600 font-mono">07. Distribusi</span>
+                    <i data-lucide="truck" class="w-3.5 h-3.5 text-indigo-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">OTD: <span class="font-bold text-slate-800">94%</span></p>
+                <a href="{{ route('distribution.index') }}" class="text-[10px] font-bold text-indigo-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
+            </div>
+
+            <!-- Mobile 8 -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-teal-600 font-mono">08. Terkirim</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600"></i>
+                </div>
+                <p class="text-[10px] text-slate-500">CSAT: <span class="font-bold text-slate-800">4.8 / 5.0</span></p>
+                <a href="{{ route('distribution.index') }}" class="text-[10px] font-bold text-teal-600 hover:underline mt-1 flex items-center gap-0.5">
+                    Detail &rarr;
+                </a>
             </div>
         </div>
     </div>

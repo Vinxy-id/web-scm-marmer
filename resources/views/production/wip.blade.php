@@ -131,14 +131,20 @@
                         <th class="p-3">No. SPK</th>
                         <th class="p-3">Produk Wastafel</th>
                         <th class="p-3">Target & Selesai</th>
-                        <th class="p-3">Stasiun Kerja</th>
-                        <th class="p-3">Persentase Progres</th>
+                        <!-- MOB-06 SOLVED: Responsive column hiding on mobile/tablet -->
+                        <th class="p-3 hidden md:table-cell">Stasiun Kerja</th>
+                        <th class="p-3 hidden lg:table-cell">Persentase Progres</th>
                         <th class="p-3">Status</th>
                         <th class="p-3 text-center">Aksi / Update</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($workOrders as $wo)
+                    @php
+                        $activeStep = $wo->steps->firstWhere('status', 'running') ?? $wo->steps->firstWhere('status', 'pending');
+                        $stationName = $activeStep ? $activeStep->machine_number : ($wo->status === 'qc_phase' ? 'Meja QC & Finishing' : 'Mesin Bubut Utama');
+                        $pct = $wo->target_quantity > 0 ? round(($wo->completed_quantity / $wo->target_quantity) * 100) : 0;
+                    @endphp
                     <tr class="hover:bg-slate-50/80 transition">
                         <td class="p-3 font-mono font-bold text-blue-600">
                             <span class="bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $wo->spk_number }}</span>
@@ -146,26 +152,25 @@
                         <td class="p-3 font-semibold text-slate-800">
                             {{ $wo->product->name ?? '-' }}
                             <span class="block text-[10px] text-slate-400 font-normal">Pemesan: {{ $wo->customer->name ?? 'Stok Gudang' }}</span>
+                            <!-- Mobile-only compact station badge -->
+                            <span class="md:hidden inline-block bg-indigo-50 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded font-medium mt-1">
+                                {{ $stationName }}
+                            </span>
                         </td>
                         <td class="p-3">
                             <span class="font-bold text-slate-800">{{ $wo->completed_quantity }} / {{ $wo->target_quantity }} Unit</span>
+                            <!-- Mobile-only compact percentage -->
+                            <span class="lg:hidden text-[10px] text-blue-600 font-bold block">{{ $pct }}% selesai</span>
                             @if($wo->scrap_quantity > 0)
                             <span class="block text-[10px] text-amber-600 font-medium">Tambal: {{ $wo->scrap_quantity }} Unit</span>
                             @endif
                         </td>
-                        <td class="p-3">
-                            @php
-                                $activeStep = $wo->steps->firstWhere('status', 'running') ?? $wo->steps->firstWhere('status', 'pending');
-                                $stationName = $activeStep ? $activeStep->machine_number : ($wo->status === 'qc_phase' ? 'Meja QC & Finishing' : 'Mesin Bubut Utama');
-                            @endphp
+                        <td class="p-3 hidden md:table-cell">
                             <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-semibold text-[10px]">
                                 {{ $stationName }}
                             </span>
                         </td>
-                        <td class="p-3 w-44">
-                            @php
-                                $pct = $wo->target_quantity > 0 ? round(($wo->completed_quantity / $wo->target_quantity) * 100) : 0;
-                            @endphp
+                        <td class="p-3 w-44 hidden lg:table-cell">
                             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                                 <div class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: {{ $pct }}%"></div>
                             </div>
@@ -187,21 +192,22 @@
                             @endif
                         </td>
                         <td class="p-3 text-center">
+                            <!-- MOB-13 SOLVED: Touch Target >= 36px on mobile/desktop -->
                             <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="openWipModal({{ json_encode($wo) }})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
-                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Update Progres
+                                <button onclick="openWipModal({{ json_encode($wo) }})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 min-h-[36px] rounded-lg flex items-center gap-1 shadow-sm transition">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Update
                                 </button>
                                 @if($wo->status !== 'qc_phase')
                                 <form action="{{ route('production.work-order.update-status', $wo->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="qc_phase">
-                                    <button type="submit" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition" title="Kirim ke Inspeksi QC">
-                                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Kirim QC
+                                    <button type="submit" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 text-xs font-semibold px-3 py-2 min-h-[36px] rounded-lg flex items-center gap-1 transition" title="Kirim ke Inspeksi QC">
+                                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> QC
                                     </button>
                                 </form>
                                 @else
-                                <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
+                                <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 min-h-[36px] rounded-lg flex items-center gap-1 shadow-sm transition">
                                     <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i> Buka QC
                                 </a>
                                 @endif
@@ -221,8 +227,9 @@
 </div>
 
 <!-- MODAL UPDATE PROGRES WIP -->
-<div id="modal-update-wip" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+<div id="modal-update-wip" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between pb-3 border-b">
             <div>
                 <h3 class="text-base font-bold text-slate-800">Update Progres & Output Mesin Bubut</h3>
@@ -242,7 +249,8 @@
                 <input type="text" id="modal-wip-product-name" readonly class="w-full text-xs bg-slate-100 border border-slate-200 rounded-lg p-2.5 text-slate-700 font-medium">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Target Total</label>
                     <input type="number" id="modal-wip-target-qty" readonly class="w-full text-xs bg-slate-100 border border-slate-200 rounded-lg p-2.5 text-slate-600">
@@ -253,7 +261,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Unit Tambal Resin / Rework</label>
                     <input type="number" name="scrap_quantity" id="modal-wip-scrap-qty" min="0" class="w-full text-xs border rounded-lg p-2.5 focus:outline-blue-500 text-amber-700 font-medium">

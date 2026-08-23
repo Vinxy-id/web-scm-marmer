@@ -103,16 +103,17 @@
                 <p class="text-[11px] text-slate-500">Pelacakan pengiriman produk dari bengkel Campurdarat ke pelanggan</p>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
                         <th class="p-3">No. Surat Jalan</th>
                         <th class="p-3">Pelanggan / Destinasi</th>
                         <th class="p-3">Item SPK Terkait</th>
-                        <th class="p-3">Tgl Kirim</th>
-                        <th class="p-3">Ekspedisi & Driver</th>
-                        <th class="p-3">Checklist Packing Kayu</th>
+                        <!-- MOB-05 SOLVED: Responsive column hiding on mobile -->
+                        <th class="p-3 hidden sm:table-cell">Tgl Kirim</th>
+                        <th class="p-3 hidden md:table-cell">Ekspedisi & Driver</th>
+                        <th class="p-3 hidden lg:table-cell">Checklist Packing Kayu</th>
                         <th class="p-3">Status Logistik</th>
                         <th class="p-3 text-right">Aksi</th>
                     </tr>
@@ -122,13 +123,18 @@
                     <tr class="hover:bg-slate-50/80">
                         <td class="p-3">
                             <span class="font-mono font-bold text-purple-700">{{ $sh->shipment_code }}</span>
+                            <p class="text-[10px] text-slate-400 sm:hidden">{{ $sh->shipment_date->format('d M Y') }}</p>
                             @if($sh->tracking_number)
-                            <p class="text-[10px] text-slate-400 font-mono">Resi: {{ $sh->tracking_number }}</p>
+                            <p class="text-[10px] text-slate-500 font-mono">Resi: {{ $sh->tracking_number }}</p>
                             @endif
                         </td>
                         <td class="p-3 font-semibold text-slate-800">
                             {{ $sh->customer->company_name ?? $sh->customer->name }}
                             <p class="text-[10px] text-slate-400 font-normal">{{ $sh->customer->city }}</p>
+                            <!-- Mobile-only expedition name -->
+                            <p class="text-[10px] text-blue-600 md:hidden mt-0.5">
+                                {{ $sh->expedition_name ?? 'Kargo Truk' }}
+                            </p>
                         </td>
                         <td class="p-3">
                             @if($sh->workOrder)
@@ -138,12 +144,12 @@
                             <span class="text-slate-400 text-[10px]">Stok Reguler</span>
                             @endif
                         </td>
-                        <td class="p-3 whitespace-nowrap">{{ $sh->shipment_date->format('d M Y') }}</td>
-                        <td class="p-3 text-slate-600">
+                        <td class="p-3 whitespace-nowrap hidden sm:table-cell">{{ $sh->shipment_date->format('d M Y') }}</td>
+                        <td class="p-3 text-slate-600 hidden md:table-cell">
                             <span class="font-semibold">{{ $sh->expedition_name ?? 'Kargo Truk Sendiri' }}</span>
                             <p class="text-[10px] text-slate-400">Driver: {{ $sh->driver_name ?? '-' }} ({{ $sh->vehicle_plate ?? '-' }})</p>
                         </td>
-                        <td class="p-3">
+                        <td class="p-3 hidden lg:table-cell">
                             @if($sh->packing_verified)
                             <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
                                 <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> Terverifikasi Solid
@@ -163,6 +169,10 @@
                             <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 DALAM PERJALANAN
                             </span>
+                            @elseif($sh->delivery_status === 'returned')
+                            <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                                RETUR
+                            </span>
                             @else
                             <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 PACKING / SIAP
@@ -170,13 +180,14 @@
                             @endif
                         </td>
                         <td class="p-3 text-right space-x-1">
+                            <!-- MOB-13 SOLVED: Touch Target >= 34px -->
                             @if($sh->delivery_status === 'packed')
                             <form action="{{ route('distribution.shipment.update-status', $sh->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="delivery_status" value="in_transit">
-                                <button type="submit" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1">
-                                    <i data-lucide="truck" class="w-3 h-3"></i> Kirim Kargo
+                                <button type="submit" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-3 py-1.5 min-h-[34px] rounded-lg transition inline-flex items-center gap-1">
+                                    <i data-lucide="truck" class="w-3.5 h-3.5"></i> Kirim
                                 </button>
                             </form>
                             @elseif($sh->delivery_status === 'in_transit')
@@ -185,8 +196,8 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="delivery_status" value="delivered">
-                                    <button type="submit" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1">
-                                        <i data-lucide="check" class="w-3 h-3"></i> Diterima
+                                    <button type="submit" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-2.5 py-1.5 min-h-[34px] rounded-lg transition inline-flex items-center gap-1">
+                                        <i data-lucide="check" class="w-3.5 h-3.5"></i> Diterima
                                     </button>
                                 </form>
                                 <!-- DST-10 SOLVED: Action button for returned shipments -->
@@ -194,8 +205,8 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="delivery_status" value="returned">
-                                    <button type="submit" class="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold px-2 py-1 rounded transition inline-flex items-center gap-1" title="Barang Retur / Dikembalikan">
-                                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Retur
+                                    <button type="submit" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold px-2.5 py-1.5 min-h-[34px] rounded-lg transition inline-flex items-center gap-1" title="Barang Retur / Dikembalikan">
+                                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Retur
                                     </button>
                                 </form>
                             </div>
@@ -229,7 +240,8 @@
 
 <!-- MODAL ADD SHIPMENT -->
 <div id="modal-add-shipment" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto to prevent mobile button cutoff -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <div class="flex items-center gap-2">
                 <div class="p-2 bg-purple-100 rounded-lg text-purple-700">
@@ -249,7 +261,7 @@
         <div id="modal_spk_summary_card" class="hidden p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs text-purple-900 space-y-1">
             <div class="flex justify-between items-center">
                 <span class="font-bold font-mono text-purple-700" id="modal_summary_spk_num">SPK-XXX</span>
-                <span class="bg-purple-200/80 text-purple-800 px-2 py-0.5 rounded text-[10px] font-bold" id="modal_summary_qty">0 Unit</span>
+                <span class="bg-purple-200/80 text-purple-800 px-2 py-0.5 rounded text-[10px] font-bold" id="modal_summary_qty">0 Unit Siap Kirim</span>
             </div>
             <p class="font-bold text-slate-800" id="modal_summary_product">Produk</p>
             <p class="text-[11px] text-slate-600" id="modal_summary_customer">Pelanggan</p>
@@ -278,7 +290,8 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Tanggal Pengiriman</label>
                     <input type="date" name="shipment_date" value="{{ date('Y-m-d') }}" required class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -299,7 +312,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-2">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-3 -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">No. Polisi Truk</label>
                     <input type="text" name="vehicle_plate" placeholder="AG 8899 AB" class="w-full text-xs mt-1 border rounded-lg p-2">

@@ -47,7 +47,26 @@
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- MOB-14 SOLVED: Mobile Order Quick Summary Bar (lg:hidden) -->
+            <div class="lg:hidden bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-3 mb-6">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-12 h-12 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0 border border-slate-200">
+                        <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih-b1.webp') }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="text-xs font-bold text-slate-900 truncate">{{ $product->name }}</h4>
+                        <p class="text-[11px] font-bold text-blue-900">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <span class="text-[10px] text-slate-400 block font-medium">Bahan Alami</span>
+                    <span class="text-[11px] font-bold bg-blue-50 text-blue-800 px-2 py-0.5 rounded-lg border border-blue-100">
+                        100% Tulungagung
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
                 <!-- Left: Shipping & Payment Details (8 cols) -->
                 <div class="lg:col-span-7 space-y-6">
@@ -208,10 +227,10 @@
 
                 </div>
 
-                <!-- Right: Order Summary Sticky Card (4 cols) -->
-                <div class="lg:col-span-5 space-y-6">
+                <!-- Right: Order Summary Sticky Card (4 cols) (MOB-14 SOLVED: Sticky sidebar) -->
+                <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-6 lg:self-start">
                     
-                    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm sticky top-6 space-y-6">
+                    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
                             <span>Ringkasan Pesanan</span>
                             <span class="text-[11px] font-mono text-slate-400">{{ $product->product_code }}</span>

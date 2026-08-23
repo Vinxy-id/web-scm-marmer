@@ -11,10 +11,37 @@
 @endsection
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
+
+    <!-- MOB-01 SOLVED: Mobile Column Navigation & Swipe Indicator -->
+    <div class="md:hidden bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+            <span class="font-bold flex items-center gap-1 text-slate-700">
+                <i data-lucide="columns" class="w-3.5 h-3.5 text-blue-600"></i> Kolom Kanban (5 Tahap)
+            </span>
+            <span class="text-[10px] text-slate-400">Geser atau ketuk kolom &rarr;</span>
+        </div>
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
+            <button type="button" onclick="scrollKanbanTo(0)" class="px-2.5 py-1.5 bg-slate-100 active:bg-blue-600 active:text-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-lg font-semibold text-[11px] whitespace-nowrap transition flex items-center gap-1">
+                1. Antrian <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{{ $colAntrian->count() }}</span>
+            </button>
+            <button type="button" onclick="scrollKanbanTo(1)" class="px-2.5 py-1.5 bg-slate-100 active:bg-blue-600 active:text-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-lg font-semibold text-[11px] whitespace-nowrap transition flex items-center gap-1">
+                2. Slep <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{{ $colSlep->count() }}</span>
+            </button>
+            <button type="button" onclick="scrollKanbanTo(2)" class="px-2.5 py-1.5 bg-slate-100 active:bg-blue-600 active:text-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-lg font-semibold text-[11px] whitespace-nowrap transition flex items-center gap-1">
+                3. Bubut/Poles <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{{ $colBubut->count() }}</span>
+            </button>
+            <button type="button" onclick="scrollKanbanTo(3)" class="px-2.5 py-1.5 bg-slate-100 active:bg-blue-600 active:text-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-lg font-semibold text-[11px] whitespace-nowrap transition flex items-center gap-1">
+                4. QC <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{{ $colQc->count() }}</span>
+            </button>
+            <button type="button" onclick="scrollKanbanTo(4)" class="px-2.5 py-1.5 bg-slate-100 active:bg-blue-600 active:text-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-lg font-semibold text-[11px] whitespace-nowrap transition flex items-center gap-1">
+                5. Selesai <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{{ $colCompleted->count() }}</span>
+            </button>
+        </div>
+    </div>
 
     <!-- 5 KANBAN COLUMNS -->
-    <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x snap-mandatory">
+    <div id="kanban-container" class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x snap-mandatory scroll-smooth">
         
         <!-- Col 1: Antrian SPK -->
         <div class="min-w-[270px] sm:min-w-[290px] flex-1 flex-shrink-0 bg-slate-100 p-3 rounded-xl border border-slate-200 kanban-col space-y-3 snap-start">
@@ -213,7 +240,8 @@
 
 <!-- MODAL ACC & TERBITKAN SURAT JALAN LANGSUNG DARI KANBAN -->
 <div id="modal-acc-shipment" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto to prevent mobile button cutoff -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <div class="flex items-center gap-2">
                 <div class="p-2 bg-purple-100 rounded-lg text-purple-700">
@@ -257,7 +285,8 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Tanggal Pengiriman</label>
                     <input type="date" name="shipment_date" value="{{ date('Y-m-d') }}" required class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -268,7 +297,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">No. Polisi Truk</label>
                     <input type="text" name="vehicle_plate" placeholder="AG 8899 AB" class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -304,7 +333,8 @@
 
 <!-- MODAL ADD SPK -->
 <div id="modal-add-spk" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto to prevent mobile button cutoff -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <h4 class="text-sm font-bold text-slate-800">Terbitkan Surat Perintah Kerja (SPK) Baru</h4>
             <button onclick="document.getElementById('modal-add-spk').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
@@ -323,7 +353,8 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Pelanggan / Buyer (Opsional)</label>
                     <select name="customer_id" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
@@ -344,7 +375,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-3 -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Target Qty (Unit)</label>
                     <input type="number" name="target_quantity" value="14" min="1" required class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -382,6 +414,17 @@ function openAccShipmentModal(spkId, spkNumber, customerId, customerName, produc
         document.getElementById('acc_customer_id').value = customerId;
     }
     document.getElementById('modal-acc-shipment').classList.remove('hidden');
+}
+
+// MOB-01 SOLVED: Scroll Kanban Column Helper for Mobile
+function scrollKanbanTo(colIndex) {
+    const container = document.getElementById('kanban-container');
+    if (container) {
+        const cols = container.querySelectorAll('.kanban-col');
+        if (cols[colIndex]) {
+            cols[colIndex].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+        }
+    }
 }
 </script>
 @endsection

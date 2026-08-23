@@ -18,7 +18,8 @@
 
         <form action="{{ route('qc.inspect') }}" method="POST" class="space-y-4" id="qc-form">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <!-- MOB-04 & MOB-12 SOLVED: Responsive form grids and full-width mobile button -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Pilih Batch SPK</label>
                     <select name="work_order_id" id="qc-work-order-select" required onchange="handleWorkOrderChange(this)" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
@@ -60,7 +61,7 @@
             </div>
 
             <!-- QC-05 SOLVED: Standar Kategori Cacat & Tindakan -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Perlu Tambal Resin (Rework)</label>
                     <input type="number" id="qc-rework-qty" name="rework_quantity" value="0" min="0" required oninput="recalculateQcPass()" class="w-full text-xs mt-1 border rounded-lg p-2 text-amber-600 font-bold">
@@ -88,7 +89,7 @@
             </div>
 
             <div class="flex justify-end gap-2 pt-2">
-                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-6 py-2.5 min-h-[38px] rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition">
                     <i data-lucide="check-circle" class="w-4 h-4"></i> Simpan Hasil Inspeksi QC
                 </button>
             </div>
@@ -101,7 +102,7 @@
             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Histori Pemeriksaan QC Lengkap</h4>
             <span class="text-[11px] text-slate-500 font-medium">Total: {{ $recentQcLogs->total() }} Laporan Inspeksi</span>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
@@ -112,9 +113,9 @@
                         <th class="p-3">Pass (Lolos)</th>
                         <th class="p-3">Rework (Tambal)</th>
                         <th class="p-3">Scrap (Pecah)</th>
-                        <th class="p-3">Jenis Cacat</th>
-                        <th class="p-3">Tindakan / Solusi</th>
-                        <th class="p-3">Inspektor</th>
+                        <th class="p-3 hidden md:table-cell">Jenis Cacat</th>
+                        <th class="p-3 hidden lg:table-cell">Tindakan / Solusi</th>
+                        <th class="p-3 hidden sm:table-cell">Inspektor</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -134,13 +135,13 @@
                         <td class="p-3 font-bold text-emerald-600">{{ $log->pass_quantity }} Unit</td>
                         <td class="p-3 font-bold text-amber-600">{{ $log->rework_quantity }} Unit</td>
                         <td class="p-3 font-bold text-red-600">{{ $log->scrap_quantity }} Unit</td>
-                        <td class="p-3 text-slate-600">
+                        <td class="p-3 text-slate-600 hidden md:table-cell">
                             {{ $log->defect_type ? ucwords(str_replace('_', ' ', $log->defect_type)) : '-' }}
                         </td>
-                        <td class="p-3 text-slate-500 text-[11px] max-w-xs truncate" title="{{ $log->rework_action ?: $log->notes }}">
+                        <td class="p-3 text-slate-500 text-[11px] max-w-xs truncate hidden lg:table-cell" title="{{ $log->rework_action ?: $log->notes }}">
                             {{ $log->rework_action ?: ($log->notes ?: '-') }}
                         </td>
-                        <td class="p-3 text-slate-600 font-medium">{{ $log->inspector->name ?? 'Inspektor' }}</td>
+                        <td class="p-3 text-slate-600 font-medium hidden sm:table-cell">{{ $log->inspector->name ?? 'Inspektor' }}</td>
                     </tr>
                     @empty
                     <tr>

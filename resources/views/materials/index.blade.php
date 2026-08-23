@@ -131,7 +131,8 @@
 
 <!-- MODAL ADD MATERIAL -->
 <div id="modal-add-material" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto to prevent mobile button cutoff -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <h4 class="text-sm font-bold text-slate-800">Tambah Bahan Baku Baru</h4>
             <button onclick="document.getElementById('modal-add-material').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
@@ -141,7 +142,8 @@
 
         <form action="{{ route('materials.store') }}" method="POST" class="space-y-3">
             @csrf
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Kode Material <span class="text-slate-400 font-normal">(Otomatis/Opsional)</span></label>
                     <input type="text" name="material_code" placeholder="Otomatis (MAT-MRM-xxx)" class="w-full text-xs mt-1 border rounded-lg p-2 bg-slate-50 focus:bg-white" oninput="validateCodeInput(this)">
@@ -162,7 +164,8 @@
                 <input type="text" name="name" placeholder="Bongkahan Marmer Trotol Campurdarat" required class="w-full text-xs mt-1 border rounded-lg p-2">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Grade Batuan</label>
                     <select name="grade" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
@@ -182,7 +185,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-3 -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Stok Awal</label>
                     <input type="number" step="1" min="0" name="current_stock" value="10" required class="w-full text-xs mt-1 border rounded-lg p-2" oninput="validateIntegerInput(this)">
@@ -197,7 +201,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Dimensi Blok</label>
                     <input type="text" name="dimension_info" placeholder="80 x 60 x 60 cm" class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -218,7 +223,8 @@
 
 <!-- MODAL EDIT MATERIAL -->
 <div id="modal-edit-material" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto -->
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <h4 class="text-sm font-bold text-slate-800">Edit Data Bahan Baku</h4>
             <button onclick="document.getElementById('modal-edit-material').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
@@ -229,7 +235,8 @@
         <form id="form-edit-material" method="POST" class="space-y-3">
             @csrf
             @method('PUT')
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Jenis Batuan</label>
                     <select id="edit_type" name="type" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
@@ -254,7 +261,8 @@
                 <input type="text" id="edit_name" name="name" required class="w-full text-xs mt-1 border rounded-lg p-2">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Pemasok Tambang</label>
                     <select id="edit_supplier_id" name="supplier_id" class="w-full text-xs mt-1 border rounded-lg p-2 bg-white">
@@ -270,7 +278,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Dimensi Blok</label>
                     <input type="text" id="edit_dimension_info" name="dimension_info" class="w-full text-xs mt-1 border rounded-lg p-2">
@@ -291,7 +300,8 @@
 
 <!-- MODAL MUTASI STOK -->
 <div id="modal-stock-transaction" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border">
+    <!-- MOB-02 SOLVED: max-h-[90vh] overflow-y-auto -->
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="flex items-center justify-between border-b pb-3">
             <h4 class="text-sm font-bold text-slate-800">Catat Mutasi Stok Masuk / Keluar</h4>
             <button onclick="document.getElementById('modal-stock-transaction').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
@@ -310,7 +320,8 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- MOB-04 SOLVED: grid-cols-1 sm:grid-cols-2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Tipe Transaksi</label>
                     <select name="type" required class="w-full text-xs mt-1 border rounded-lg p-2 bg-white font-bold">
