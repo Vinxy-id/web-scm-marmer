@@ -159,6 +159,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 7. SEED WORK ORDERS (17 Bulan Data Observasi Lengkap dari Excel 'Hasil Produksi Cahaya Onix.xlsx')
+        $defaultUserId = DB::table('users')->value('id') ?? 1;
+        $ownerPaId = DB::table('users')->where('email', 'like', '%putraabadi%')->value('id') ?? $defaultUserId;
+
         $historicalProduction = [
             // 2025
             ['m' => '2025-01', 'qty' => 590, 'spk' => 'SPK-CO-202501-001'],
@@ -178,13 +181,13 @@ class DatabaseSeeder extends Seeder
             ['m' => '2026-02', 'qty' => 700, 'spk' => 'SPK-CO-202602-014'],
             ['m' => '2026-03', 'qty' => 550, 'spk' => 'SPK-CO-202603-015'],
             ['m' => '2026-04', 'qty' => 675, 'spk' => 'SPK-CO-202604-016'],
-            ['m' => '2026-05', 'qty' => 750, 'spk' => 'SPK-CO-202605-017'],
+            ['m' => '2026-05', 'qty' => 690, 'spk' => 'SPK-CO-202605-017'],
         ];
 
-        foreach ($historicalProduction as $idx => $prod) {
-            $startDate = $prod['m'] . '-01';
-            $endDate = Carbon::parse($startDate)->endOfMonth()->toDateString();
-            $isLast = ($idx === count($historicalProduction) - 1);
+        foreach ($historicalProduction as $prod) {
+            $startDate = Carbon::createFromFormat('Y-m', $prod['m'])->startOfMonth()->toDateString();
+            $endDate = Carbon::createFromFormat('Y-m', $prod['m'])->endOfMonth()->toDateString();
+            $isLast = ($prod['m'] === '2026-05');
 
             DB::table('work_orders')->upsert([
                 [
@@ -200,7 +203,7 @@ class DatabaseSeeder extends Seeder
                     'due_date' => $endDate,
                     'completion_date' => $isLast ? null : $endDate,
                     'notes' => 'Batch produksi bulanan ' . Carbon::parse($startDate)->translatedFormat('F Y') . ' (Data Observasi Lapangan)',
-                    'created_by' => 1,
+                    'created_by' => $defaultUserId,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]
@@ -209,10 +212,10 @@ class DatabaseSeeder extends Seeder
 
         // Additional Work Orders for Active Kanban Flow
         DB::table('work_orders')->upsert([
-            ['spk_number' => 'SPK-CO-202608-008', 'product_id' => 9, 'customer_id' => 1, 'target_quantity' => 5, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'scheduled', 'priority' => 'urgent', 'start_date' => '2026-08-20', 'due_date' => '2026-08-30', 'completion_date' => null, 'notes' => 'Pesanan khusus 5 unit wastafel onyx tembus cahaya ke Bali', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['spk_number' => 'SPK-CO-202608-007', 'product_id' => 4, 'customer_id' => 2, 'target_quantity' => 14, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-18', 'due_date' => '2026-08-26', 'completion_date' => null, 'notes' => 'Pembelahan balok marmer putih di mesin slep utama (Kapasitas 14 Biji/Hari)', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['spk_number' => 'SPK-CO-202608-006', 'product_id' => 6, 'customer_id' => 3, 'target_quantity' => 8, 'completed_quantity' => 4, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-15', 'due_date' => '2026-08-24', 'completion_date' => null, 'notes' => 'Pembubutan bentuk luar & lubang afur wastafel batu kali di Mesin Bubut 1-4', 'created_by' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['spk_number' => 'SPK-PA-202604-046', 'product_id' => 5, 'customer_id' => 2, 'target_quantity' => 2650, 'completed_quantity' => 2650, 'scrap_quantity' => 20, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Produksi 2.650 pcs Stepping Stone Batu Kali UD Putra Abadi', 'created_by' => 13, 'created_at' => $now, 'updated_at' => $now],
+            ['spk_number' => 'SPK-CO-202608-008', 'product_id' => 9, 'customer_id' => 1, 'target_quantity' => 5, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'scheduled', 'priority' => 'urgent', 'start_date' => '2026-08-20', 'due_date' => '2026-08-30', 'completion_date' => null, 'notes' => 'Pesanan khusus 5 unit wastafel onyx tembus cahaya ke Bali', 'created_by' => $defaultUserId, 'created_at' => $now, 'updated_at' => $now],
+            ['spk_number' => 'SPK-CO-202608-007', 'product_id' => 4, 'customer_id' => 2, 'target_quantity' => 14, 'completed_quantity' => 0, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-18', 'due_date' => '2026-08-26', 'completion_date' => null, 'notes' => 'Pembelahan balok marmer putih di mesin slep utama (Kapasitas 14 Biji/Hari)', 'created_by' => $defaultUserId, 'created_at' => $now, 'updated_at' => $now],
+            ['spk_number' => 'SPK-CO-202608-006', 'product_id' => 6, 'customer_id' => 3, 'target_quantity' => 8, 'completed_quantity' => 4, 'scrap_quantity' => 0, 'status' => 'in_progress', 'priority' => 'normal', 'start_date' => '2026-08-15', 'due_date' => '2026-08-24', 'completion_date' => null, 'notes' => 'Pembubutan bentuk luar & lubang afur wastafel batu kali di Mesin Bubut 1-4', 'created_by' => $defaultUserId, 'created_at' => $now, 'updated_at' => $now],
+            ['spk_number' => 'SPK-PA-202604-046', 'product_id' => 5, 'customer_id' => 2, 'target_quantity' => 2650, 'completed_quantity' => 2650, 'scrap_quantity' => 20, 'status' => 'completed', 'priority' => 'normal', 'start_date' => '2026-04-01', 'due_date' => '2026-04-30', 'completion_date' => '2026-04-30', 'notes' => 'Produksi 2.650 pcs Stepping Stone Batu Kali UD Putra Abadi', 'created_by' => $ownerPaId, 'created_at' => $now, 'updated_at' => $now],
         ], ['spk_number'], ['product_id', 'customer_id', 'target_quantity', 'completed_quantity', 'scrap_quantity', 'status', 'priority', 'start_date', 'due_date', 'completion_date', 'notes', 'created_by', 'updated_at']);
 
         // Resolve dynamic IDs
