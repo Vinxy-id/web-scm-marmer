@@ -116,7 +116,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-600">Berat (Kg)</label>
-                    <input type="number" step="0.1" name="weight_kg" value="25.0" required class="w-full text-xs mt-1 border rounded-lg p-2">
+                    <input type="number" step="0.1" name="weight_kg" value="" placeholder="Contoh: 25.0" min="0.1" required class="w-full text-xs mt-1 border rounded-lg p-2">
                 </div>
             </div>
 

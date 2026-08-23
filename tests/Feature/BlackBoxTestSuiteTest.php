@@ -167,10 +167,22 @@ class BlackBoxTestSuiteTest extends TestCase
         $response->assertSessionHasErrors(['due_date']);
     }
 
-    /** TC-QC-01: Input inspeksi QC2 Final Polish valid */
+    /** TC-QC-01: Input inspeksi QC2 Final Polish valid (setelah QC1) */
     public function test_tc_qc_01_store_inspection_qc2_valid()
     {
         $workOrder = WorkOrder::first();
+
+        // QC 2-Tahap: Lakukan QC1 terlebih dahulu
+        \App\Models\QcLog::create([
+            'work_order_id' => $workOrder->id,
+            'stage' => 'qc1_raw_shape',
+            'inspector_id' => $this->distribusiUser->id,
+            'inspected_quantity' => 10,
+            'pass_quantity' => 10,
+            'rework_quantity' => 0,
+            'scrap_quantity' => 0,
+            'inspection_date' => now()->toDateString(),
+        ]);
 
         $response = $this->actingAs($this->distribusiUser)->post(route('qc.inspect'), [
             'work_order_id' => $workOrder->id,
