@@ -6,6 +6,7 @@
     <title>@yield('title', 'E-SCM Marmer Tulungagung') - Klaster IKM Terintegrasi</title>
     <meta name="description" content="@yield('meta-description', 'Dashboard monitoring rantai pasok terintegrasi klaster IKM marmer dan onix Tulungagung - E-SCM.')">
     <meta name="robots" content="@yield('meta-robots', 'index, follow')">
+    <meta name="google-site-verification" content="google32f15ef73219ac0b">
     
     <!-- Preload & Link Compiled Minified CSS -->
     <link rel="preload" href="{{ asset('css/app.css') }}" as="style">

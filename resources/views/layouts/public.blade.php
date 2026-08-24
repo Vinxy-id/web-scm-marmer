@@ -8,6 +8,7 @@
     <meta name="keywords" content="marmer tulungagung, kerajinan marmer, wastafel marmer, onyx tembus cahaya, wastafel batu kali, stepping stone taman, UD Cahaya Onix, UD Putra Abadi, e-scm campurdarat">
     <meta name="author" content="Klaster IKM Marmer & Onyx Tulungagung">
     <meta name="robots" content="index, follow">
+    <meta name="google-site-verification" content="google32f15ef73219ac0b">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ url()->current() }}">
