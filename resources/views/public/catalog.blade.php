@@ -2,6 +2,12 @@
 
 @section('title', 'Katalog Lengkap Kerajinan Marmer & Onyx Tulungagung')
 
+@section('styles')
+    @if($products->first())
+        <link rel="preload" as="image" href="{{ asset($products->first()->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" fetchpriority="high">
+    @endif
+@endsection
+
 @section('content')
 
 <!-- Header Breadcrumb Banner -->
@@ -32,9 +38,10 @@
                 
                 <!-- Search Box -->
                 <div class="lg:col-span-1">
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Pencarian Produk</label>
+                    <label for="catalog-search-input" class="block text-xs font-bold text-slate-700 mb-1.5">Pencarian Produk</label>
                     <div class="relative">
                         <input type="text" 
+                               id="catalog-search-input"
                                name="q" 
                                value="{{ request('q') }}" 
                                placeholder="Cari wastafel, onix, dimensi..." 
@@ -45,8 +52,8 @@
 
                 <!-- Category Select -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Produk</label>
-                    <select name="category" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label for="filter-category" class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Produk</label>
+                    <select id="filter-category" name="category" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="all">Semua Kategori</option>
                         @foreach($categories as $cat)
                         <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>
@@ -58,8 +65,8 @@
 
                 <!-- Material Type Filter -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Batuan Alam</label>
-                    <select name="material" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label for="filter-material" class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Batuan Alam</label>
+                    <select id="filter-material" name="material" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="all">Semua Batuan</option>
                         <option value="marmer" {{ request('material') == 'marmer' ? 'selected' : '' }}>Batu Marmer Tulungagung</option>
                         <option value="onix" {{ request('material') == 'onix' ? 'selected' : '' }}>Batu Onyx Tembus Cahaya</option>
@@ -69,8 +76,8 @@
 
                 <!-- Stock Filter (CAT-01 SOLVED) -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Ketersediaan Stok</label>
-                    <select name="stock" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label for="filter-stock" class="block text-xs font-bold text-slate-700 mb-1.5">Ketersediaan Stok</label>
+                    <select id="filter-stock" name="stock" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="">Semua Ketersediaan</option>
                         <option value="ready" {{ request('stock') == 'ready' ? 'selected' : '' }}>Ready Stock (Siap Kirim)</option>
                         <option value="preorder" {{ request('stock') == 'preorder' ? 'selected' : '' }}>Pre-Order Pengrajin</option>
@@ -79,8 +86,8 @@
 
                 <!-- Sorting -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Urutkan Berdasarkan</label>
-                    <select name="sort" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label for="filter-sort" class="block text-xs font-bold text-slate-700 mb-1.5">Urutkan Berdasarkan</label>
+                    <select id="filter-sort" name="sort" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Paling Populer</option>
                         <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Harga: Terendah ke Tertinggi</option>
                         <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Harga: Tertinggi ke Terendah</option>
@@ -128,6 +135,10 @@
                     <div class="relative aspect-square w-full bg-slate-100 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset($item->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" 
                              alt="{{ $item->name }}" 
+                             width="300"
+                             height="300"
+                             {!! $loop->first ? 'fetchpriority="high"' : 'loading="lazy"' !!}
+                             decoding="async"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         
                         <!-- Badges -->
@@ -198,6 +209,7 @@
                             <a href="https://wa.me/{{ $artisanPhone }}?text={{ urlencode($waMessage) }}" 
                                target="_blank" 
                                title="Tanya Serat via WhatsApp"
+                               aria-label="Tanya Produk {{ $item->name }} via WhatsApp"
                                class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold p-2 rounded-xl transition flex items-center justify-center">
                                 <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                             </a>
@@ -236,7 +248,7 @@
 <div id="catalog-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-200">
         
-        <button onclick="closeCatalogModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 bg-slate-100 rounded-full z-10 transition">
+        <button onclick="closeCatalogModal()" aria-label="Tutup Modal Detail Produk" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 bg-slate-100 rounded-full z-10 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 

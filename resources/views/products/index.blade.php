@@ -108,21 +108,21 @@
             <table class="w-full text-left text-xs divide-y divide-slate-200">
                 <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
                     <tr>
-                        <th class="p-3.5 text-center w-16">Foto</th>
-                        <th class="p-3.5">Kode & Nama Produk</th>
-                        <th class="p-3.5">Kategori / Bahan</th>
-                        <th class="p-3.5">Spesifikasi Teknis</th>
-                        <th class="p-3.5 text-right">HPP (COGS)</th>
-                        <th class="p-3.5 text-right">Harga Jual</th>
-                        <th class="p-3.5 text-center">Stok Ready</th>
-                        <th class="p-3.5 text-center w-28">Aksi</th>
+                        <th class="p-3.5 text-center w-16 whitespace-nowrap">Foto</th>
+                        <th class="p-3.5 whitespace-nowrap min-w-[180px]">Kode & Nama Produk</th>
+                        <th class="p-3.5 whitespace-nowrap">Kategori / Bahan</th>
+                        <th class="p-3.5 whitespace-nowrap">Spesifikasi Teknis</th>
+                        <th class="p-3.5 whitespace-nowrap text-right">HPP (COGS)</th>
+                        <th class="p-3.5 whitespace-nowrap text-right">Harga Jual</th>
+                        <th class="p-3.5 whitespace-nowrap text-center">Stok Ready</th>
+                        <th class="p-3.5 whitespace-nowrap text-center w-28">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($products as $p)
                     <tr class="hover:bg-slate-50/80 transition">
                         <!-- Foto 1:1 -->
-                        <td class="p-3.5 text-center">
+                        <td class="p-3.5 text-center whitespace-nowrap">
                             <div class="w-12 h-12 aspect-square rounded-xl bg-slate-100 border border-slate-200 overflow-hidden mx-auto flex items-center justify-center">
                                 <img src="{{ asset($p->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $p->name }}" class="w-full h-full object-cover">
                             </div>
@@ -130,14 +130,14 @@
 
                         <!-- Kode & Nama -->
                         <td class="p-3.5">
-                            <span class="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded text-[11px]">{{ $p->product_code }}</span>
+                            <span class="inline-block whitespace-nowrap font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded text-[11px]">{{ $p->product_code }}</span>
                             <p class="font-bold text-slate-900 text-xs mt-1">{{ $p->name }}</p>
                         </td>
 
                         <!-- Kategori / Bahan -->
-                        <td class="p-3.5">
+                        <td class="p-3.5 whitespace-nowrap">
                             <span class="font-semibold text-slate-800 block">{{ $p->category->name ?? 'Kerajinan' }}</span>
-                            <span class="inline-block mt-0.5 text-[10px] font-medium px-2 py-0.5 rounded-full capitalize
+                            <span class="inline-block whitespace-nowrap mt-0.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full capitalize
                                 @if($p->material_type === 'marmer') bg-blue-100 text-blue-800
                                 @elseif($p->material_type === 'onix') bg-amber-100 text-amber-800
                                 @else bg-emerald-100 text-emerald-800 @endif">
@@ -152,29 +152,29 @@
                         </td>
 
                         <!-- HPP -->
-                        <td class="p-3.5 text-right font-mono text-slate-600">
+                        <td class="p-3.5 text-right font-mono text-slate-600 whitespace-nowrap">
                             Rp {{ number_format($p->standard_cogs, 0, ',', '.') }}
                         </td>
 
                         <!-- Harga Jual -->
-                        <td class="p-3.5 text-right font-mono font-bold text-slate-900">
+                        <td class="p-3.5 text-right font-mono font-bold text-slate-900 whitespace-nowrap">
                             Rp {{ number_format($p->selling_price, 0, ',', '.') }}
                         </td>
 
                         <!-- Stok Ready -->
-                        <td class="p-3.5 text-center">
+                        <td class="p-3.5 text-center whitespace-nowrap">
                             @if($p->ready_stock <= $p->safety_stock)
-                            <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-lg text-[11px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
                                 {{ $p->ready_stock }} Unit
                             </span>
-                            <span class="block text-[9px] text-red-500 mt-0.5">Min: {{ $p->safety_stock }}</span>
+                            <span class="block text-[9px] text-red-500 mt-0.5 whitespace-nowrap">Min: {{ $p->safety_stock }}</span>
                             @else
-                            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded-lg text-[11px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg text-[11px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                                 {{ $p->ready_stock }} Unit
                             </span>
-                            <span class="block text-[9px] text-slate-400 mt-0.5">Min: {{ $p->safety_stock }}</span>
+                            <span class="block text-[9px] text-slate-400 mt-0.5 whitespace-nowrap">Min: {{ $p->safety_stock }}</span>
                             @endif
                         </td>
 

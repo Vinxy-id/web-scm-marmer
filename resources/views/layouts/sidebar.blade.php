@@ -6,16 +6,20 @@
     <!-- Brand Header -->
     <div class="h-16 flex items-center justify-between px-4 bg-slate-950 border-b border-slate-800">
         <div class="flex items-center gap-3 overflow-hidden">
-            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 flex-shrink-0">
-                <i data-lucide="layers" class="w-5 h-5"></i>
+            <div class="w-9 h-9 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center p-1 shadow-md flex-shrink-0">
+                <img src="{{ asset('images/logo-icon.webp') }}" 
+                     alt="Logo E-SCM Marmer" 
+                     width="28" 
+                     height="28" 
+                     class="w-7 h-7 object-contain">
             </div>
             <div class="overflow-hidden">
-                <h1 class="font-bold text-sm text-white tracking-wide leading-tight">E-SCM MARMER</h1>
+                <span class="font-bold text-sm text-white tracking-wide leading-tight block">E-SCM MARMER</span>
                 <p class="text-[11px] text-blue-400 font-medium truncate">Klaster IKM Tulungagung</p>
             </div>
         </div>
         <!-- Close Button (Mobile Only) -->
-        <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden" title="Tutup Menu">
+        <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden" title="Tutup Menu" aria-label="Tutup Menu Sidebar">
             <i data-lucide="x" class="w-5 h-5"></i>
         </button>
     </div>
@@ -109,6 +113,19 @@
         <a href="{{ route('reports') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('reports') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400"></i> Laporan & KPI
         </a>
+
+        @if(in_array(auth()->user()->role ?? '', ['owner', 'admin']))
+        <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Sistem & Hak Akses</div>
+
+        <a href="{{ route('users.index') }}" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('users.*') ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            <div class="flex items-center gap-3">
+                <i data-lucide="users-round" class="w-4 h-4 text-pink-400"></i> Kelola Pengguna
+            </div>
+            <span class="inline-flex items-center bg-blue-500/20 text-blue-300 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+                RBAC
+            </span>
+        </a>
+        @endif
     </div>
 
     <!-- Footer User Profile -->

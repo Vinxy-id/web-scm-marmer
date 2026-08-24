@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Pencatatan Bongkahan Marmer, Onyx, dan Batu Kali dari Penambang')
 
 @section('topbar-actions')
-    <button onclick="document.getElementById('modal-add-material').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus" class="w-4 h-4"></i> Tambah Material
+    <button onclick="document.getElementById('modal-add-material').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Tambah Material">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Tambah Material</span>
     </button>
 @endsection
 
@@ -52,49 +53,51 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
-                        <th class="p-3">Kode Material</th>
-                        <th class="p-3">Nama Bahan Baku</th>
-                        <th class="p-3">Jenis / Grade</th>
-                        <th class="p-3">Dimensi Blok</th>
-                        <th class="p-3">Stok Terkini</th>
-                        <th class="p-3">Stok Min</th>
-                        <th class="p-3">Harga Satuan</th>
-                        <th class="p-3">Status</th>
-                        <th class="p-3 text-right">Aksi</th>
+                        <th class="p-3 whitespace-nowrap">Kode Material</th>
+                        <th class="p-3 whitespace-nowrap min-w-[160px]">Nama Bahan Baku</th>
+                        <th class="p-3 whitespace-nowrap">Jenis / Grade</th>
+                        <th class="p-3 whitespace-nowrap">Dimensi Blok</th>
+                        <th class="p-3 whitespace-nowrap">Stok Terkini</th>
+                        <th class="p-3 whitespace-nowrap">Stok Min</th>
+                        <th class="p-3 whitespace-nowrap">Harga Satuan</th>
+                        <th class="p-3 whitespace-nowrap">Status</th>
+                        <th class="p-3 whitespace-nowrap text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($materials as $mat)
                     <tr class="hover:bg-slate-50/80 {{ $mat->stock_status === 'kritis' ? 'bg-red-50/30' : '' }}">
-                        <td class="p-3 font-mono font-bold text-blue-700">{{ $mat->material_code }}</td>
+                        <td class="p-3 font-mono font-bold text-blue-700 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap">{{ $mat->material_code }}</span>
+                        </td>
                         <td class="p-3 font-semibold text-slate-800">
                             {{ $mat->name }}
                             @if($mat->supplier)
                             <p class="text-[10px] text-slate-400 font-normal">Pemasok: {{ $mat->supplier->name }}</p>
                             @endif
                         </td>
-                        <td class="p-3">
-                            <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded font-semibold text-[10px] uppercase border border-slate-200">
                                 {{ $mat->type }} - {{ str_replace('_', ' ', $mat->grade) }}
                             </span>
                         </td>
-                        <td class="p-3 text-slate-500">{{ $mat->dimension_info ?? '-' }}</td>
-                        <td class="p-3 font-bold {{ $mat->stock_status === 'kritis' ? 'text-red-600' : 'text-slate-800' }}">
+                        <td class="p-3 text-slate-500 whitespace-nowrap">{{ $mat->dimension_info ?? '-' }}</td>
+                        <td class="p-3 font-bold whitespace-nowrap {{ $mat->stock_status === 'kritis' ? 'text-red-600' : 'text-slate-800' }}">
                             {{ number_format($mat->current_stock, 0, ',', '.') }} {{ $mat->unit }}
                         </td>
-                        <td class="p-3 text-slate-500">{{ number_format($mat->minimum_stock, 0, ',', '.') }} {{ $mat->unit }}</td>
-                        <td class="p-3 text-slate-700">Rp {{ number_format($mat->unit_cost, 0, ',', '.') }}</td>
-                        <td class="p-3">
+                        <td class="p-3 text-slate-500 whitespace-nowrap">{{ number_format($mat->minimum_stock, 0, ',', '.') }} {{ $mat->unit }}</td>
+                        <td class="p-3 text-slate-700 whitespace-nowrap">Rp {{ number_format($mat->unit_cost, 0, ',', '.') }}</td>
+                        <td class="p-3 whitespace-nowrap">
                             @if($mat->stock_status === 'kritis')
-                            <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-red-100 text-red-700 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
                             </span>
                             @elseif($mat->stock_status === 'rendah')
-                            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rendah
                             </span>
                             @else
-                            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Normal
                             </span>
                             @endif

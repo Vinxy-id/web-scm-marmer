@@ -1,6 +1,11 @@
 @extends('layouts.public')
 
 @section('title', $product->name . ' - Kerajinan Marmer Tulungagung')
+@section('meta-description', 'Beli ' . $product->name . ' asli Tulungagung. Spesifikasi: ' . ($product->dimension_spec ?: 'Dimensi presisi') . ', finishing ' . ($product->finishing_type ?: 'Hi-Glossy') . ' langsung dari pengrajin ' . $artisan['name'] . '.')
+
+@section('styles')
+    <link rel="preload" as="image" href="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" fetchpriority="high">
+@endsection
 
 @section('content')
 

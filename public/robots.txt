@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /katalog
+Allow: /katalog/*
+Allow: /lacak-pesanan
+Disallow: /dashboard
+Disallow: /materials
+Disallow: /production
+Disallow: /qc
+Disallow: /waste
+Disallow: /distribution
+Disallow: /forecasting
+Disallow: /orders
+
+Sitemap: http://127.0.0.1:8000/sitemap.xml

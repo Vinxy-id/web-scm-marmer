@@ -34,6 +34,15 @@ Route::prefix('orders')->name('orders.')->group(function () {
 // Admin / Owner Product Management (CRUD Master Produk)
 Route::resource('products', \App\Http\Controllers\ProductController::class)->except(['create', 'show', 'edit']);
 
+// Admin / Owner User & Access Management (CRUD Akun Pengguna & RBAC)
+Route::prefix('users')->name('users.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('index');
+    Route::post('/', [\App\Http\Controllers\UserController::class, 'store'])->name('store');
+    Route::put('/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('update');
+    Route::post('/{user}/toggle-status', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->name('toggle-status');
+    Route::delete('/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
+});
+
 // Load routes per modul
 require __DIR__ . '/modules/auth.php';
 require __DIR__ . '/modules/materials.php';    // Dikelola Alvin

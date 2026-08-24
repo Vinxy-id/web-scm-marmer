@@ -51,32 +51,55 @@ class DashboardController extends Controller
             ->groupBy('type')
             ->pluck('total', 'type');
 
-        // 6. Dynamic Monthly Trend Data (Last 6 Months)
+        // 6. Dynamic Monthly Trend Data (Last 6 Months - Fast Agnostic Aggregation)
         $chartLabels = [];
         $chartMaterialsIn = [];
         $chartOutputs = [];
 
+        $sixMonthsAgo = now()->subMonths(5)->startOfMonth()->toDateString();
+        $matInByMonth = StockTransaction::where('transaction_date', '>=', $sixMonthsAgo)
+            ->where('type', 'in')
+            ->get(['transaction_date', 'quantity'])
+            ->groupBy(function($tx) {
+                return substr((string) $tx->transaction_date, 0, 7);
+            })
+            ->map(function($group) {
+                return (int) $group->sum('quantity');
+            });
+
+        $prodOutByMonth = WorkOrder::where(function($q) use ($sixMonthsAgo) {
+                $q->where('completion_date', '>=', $sixMonthsAgo)
+                  ->orWhere('start_date', '>=', $sixMonthsAgo);
+            })
+            ->get(['completion_date', 'start_date', 'status', 'target_quantity', 'completed_quantity'])
+            ->groupBy(function($wo) {
+                $d = $wo->completion_date ?: $wo->start_date;
+                return substr((string) $d, 0, 7);
+            })
+            ->map(function($group) {
+                return (int) $group->sum(function($w) {
+                    return $w->status === 'completed'
+                        ? ($w->completed_quantity ?: $w->target_quantity)
+                        : $w->completed_quantity;
+                });
+            });
+
+        $empiricalInDefaults = [27, 31, 34, 30, 33, 29]; // Data Pembelian Bahan Baku Excel (Balok)
+        $empiricalOutDefaults = [550, 675, 750, 680, 720, 640]; // Data Output Produksi Excel (Unit)
+
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $monthNum = (int) $date->format('m');
-            $yearNum = (int) $date->format('Y');
+            $ym = $date->format('Y-m');
             $chartLabels[] = $date->translatedFormat('M y') ?: $date->format('M y');
 
-            $matIn = StockTransaction::whereYear('transaction_date', $yearNum)
-                ->whereMonth('transaction_date', $monthNum)
-                ->where('type', 'in')
-                ->sum('quantity');
+            $matIn = $matInByMonth[$ym] ?? null;
+            $prodOut = $prodOutByMonth[$ym] ?? null;
 
-            $prodOut = WorkOrder::whereYear('updated_at', $yearNum)
-                ->whereMonth('updated_at', $monthNum)
-                ->where('status', 'completed')
-                ->sum('target_quantity');
+            $defaultIn = $empiricalInDefaults[5 - $i] ?? 30;
+            $defaultOut = $empiricalOutDefaults[5 - $i] ?? 650;
 
-            $defaultIn = [35, 42, 38, 45, 52, 48][5 - $i] ?? 40;
-            $defaultOut = [70, 84, 76, 90, 104, 96][5 - $i] ?? 80;
-
-            $chartMaterialsIn[] = $matIn > 0 ? (int) $matIn : $defaultIn;
-            $chartOutputs[] = $prodOut > 0 ? (int) $prodOut : $defaultOut;
+            $chartMaterialsIn[] = ($matIn !== null && $matIn > 0) ? (int) $matIn : $defaultIn;
+            $chartOutputs[] = ($prodOut !== null && $prodOut > 0) ? (int) $prodOut : $defaultOut;
         }
 
         return view('dashboard.index', compact(

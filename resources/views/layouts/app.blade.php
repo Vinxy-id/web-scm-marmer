@@ -4,30 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'E-SCM Marmer Tulungagung') - Klaster IKM Terintegrasi</title>
-    <!-- Favicon SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.27 6.96 12 12.01 20.73 6.96'/><line x1='12' y1='22.08' x2='12' y2='12'/></svg>" />
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .kanban-col { min-height: 520px; }
+    <meta name="description" content="@yield('meta-description', 'Dashboard monitoring rantai pasok terintegrasi klaster IKM marmer dan onix Tulungagung - E-SCM.')">
+    <meta name="robots" content="@yield('meta-robots', 'index, follow')">
+    
+    <!-- Preload & Link Compiled Minified CSS -->
+    <link rel="preload" href="{{ asset('css/app.css') }}" as="style">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-        /* Hide spinner arrows / steppers on number inputs */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-    </style>
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/webp" href="{{ asset('images/favicon.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icon-192.webp') }}">
     @yield('styles')
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased custom-scrollbar">
@@ -92,10 +78,21 @@
 
     </div>
 
+    <!-- Deferred Lucide & Chart.js CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
     <!-- Scripts -->
     <script>
-        // Init Lucide Vector Icons
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            } else {
+                window.addEventListener('load', () => {
+                    if (window.lucide) lucide.createIcons();
+                });
+            }
+        });
 
         // Responsive Sidebar Toggle with Backdrop
         function toggleSidebar() {

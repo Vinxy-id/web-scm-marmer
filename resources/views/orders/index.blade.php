@@ -121,12 +121,12 @@
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
-                        <th class="py-3.5 px-4">No. Order & Waktu</th>
-                        <th class="py-3.5 px-4">Pembeli & Tujuan</th>
-                        <th class="py-3.5 px-4">Produk Kerajinan</th>
-                        <th class="py-3.5 px-4">Skema & Nominal</th>
-                        <th class="py-3.5 px-4">Status & SPK</th>
-                        <th class="py-3.5 px-4 text-center">Tindakan Admin</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">No. Order & Waktu</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Pembeli & Tujuan</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Produk Kerajinan</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Skema & Nominal</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Status & SPK</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap text-center">Tindakan Admin</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-700">
@@ -134,21 +134,21 @@
                     <tr class="hover:bg-slate-50/80 transition">
                         
                         <!-- Order Number & Date -->
-                        <td class="py-3.5 px-4 align-top">
+                        <td class="py-3.5 px-4 align-top whitespace-nowrap">
                             <div class="space-y-1">
-                                <a href="{{ route('checkout.invoice', $item->order_number) }}" target="_blank" class="font-mono font-black text-blue-700 hover:underline flex items-center gap-1">
+                                <a href="{{ route('checkout.invoice', $item->order_number) }}" target="_blank" class="font-mono font-black text-blue-700 hover:underline inline-flex whitespace-nowrap items-center gap-1">
                                     <span>#{{ $item->order_number }}</span>
                                     <i data-lucide="external-link" class="w-3 h-3"></i>
                                 </a>
-                                <p class="text-[11px] text-slate-400">{{ $item->created_at->translatedFormat('d M Y, H:i') }} WIB</p>
+                                <p class="text-[11px] text-slate-400 whitespace-nowrap">{{ $item->created_at->translatedFormat('d M Y, H:i') }} WIB</p>
                                 
                                 @if($item->order_status === 'pending_payment')
                                     @if($item->isExpired())
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">
+                                    <span class="inline-flex whitespace-nowrap items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">
                                         <i data-lucide="clock" class="w-3 h-3"></i> Kadaluarsa
                                     </span>
                                     @else
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
+                                    <span class="inline-flex whitespace-nowrap items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
                                         <i data-lucide="clock" class="w-3 h-3"></i> Exp: {{ $item->expires_at ? $item->expires_at->diffForHumans() : '24 Jam' }}
                                     </span>
                                     @endif
@@ -186,13 +186,13 @@
                         </td>
 
                         <!-- Scheme & Amount -->
-                        <td class="py-3.5 px-4 align-top">
+                        <td class="py-3.5 px-4 align-top whitespace-nowrap">
                             <div class="space-y-1">
                                 <p class="font-extrabold text-slate-900">
                                     Rp {{ number_format($item->total_amount, 0, ',', '.') }}
                                 </p>
                                 <div class="flex items-center gap-1">
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded {{ $item->payment_scheme === 'dp_50' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded inline-block whitespace-nowrap {{ $item->payment_scheme === 'dp_50' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
                                         {{ $item->payment_scheme === 'dp_50' ? 'DP 50%' : 'Lunas 100%' }}
                                     </span>
                                     <span class="text-[10px] text-slate-400 uppercase font-mono">{{ $item->payment_method }}</span>
@@ -201,22 +201,22 @@
                         </td>
 
                         <!-- Status & SPK -->
-                        <td class="py-3.5 px-4 align-top">
+                        <td class="py-3.5 px-4 align-top whitespace-nowrap">
                             <div class="space-y-1.5">
-                                <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $item->status_badge_class }}">
+                                <span class="inline-block whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $item->status_badge_class }}">
                                     {{ $item->order_status_label }}
                                 </span>
 
                                 <div>
                                     @if($item->work_order_id && $item->workOrder)
-                                    <a href="{{ route('production.kanban') }}" class="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 hover:bg-indigo-100 transition">
+                                    <a href="{{ route('production.kanban') }}" class="inline-flex whitespace-nowrap items-center gap-1 text-[11px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 hover:bg-indigo-100 transition">
                                         <i data-lucide="kanban-square" class="w-3 h-3"></i>
                                         <span>{{ $item->workOrder->spk_number }}</span>
                                     </a>
                                     @elseif($item->isCancelled())
                                     <p class="text-[10px] text-rose-600">Alasan: {{ $item->cancellation_reason ?: 'Kadaluarsa' }}</p>
                                     @else
-                                    <span class="text-[10px] text-amber-700 font-semibold bg-amber-50/80 px-2 py-0.5 rounded border border-amber-200">
+                                    <span class="inline-block whitespace-nowrap text-[10px] text-amber-700 font-semibold bg-amber-50/80 px-2 py-0.5 rounded border border-amber-200">
                                         SPK Belum Terbit (Menunggu DP)
                                     </span>
                                     @endif

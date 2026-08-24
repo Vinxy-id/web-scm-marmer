@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Pencatatan Potongan Layak Cladding/Stepping Stone & Residu Bubut (UD Putra Abadi)')
 
 @section('topbar-actions')
-    <button onclick="document.getElementById('modal-add-waste').classList.remove('hidden')" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus" class="w-4 h-4"></i> Catat Residu Baru
+    <button onclick="document.getElementById('modal-add-waste').classList.remove('hidden')" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Catat Residu Baru">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Catat Residu Baru</span>
     </button>
 @endsection
 
@@ -43,31 +44,33 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
-                        <th class="p-3">Tanggal</th>
-                        <th class="p-3">Batch SPK</th>
-                        <th class="p-3">Jenis Residu</th>
-                        <th class="p-3">Berat (Kg)</th>
-                        <th class="p-3">Rencana Penggunaan</th>
+                        <th class="p-3 whitespace-nowrap">Tanggal</th>
+                        <th class="p-3 whitespace-nowrap">Batch SPK</th>
+                        <th class="p-3 whitespace-nowrap">Jenis Residu</th>
+                        <th class="p-3 whitespace-nowrap">Berat (Kg)</th>
+                        <th class="p-3 whitespace-nowrap">Rencana Penggunaan</th>
                         <th class="p-3">Catatan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($wasteLogs as $log)
                     <tr class="hover:bg-slate-50/80">
-                        <td class="p-3">{{ $log->logged_at->format('d M Y') }}</td>
-                        <td class="p-3 font-mono font-bold text-blue-600">{{ $log->workOrder->spk_number ?? '-' }}</td>
-                        <td class="p-3">
-                            <span class="bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-semibold text-[10px]">
-                                {{ str_replace('_', ' ', $log->waste_type) }}
+                        <td class="p-3 font-mono text-slate-500 whitespace-nowrap">{{ $log->logged_at->format('d M Y') }}</td>
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $log->workOrder->spk_number ?? '-' }}</span>
+                        </td>
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded font-semibold text-[10px]">
+                                {{ ucwords(str_replace('_', ' ', $log->waste_type)) }}
                             </span>
                         </td>
-                        <td class="p-3 font-bold text-slate-800">{{ number_format($log->weight_kg, 2) }} Kg</td>
-                        <td class="p-3">
-                            <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px]">
-                                {{ str_replace('_', ' ', $log->reuse_status) }}
+                        <td class="p-3 font-bold text-slate-800 whitespace-nowrap">{{ number_format($log->weight_kg, 2) }} Kg</td>
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded text-[10px] font-medium border border-slate-200">
+                                {{ ucwords(str_replace('_', ' ', $log->reuse_status)) }}
                             </span>
                         </td>
-                        <td class="p-3 text-slate-500">{{ $log->notes ?? '-' }}</td>
+                        <td class="p-3 text-slate-500 text-xs">{{ $log->notes ?? '-' }}</td>
                     </tr>
                     @empty
                     <tr>

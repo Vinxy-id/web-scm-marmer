@@ -106,42 +106,42 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
-                        <th class="p-3">Tanggal</th>
-                        <th class="p-3">No. SPK & Produk</th>
-                        <th class="p-3">Tahap QC</th>
-                        <th class="p-3">Diperiksa</th>
-                        <th class="p-3">Pass (Lolos)</th>
-                        <th class="p-3">Rework (Tambal)</th>
-                        <th class="p-3">Scrap (Pecah)</th>
-                        <th class="p-3 hidden md:table-cell">Jenis Cacat</th>
+                        <th class="p-3 whitespace-nowrap">Tanggal</th>
+                        <th class="p-3 whitespace-nowrap min-w-[160px]">No. SPK & Produk</th>
+                        <th class="p-3 whitespace-nowrap">Tahap QC</th>
+                        <th class="p-3 whitespace-nowrap">Diperiksa</th>
+                        <th class="p-3 whitespace-nowrap">Pass (Lolos)</th>
+                        <th class="p-3 whitespace-nowrap">Rework (Tambal)</th>
+                        <th class="p-3 whitespace-nowrap">Scrap (Pecah)</th>
+                        <th class="p-3 whitespace-nowrap hidden md:table-cell">Jenis Cacat</th>
                         <th class="p-3 hidden lg:table-cell">Tindakan / Solusi</th>
-                        <th class="p-3 hidden sm:table-cell">Inspektor</th>
+                        <th class="p-3 whitespace-nowrap hidden sm:table-cell">Inspektor</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($recentQcLogs as $log)
                     <tr class="hover:bg-slate-50/80">
-                        <td class="p-3 font-mono text-slate-500">{{ $log->inspection_date->format('d M Y') }}</td>
+                        <td class="p-3 font-mono text-slate-500 whitespace-nowrap">{{ $log->inspection_date->format('d M Y') }}</td>
                         <td class="p-3">
-                            <span class="font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{{ $log->workOrder->spk_number ?? '-' }}</span>
-                            <span class="block text-[10px] text-slate-500 font-medium mt-0.5">{{ $log->workOrder->product->name ?? '-' }}</span>
+                            <span class="inline-block whitespace-nowrap font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $log->workOrder->spk_number ?? '-' }}</span>
+                            <span class="block text-[11px] text-slate-600 font-medium mt-0.5">{{ $log->workOrder->product->name ?? '-' }}</span>
                         </td>
-                        <td class="p-3">
-                            <span class="px-2 py-0.5 rounded font-semibold text-[10px] {{ $log->stage === 'qc1_raw_shape' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded font-semibold text-[10px] {{ $log->stage === 'qc1_raw_shape' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
                                 {{ $log->stage === 'qc1_raw_shape' ? 'QC 1 (Mentah)' : 'QC 2 (Poles Akhir)' }}
                             </span>
                         </td>
-                        <td class="p-3 font-semibold">{{ $log->inspected_quantity }} Unit</td>
-                        <td class="p-3 font-bold text-emerald-600">{{ $log->pass_quantity }} Unit</td>
-                        <td class="p-3 font-bold text-amber-600">{{ $log->rework_quantity }} Unit</td>
-                        <td class="p-3 font-bold text-red-600">{{ $log->scrap_quantity }} Unit</td>
-                        <td class="p-3 text-slate-600 hidden md:table-cell">
+                        <td class="p-3 font-semibold whitespace-nowrap">{{ $log->inspected_quantity }} Unit</td>
+                        <td class="p-3 font-bold text-emerald-600 whitespace-nowrap">{{ $log->pass_quantity }} Unit</td>
+                        <td class="p-3 font-bold text-amber-600 whitespace-nowrap">{{ $log->rework_quantity }} Unit</td>
+                        <td class="p-3 font-bold text-red-600 whitespace-nowrap">{{ $log->scrap_quantity }} Unit</td>
+                        <td class="p-3 text-slate-600 whitespace-nowrap hidden md:table-cell">
                             {{ $log->defect_type ? ucwords(str_replace('_', ' ', $log->defect_type)) : '-' }}
                         </td>
                         <td class="p-3 text-slate-500 text-[11px] max-w-xs truncate hidden lg:table-cell" title="{{ $log->rework_action ?: $log->notes }}">
                             {{ $log->rework_action ?: ($log->notes ?: '-') }}
                         </td>
-                        <td class="p-3 text-slate-600 font-medium hidden sm:table-cell">{{ $log->inspector->name ?? 'Inspektor' }}</td>
+                        <td class="p-3 text-slate-600 font-medium whitespace-nowrap hidden sm:table-cell">{{ $log->inspector->name ?? 'Inspektor' }}</td>
                     </tr>
                     @empty
                     <tr>

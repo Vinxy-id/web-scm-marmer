@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Visualisasi lengkap dari bahan mentah batuan alam hingga produk sampai ke pelanggan klaster IKM Marmer')
 
 @section('topbar-actions')
-    <a href="{{ route('dashboard') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Dashboard
+    <a href="{{ route('dashboard') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 transition" title="Kembali ke Dashboard">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Kembali</span>
     </a>
 @endsection
 

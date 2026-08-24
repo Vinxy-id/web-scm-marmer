@@ -97,3 +97,5 @@ Desktop.ini
 *.njsproj
 *.sln
 *.sw?
+lighthouse-*.report.html
+lighthouse-*.report.json

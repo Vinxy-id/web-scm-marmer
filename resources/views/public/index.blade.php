@@ -2,6 +2,10 @@
 
 @section('title', 'Kerajinan Marmer & Onyx Asli Tulungagung - E-SCM Showcase')
 
+@section('styles')
+    <link rel="preload" as="image" href="{{ asset($heroProduct->image_path ?: 'images/products/wastafel-onyx-tembus-cahaya.webp') }}" type="image/webp" fetchpriority="high">
+@endsection
+
 @section('content')
 
 <!-- ============================================================================ -->
@@ -85,7 +89,13 @@
                     
                     <!-- Highlight Image -->
                     <div class="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border border-slate-700/50">
-                        <img src="{{ asset($heroProduct->image_path ?: 'images/products/wastafel-onyx-tembus-cahaya.webp') }}" alt="{{ $heroProduct->name ?? 'Wastafel Onyx' }}" class="w-full h-full object-contain p-4 group-hover:scale-105 transition duration-500">
+                        <img src="{{ asset($heroProduct->image_path ?: 'images/products/wastafel-onyx-tembus-cahaya.webp') }}" 
+                             alt="{{ $heroProduct->name ?? 'Wastafel Onyx' }}" 
+                             fetchpriority="high" 
+                             decoding="async" 
+                             width="400" 
+                             height="400"
+                             class="w-full h-full object-contain p-4 group-hover:scale-105 transition duration-500">
                         
                         <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 font-extrabold text-[11px] px-2.5 py-1 rounded-full shadow">
                             ★ Unggulan Ekspor
@@ -104,12 +114,12 @@
                                 {{ ($heroProduct->ready_stock ?? 0) > 0 ? 'Ready Stock: ' . $heroProduct->ready_stock . ' Unit' : 'Pre-Order Pengrajin' }}
                             </span>
                         </div>
-                        <h3 class="text-lg font-bold text-white leading-snug">{{ $heroProduct->name ?? 'Wastafel Onyx Tembus Cahaya Eksklusif' }}</h3>
-                        <p class="text-xs text-slate-400">{{ $heroProduct->dimension_spec ?? 'D: 42 cm, T: 14 cm' }} • Finishing: {{ $heroProduct->finishing_type ?? 'Hi-Glossy Translucent' }}</p>
+                        <h2 class="text-lg font-bold text-white leading-snug">{{ $heroProduct->name ?? 'Wastafel Onyx Tembus Cahaya Eksklusif' }}</h2>
+                        <p class="text-xs text-slate-300">{{ $heroProduct->dimension_spec ?? 'D: 42 cm, T: 14 cm' }} • Finishing: {{ $heroProduct->finishing_type ?? 'Hi-Glossy Translucent' }}</p>
                         
                         <div class="pt-3 flex items-center justify-between border-t border-slate-800">
                             <div>
-                                <p class="text-[10px] text-slate-400 uppercase tracking-wider">Harga Pengrajin</p>
+                                <p class="text-[10px] text-slate-300 uppercase tracking-wider">Harga Pengrajin</p>
                                 <p class="text-lg font-black text-amber-400">Rp {{ number_format($heroProduct->selling_price ?? 950000, 0, ',', '.') }}</p>
                             </div>
                             <button onclick="openProductModal({{ $heroProduct->id ?? 9 }})" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
@@ -290,19 +300,23 @@
                     <div class="relative aspect-square w-full bg-slate-100 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset($item->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" 
                              alt="{{ $item->name }}" 
+                             loading="lazy"
+                             decoding="async"
+                             width="300"
+                             height="300"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         
                         <!-- Badges -->
                         <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
-                            <span class="bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow">
+                            <span class="bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow">
                                 {{ $item->category->name ?? 'Kerajinan' }}
                             </span>
                             @if($item->ready_stock > 0)
-                            <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                            <span class="bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
                                 Ready: {{ $item->ready_stock }} unit
                             </span>
                             @else
-                            <span class="bg-amber-500 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                            <span class="bg-amber-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
                                 Pre-Order
                             </span>
                             @endif
@@ -320,7 +334,7 @@
                     <div class="p-4 space-y-2">
                         <div class="flex items-center justify-between text-[11px]">
                             <span class="font-semibold text-blue-700">{{ $artisanName }}</span>
-                            <span class="text-slate-400 font-mono text-[10px]">{{ $item->product_code }}</span>
+                            <span class="text-slate-600 font-mono text-[11px] font-medium">{{ $item->product_code }}</span>
                         </div>
 
                         <h3 class="font-bold text-sm text-slate-800 leading-snug line-clamp-2 min-h-[2.5rem]">
@@ -328,14 +342,14 @@
                         </h3>
 
                         <!-- Tech Specs Pills -->
-                        <div class="text-[11px] text-slate-500 space-y-1 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <div class="text-[11px] text-slate-600 space-y-1 bg-slate-50 p-2 rounded-lg border border-slate-200">
                             <div class="flex items-center justify-between">
-                                <span>Dimensi:</span>
-                                <b class="text-slate-700">{{ $item->dimension_spec ?: 'D: 40cm, T: 15cm' }}</b>
+                                <span class="text-slate-600">Dimensi:</span>
+                                <b class="text-slate-800">{{ $item->dimension_spec ?: 'D: 40cm, T: 15cm' }}</b>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span>Finishing:</span>
-                                <span class="text-slate-700 font-medium">{{ $item->finishing_type ?: 'Hi-Glossy' }}</span>
+                                <span class="text-slate-600">Finishing:</span>
+                                <span class="text-slate-800 font-medium">{{ $item->finishing_type ?: 'Hi-Glossy' }}</span>
                             </div>
                         </div>
                     </div>
@@ -345,7 +359,7 @@
                 <div class="p-4 pt-0" onclick="event.stopPropagation()">
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-semibold">Harga</p>
+                            <p class="text-[10px] text-slate-600 uppercase font-bold">Harga</p>
                             <p class="text-sm font-extrabold text-slate-900">
                                 Rp {{ number_format($item->selling_price, 0, ',', '.') }}
                             </p>
@@ -399,7 +413,7 @@
                 <div class="w-12 h-12 rounded-xl bg-blue-900 text-white font-black text-base flex items-center justify-center shadow-md mb-4">
                     01
                 </div>
-                <h4 class="font-bold text-sm text-slate-900">Penambangan Batuan Alami</h4>
+                <h3 class="font-bold text-sm text-slate-900">Penambangan Batuan Alami</h3>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
                     Pengambilan bongkahan marmer putih & hitam dari tambang batuan alam serta seleksi batuan kali berkualitas tinggi di Campurdarat.
                 </p>
@@ -413,7 +427,7 @@
                 <div class="w-12 h-12 rounded-xl bg-blue-900 text-white font-black text-base flex items-center justify-center shadow-md mb-4">
                     02
                 </div>
-                <h4 class="font-bold text-sm text-slate-900">Pembubutan & Pemahatan</h4>
+                <h3 class="font-bold text-sm text-slate-900">Pembubutan & Pemahatan</h3>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
                     Pemotongan mesin slep, pembubutan manual oleh pengrajin berpengalaman, dan presisi lubang afur pembuangan universal 4.5 cm.
                 </p>
@@ -427,7 +441,7 @@
                 <div class="w-12 h-12 rounded-xl bg-emerald-700 text-white font-black text-base flex items-center justify-center shadow-md mb-4">
                     03
                 </div>
-                <h4 class="font-bold text-sm text-slate-900">QC 2-Tahap & Poles Kilap</h4>
+                <h3 class="font-bold text-sm text-slate-900">QC 2-Tahap & Poles Kilap</h3>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
                     Inspeksi tahap 1 untuk serat retak, dilanjutkan poles Hi-Glossy kaca atau finishing doff alami, dan uji kelancaran afur.
                 </p>
@@ -438,10 +452,10 @@
 
             <!-- Step 4 -->
             <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative group hover:border-blue-300 transition">
-                <div class="w-12 h-12 rounded-xl bg-amber-600 text-white font-black text-base flex items-center justify-center shadow-md mb-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-700 text-white font-black text-base flex items-center justify-center shadow-md mb-4">
                     04
                 </div>
-                <h4 class="font-bold text-sm text-slate-900">Peti Kayu & Ekspedisi</h4>
+                <h3 class="font-bold text-sm text-slate-900">Peti Kayu & Ekspedisi</h3>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
                     Pengemasan kardus berlapis foam tebal di dalam krat pallet kayu solid bergaransi aman untuk pengiriman ke seluruh Indonesia & luar negeri.
                 </p>
@@ -466,9 +480,9 @@
                 <span class="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full font-bold border border-amber-500/30">
                     Layanan B2B & Proyek Arsitektur
                 </span>
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-white">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
                     Butuh Wastafel Custom untuk Hotel, Villa, atau Hunian?
-                </h3>
+                </h2>
                 <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
                     Kami menerima pesanan custom dimensi, jenis batuan onix pilihan, finishing tekstur bakar/alami, serta pengadaan massal dengan invoice & surat jalan resmi E-SCM.
                 </p>
@@ -496,7 +510,7 @@
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-200">
         
         <!-- Close Button -->
-        <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 bg-slate-100 rounded-full z-10 transition">
+        <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-800 bg-slate-100 rounded-full z-10 transition" aria-label="Tutup Modal Detail Produk">
             <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 
@@ -514,7 +528,7 @@
                         <span id="modal-artisan" class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
                             UD Cahaya Onix
                         </span>
-                        <span id="modal-code" class="text-xs text-slate-400 font-mono">PRD-WSF-01</span>
+                        <span id="modal-code" class="text-xs text-slate-600 font-mono font-medium">PRD-WSF-01</span>
                     </div>
 
                     <h3 id="modal-name" class="text-lg sm:text-xl font-extrabold text-slate-900 leading-tight">
@@ -522,7 +536,7 @@
                     </h3>
 
                     <div class="pt-2">
-                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Harga Langsung Pengrajin</p>
+                        <p class="text-[10px] text-slate-600 uppercase font-bold">Harga Langsung Pengrajin</p>
                         <p id="modal-price" class="text-2xl font-black text-slate-900">Rp 0</p>
                     </div>
 
@@ -541,19 +555,19 @@
                 </h4>
                 <div class="grid grid-cols-2 gap-2 text-slate-600 pt-1">
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Dimensi Produk:</span>
+                        <span class="text-slate-600 block text-[11px] font-medium">Dimensi Produk:</span>
                         <b id="modal-dimension" class="text-slate-800">D: 40cm, T: 15cm</b>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Tipe Finishing:</span>
+                        <span class="text-slate-600 block text-[11px] font-medium">Tipe Finishing:</span>
                         <b id="modal-finishing" class="text-slate-800">Hi-Glossy</b>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Standar Lubang Afur:</span>
+                        <span class="text-slate-600 block text-[11px] font-medium">Standar Lubang Afur:</span>
                         <b class="text-slate-800">4.5 cm (Universal)</b>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Lokasi Produksi:</span>
+                        <span class="text-slate-600 block text-[11px] font-medium">Lokasi Produksi:</span>
                         <b id="modal-location" class="text-slate-800">Campurdarat, Tulungagung</b>
                     </div>
                 </div>

@@ -6,36 +6,43 @@
 
 @section('topbar-actions')
     @php $role = auth()->user()->role ?? 'owner'; @endphp
-    <div class="flex items-center gap-2">
-        <a href="{{ route('catalog') }}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 border border-slate-300 shadow-sm transition">
-            <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-500"></i> Lihat Web Publik
+    <div class="flex items-center gap-1.5 sm:gap-2">
+        <a href="{{ route('catalog') }}" target="_blank" class="hidden sm:flex bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg items-center gap-1.5 border border-slate-300 shadow-sm transition">
+            <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-500"></i>
+            <span>Lihat Web Publik</span>
         </a>
 
         @if(in_array($role, ['owner', 'admin']))
             @if(isset($pendingOrdersCount) && $pendingOrdersCount > 0)
-                <a href="{{ route('orders.index') }}" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Pesanan Masuk
+                <a href="{{ route('orders.index') }}" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Pesanan Masuk">
+                    <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Pesanan</span>
                     <span class="bg-white text-amber-800 text-[10px] font-bold px-1.5 py-0.2 rounded-full">{{ $pendingOrdersCount }}</span>
                 </a>
             @endif
-            <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+            <a href="{{ route('production.kanban') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Buat SPK Baru">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                <span class="hidden md:inline">Buat SPK Baru</span>
             </a>
         @elseif($role === 'gudang')
-            <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                <i data-lucide="arrow-down-up" class="w-4 h-4"></i> Catat Mutasi Stok
+            <a href="{{ route('materials.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Catat Mutasi Stok">
+                <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i>
+                <span class="hidden md:inline">Mutasi Stok</span>
             </a>
         @elseif($role === 'produksi')
-            <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat SPK Baru
+            <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Buat SPK Baru">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                <span class="hidden md:inline">Buat SPK Baru</span>
             </a>
         @elseif($role === 'qc')
-            <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Form Inspeksi QC
+            <a href="{{ route('qc.index') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Form Inspeksi QC">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span class="hidden md:inline">Inspeksi QC</span>
             </a>
         @elseif($role === 'distribusi')
-            <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-                <i data-lucide="truck" class="w-4 h-4"></i> Buat Surat Jalan
+            <a href="{{ route('distribution.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Buat Surat Jalan">
+                <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+                <span class="hidden md:inline">Surat Jalan</span>
             </a>
         @endif
     </div>
@@ -51,9 +58,9 @@
                 <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
                     Akses Peran: {{ ucfirst(auth()->user()->role ?? 'owner') }}
                 </span>
-                <span class="text-xs text-slate-400 font-medium">{{ auth()->user()->ikm_name ?? 'UD Cahaya Onix' }}</span>
+                <span class="text-xs text-slate-300 font-medium">{{ auth()->user()->ikm_name ?? 'UD Cahaya Onix' }}</span>
             </div>
-            <h3 class="text-sm sm:text-base font-bold text-white">
+            <h2 class="text-sm sm:text-base font-bold text-white">
                 @if(($role ?? 'owner') === 'owner' || ($role ?? 'owner') === 'admin')
                     Pusat Kendali Eksekutif Rantai Pasok IKM Marmer
                 @elseif(($role ?? '') === 'gudang')
@@ -65,7 +72,7 @@
                 @elseif(($role ?? '') === 'distribusi')
                     Pusat Pengiriman & Verifikasi Packing Krat Kayu
                 @endif
-            </h3>
+            </h2>
             <p class="text-xs text-slate-300">
                 @if(($role ?? 'owner') === 'owner' || ($role ?? 'owner') === 'admin')
                     Pantau nilai aset, efisiensi siklus proses (PCE 64,58%), dan peramalan kebutuhan bahan baku.
@@ -130,7 +137,7 @@
                 <i data-lucide="shopping-cart" class="w-5 h-5"></i>
             </div>
             <div>
-                <h4 class="text-sm font-bold text-amber-900">Pesanan E-Commerce Masuk! ({{ $pendingOrdersCount }} Perlu Verifikasi)</h4>
+                <h3 class="text-sm font-bold text-amber-900">Pesanan E-Commerce Masuk! ({{ $pendingOrdersCount }} Perlu Verifikasi)</h3>
                 <p class="text-xs text-amber-800">Terdapat pesanan dari pembeli online yang telah membayar DP/Lunas dan siap diterbitkan SPK ke lantai produksi.</p>
             </div>
         </div>
@@ -148,7 +155,7 @@
                 <i data-lucide="alert-triangle" class="w-5 h-5"></i>
             </div>
             <div>
-                <h4 class="text-sm font-bold text-red-900">Peringatan Stok Kritis Terdeteksi!</h4>
+                <h3 class="text-sm font-bold text-red-900">Peringatan Stok Kritis Terdeteksi!</h3>
                 <p class="text-xs text-red-700">Terdapat <b>{{ $criticalMaterials->count() }} material</b> yang berada di bawah ambang batas minimum stok. Segera lakukan pengadaan.</p>
             </div>
         </div>
@@ -163,9 +170,9 @@
         <!-- KPI 1: Bahan Mentah -->
         <a href="{{ route('materials.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-amber-700 transition">Bahan Mentah</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ number_format($totalRawMaterials, 0) }} Blok</h3>
-                <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                <p class="text-xs font-medium text-slate-600 uppercase tracking-wider group-hover:text-amber-700 transition">Bahan Mentah</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ number_format($totalRawMaterials, 0) }} Blok</p>
+                <p class="text-[11px] text-emerald-700 font-semibold mt-1 flex items-center gap-1">
                     <i data-lucide="trending-up" class="w-3 h-3"></i> Gudang Batu
                 </p>
             </div>
@@ -177,9 +184,9 @@
         <!-- KPI 2: SPK Produksi Aktif -->
         <a href="{{ route('production.kanban') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-indigo-700 transition">SPK Produksi</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $activeWorkOrders }} Batch</h3>
-                <p class="text-[11px] text-blue-600 font-semibold mt-1">7 Mesin Aktif</p>
+                <p class="text-xs font-medium text-slate-600 uppercase tracking-wider group-hover:text-indigo-700 transition">SPK Produksi</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ $activeWorkOrders }} Batch</p>
+                <p class="text-[11px] text-blue-700 font-semibold mt-1">7 Mesin Aktif</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 flex items-center justify-center transition">
                 <i data-lucide="cog" class="w-6 h-6"></i>
@@ -189,9 +196,9 @@
         <!-- KPI 3: Barang Jadi Siap Kirim -->
         <a href="{{ route('products.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition">Barang Jadi</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $totalReadyGoods }} Unit</h3>
-                <p class="text-[11px] text-emerald-600 font-semibold mt-1">Lolos QC Tahap 2</p>
+                <p class="text-xs font-medium text-slate-600 uppercase tracking-wider group-hover:text-emerald-700 transition">Barang Jadi</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ $totalReadyGoods }} Unit</p>
+                <p class="text-[11px] text-emerald-700 font-semibold mt-1">Lolos QC Tahap 2</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-emerald-50 group-hover:bg-emerald-100 text-emerald-600 flex items-center justify-center transition">
                 <i data-lucide="package-check" class="w-6 h-6"></i>
@@ -201,9 +208,9 @@
         <!-- KPI 4: Pesanan E-Commerce (BARU) -->
         <a href="{{ route('orders.index') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-blue-700 transition">E-Commerce</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $totalOrdersCount ?? 0 }} Order</h3>
-                <p class="text-[11px] {{ ($pendingOrdersCount ?? 0) > 0 ? 'text-amber-600 font-bold' : 'text-slate-500' }} mt-1">
+                <p class="text-xs font-medium text-slate-600 uppercase tracking-wider group-hover:text-blue-700 transition">E-Commerce</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ $totalOrdersCount ?? 0 }} Order</p>
+                <p class="text-[11px] {{ ($pendingOrdersCount ?? 0) > 0 ? 'text-amber-700 font-bold' : 'text-slate-600' }} mt-1">
                     {{ $pendingOrdersCount ?? 0 }} Perlu Verifikasi
                 </p>
             </div>
@@ -215,9 +222,9 @@
         <!-- KPI 5: Total Nilai Inventori -->
         <a href="{{ route('reports') }}" class="group bg-white p-5 rounded-xl border border-slate-200 hover:border-purple-400 hover:shadow-md transition flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider group-hover:text-purple-700 transition">Nilai Inventori</p>
-                <h3 class="text-2xl font-bold text-slate-800 mt-1">Rp {{ number_format($totalInventoryValue / 1000000, 1) }} Jt</h3>
-                <p class="text-[11px] text-slate-500 mt-1">Bahan + Produk Jadi</p>
+                <p class="text-xs font-medium text-slate-600 uppercase tracking-wider group-hover:text-purple-700 transition">Nilai Inventori</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">Rp {{ number_format($totalInventoryValue / 1000000, 1) }} Jt</p>
+                <p class="text-[11px] text-slate-600 mt-1">Bahan + Produk Jadi</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-purple-50 group-hover:bg-purple-100 text-purple-600 flex items-center justify-center transition">
                 <i data-lucide="coins" class="w-6 h-6"></i>
@@ -229,10 +236,10 @@
     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div class="flex items-center justify-between mb-4">
             <div>
-                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                     <i data-lucide="git-merge" class="w-5 h-5 text-blue-600"></i> Diagram Alur Rantai Pasok Marmer Terintegrasi
-                </h3>
-                <p class="text-xs text-slate-500">Visualisasi aliran dari tambang hingga pelanggan. Klik kotak tahap untuk langsung membuka modulnya.</p>
+                </h2>
+                <p class="text-xs text-slate-600">Visualisasi aliran dari tambang hingga pelanggan. Klik kotak tahap untuk langsung membuka modulnya.</p>
             </div>
             <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-md font-semibold border">8 Tahap Hulu-Hilir</span>
         </div>
@@ -243,8 +250,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
                     <i data-lucide="pickaxe" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">1. Tambang</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">3 Pemasok</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">1. Tambang</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">3 Pemasok</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">Campurdarat</span>
             </a>
 
@@ -253,8 +260,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
                     <i data-lucide="boxes" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">2. Gudang Batu</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">{{ number_format($totalRawMaterials, 0) }} Blok</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">2. Gudang Batu</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">{{ number_format($totalRawMaterials, 0) }} Blok</p>
                 <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
                     <span class="w-1 h-1 rounded-full bg-red-500"></span> 1 Kritis
                 </span>
@@ -265,8 +272,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
                     <i data-lucide="scissors" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">3. Mesin Slep</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Potong Blok</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">3. Mesin Slep</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">Potong Blok</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Max 80 cm</span>
             </a>
 
@@ -275,8 +282,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
                     <i data-lucide="disc" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">4. Pembubutan</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">7 Mesin Aktif</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">4. Pembubutan</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">7 Mesin Aktif</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">14 Unit/Hari</span>
             </a>
 
@@ -285,8 +292,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
                     <i data-lucide="scan-search" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">5. QC Tahap 1</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Cek Serat Awal</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">5. QC Tahap 1</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">Cek Serat Awal</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold">Bebas Retak</span>
             </a>
 
@@ -295,8 +302,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">6. Finishing Poles</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Hi-Glossy</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">6. Finishing Poles</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">Hi-Glossy</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">Kilau Super</span>
             </a>
 
@@ -305,8 +312,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-green-100 text-green-700 flex items-center justify-center">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">7. QC Tahap 2</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Uji Afur Air</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">7. QC Tahap 2</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">Uji Afur Air</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-semibold">Siap Gudang</span>
             </a>
 
@@ -315,8 +322,8 @@
                 <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
                     <i data-lucide="truck" class="w-4 h-4"></i>
                 </div>
-                <h5 class="text-xs font-bold text-slate-800 group-hover:text-blue-600">8. Distribusi</h5>
-                <p class="text-[10px] text-slate-500 mt-0.5">Packing Kayu</p>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-blue-600 block">8. Distribusi</span>
+                <p class="text-[10px] text-slate-600 mt-0.5">Packing Kayu</p>
                 <span class="inline-block mt-1.5 text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-semibold">Kirim Ekspedisi</span>
             </a>
         </div>
@@ -328,8 +335,8 @@
         <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h4 class="text-sm font-bold text-slate-800">Tren Pengadaan Bahan vs Output Produksi (6 Bulan)</h4>
-                    <p class="text-xs text-slate-500">Perbandingan volume material masuk (blok) vs barang jadi selesai (unit)</p>
+                    <h2 class="text-sm font-bold text-slate-800">Tren Pengadaan Bahan vs Output Produksi (6 Bulan)</h2>
+                    <p class="text-xs text-slate-600">Perbandingan volume material masuk (blok) vs barang jadi selesai (unit)</p>
                 </div>
                 <a href="{{ route('reports') }}" class="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1">
                     Detail PCE <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
@@ -343,16 +350,16 @@
         <!-- Chart 2: Komposisi Bahan & Stok -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-                <h4 class="text-sm font-bold text-slate-800 mb-1">Komposisi Inventori Batuan Alam</h4>
-                <p class="text-xs text-slate-500 mb-3">Distribusi volume bahan baku di gudang</p>
+                <h2 class="text-sm font-bold text-slate-800 mb-1">Komposisi Inventori Batuan Alam</h2>
+                <p class="text-xs text-slate-600 mb-3">Distribusi volume bahan baku di gudang</p>
                 <div class="h-44 flex items-center justify-center">
                     <canvas id="compositionChart"></canvas>
                 </div>
             </div>
             <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5">
-                <div class="flex justify-between text-slate-600"><span>Marmer Putih</span><b>{{ $materialBreakdown['marmer'] ?? 18 }} Blok</b></div>
-                <div class="flex justify-between text-slate-600"><span>Batu Kali</span><b>{{ $materialBreakdown['batu_kali'] ?? 35 }} Blok</b></div>
-                <div class="flex justify-between text-slate-600"><span>Onyx Kristal</span><b>{{ $materialBreakdown['onix'] ?? 12 }} Blok</b></div>
+                <div class="flex justify-between text-slate-600"><span>Marmer Alam</span><b>{{ $materialBreakdown['marmer'] ?? 42 }} Balok</b></div>
+                <div class="flex justify-between text-slate-600"><span>Batu Kali</span><b>{{ $materialBreakdown['batu_kali'] ?? 65 }} Biji</b></div>
+                <div class="flex justify-between text-slate-600"><span>Onyx Kristal</span><b>{{ $materialBreakdown['onix'] ?? 8 }} Bongkahan</b></div>
             </div>
         </div>
     </div>
@@ -361,10 +368,10 @@
     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
         <div class="flex items-center justify-between mb-3">
             <div>
-                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <i data-lucide="clipboard-list" class="w-4 h-4 text-indigo-600"></i> SPK Produksi Terkini (Lantai Bengkel)
-                </h4>
-                <p class="text-xs text-slate-500">Daftar batch pengerjaan surat perintah kerja yang sedang aktif atau baru dibuat.</p>
+                </h2>
+                <p class="text-xs text-slate-600">Daftar batch pengerjaan surat perintah kerja yang sedang aktif atau baru dibuat.</p>
             </div>
             <a href="{{ route('production.kanban') }}" class="text-xs bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-semibold px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1">
                 Buka Papan Kanban <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -373,29 +380,31 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b">
+                <thead class="bg-slate-50 text-slate-600 uppercase font-bold border-b">
                     <tr>
-                        <th class="p-2.5">No. SPK</th>
-                        <th class="p-2.5">Produk yang Dikerjakan</th>
-                        <th class="p-2.5">Pelanggan / Tujuan</th>
-                        <th class="p-2.5">Target & Selesai</th>
-                        <th class="p-2.5">Status Pengerjaan</th>
-                        <th class="p-2.5 text-right">Aksi</th>
+                        <th class="p-2.5 whitespace-nowrap">No. SPK</th>
+                        <th class="p-2.5 whitespace-nowrap min-w-[160px]">Produk yang Dikerjakan</th>
+                        <th class="p-2.5 whitespace-nowrap">Pelanggan / Tujuan</th>
+                        <th class="p-2.5 whitespace-nowrap">Target & Selesai</th>
+                        <th class="p-2.5 whitespace-nowrap">Status Pengerjaan</th>
+                        <th class="p-2.5 whitespace-nowrap text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($recentWorkOrders as $wo)
                     <tr class="hover:bg-slate-50/80 transition">
-                        <td class="p-2.5 font-bold text-indigo-600">{{ $wo->spk_number }}</td>
+                        <td class="p-2.5 whitespace-nowrap">
+                            <span class="inline-block whitespace-nowrap font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">{{ $wo->spk_number }}</span>
+                        </td>
                         <td class="p-2.5 font-medium text-slate-800">
                             {{ $wo->product->name ?? 'Produk Custom' }}
-                            <span class="block text-[10px] text-slate-400 font-normal">{{ $wo->product->product_code ?? '-' }}</span>
+                            <span class="block text-[10px] text-slate-600 font-normal">{{ $wo->product->product_code ?? '-' }}</span>
                         </td>
-                        <td class="p-2.5 text-slate-600">{{ $wo->customer->name ?? 'Stok Buffer IKM' }}</td>
-                        <td class="p-2.5 text-slate-700 font-semibold">
+                        <td class="p-2.5 text-slate-700 whitespace-nowrap">{{ $wo->customer->name ?? 'Stok Buffer IKM' }}</td>
+                        <td class="p-2.5 whitespace-nowrap text-slate-800 font-semibold">
                             {{ $wo->completed_quantity }} / {{ $wo->target_quantity }} Unit
                         </td>
-                        <td class="p-2.5">
+                        <td class="p-2.5 whitespace-nowrap">
                             @php
                                 $badgeColor = match($wo->status) {
                                     'draft' => 'bg-slate-100 text-slate-700 border-slate-200',
@@ -414,19 +423,19 @@
                                     default => ucfirst($wo->status)
                                 };
                             @endphp
-                            <span class="inline-block px-2 py-0.5 text-[10px] font-bold rounded border {{ $badgeColor }}">
+                            <span class="inline-block whitespace-nowrap px-2.5 py-0.5 text-[10px] font-bold rounded border {{ $badgeColor }}">
                                 {{ $statusLabel }}
                             </span>
                         </td>
-                        <td class="p-2.5 text-right">
-                            <a href="{{ route('production.wip') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-xs inline-flex items-center gap-0.5">
+                        <td class="p-2.5 whitespace-nowrap text-right">
+                            <a href="{{ route('production.wip') }}" class="text-blue-700 hover:text-blue-900 font-semibold text-xs inline-flex items-center gap-0.5">
                                 Pantau WIP <i data-lucide="chevron-right" class="w-3 h-3"></i>
                             </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="p-4 text-center text-slate-400">Belum ada SPK produksi yang aktif.</td>
+                        <td colspan="6" class="p-4 text-center text-slate-500">Belum ada SPK produksi yang aktif.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -439,14 +448,14 @@
         <!-- Tabel Stok Kritis -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i> Daftar Material Perlu Pengadaan Segera
-                </h4>
-                <a href="{{ route('materials.index') }}" class="text-xs text-blue-600 hover:underline font-medium">Lihat Semua</a>
+                </h2>
+                <a href="{{ route('materials.index') }}" class="text-xs text-blue-700 hover:underline font-medium">Lihat Semua</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b">
+                    <thead class="bg-slate-50 text-slate-600 uppercase font-bold border-b">
                         <tr>
                             <th class="p-2.5">Material</th>
                             <th class="p-2.5">Sisa Stok</th>
@@ -459,20 +468,20 @@
                         @forelse($criticalMaterials as $mat)
                         <tr>
                             <td class="p-2.5 font-medium text-slate-800">{{ $mat->name }}</td>
-                            <td class="p-2.5 text-red-600 font-bold">{{ $mat->current_stock }} {{ $mat->unit }}</td>
-                            <td class="p-2.5 text-slate-500">{{ $mat->minimum_stock }} {{ $mat->unit }}</td>
+                            <td class="p-2.5 text-red-700 font-bold">{{ $mat->current_stock }} {{ $mat->unit }}</td>
+                            <td class="p-2.5 text-slate-600">{{ $mat->minimum_stock }} {{ $mat->unit }}</td>
                             <td class="p-2.5">
-                                <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded font-semibold text-[10px]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                <span class="inline-flex items-center gap-1 bg-red-100 text-red-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> Kritis
                                 </span>
                             </td>
                             <td class="p-2.5 text-right">
-                                <a href="{{ route('materials.index') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-xs">Kelola</a>
+                                <a href="{{ route('materials.index') }}" class="text-blue-700 hover:text-blue-900 font-semibold text-xs">Kelola</a>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="p-3 text-center text-slate-400">Semua stok bahan baku dalam kondisi aman.</td>
+                            <td colspan="5" class="p-3 text-center text-slate-500">Semua stok bahan baku dalam kondisi aman.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -483,9 +492,9 @@
         <!-- Status 7 Mesin Bubut UD Cahaya Onix (Clickable to WIP) -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <i data-lucide="gauge" class="w-4 h-4 text-indigo-500"></i> Status 7 Stasiun Mesin (UD Cahaya Onix)
-                </h4>
+                </h2>
                 <a href="{{ route('production.wip') }}" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded font-semibold border border-indigo-200 transition flex items-center gap-1">
                     Buka Detail WIP <i data-lucide="chevron-right" class="w-3 h-3"></i>
                 </a>
@@ -537,8 +546,13 @@
 
 @section('scripts')
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        // Trend Chart (Dynamic Data from Controller)
+    function initDashboardCharts() {
+        if (typeof Chart === 'undefined') {
+            setTimeout(initDashboardCharts, 50);
+            return;
+        }
+
+        // Trend Chart (Dynamic Data with Dual Y-Axis for Blok vs Unit)
         const ctxTrend = document.getElementById('trendChart')?.getContext('2d');
         if (ctxTrend) {
             new Chart(ctxTrend, {
@@ -550,20 +564,61 @@
                             label: 'Bahan Baku Masuk (Blok)',
                             data: @json($chartMaterialsIn),
                             backgroundColor: 'rgba(59, 130, 246, 0.85)',
-                            borderRadius: 6
+                            borderRadius: 6,
+                            yAxisID: 'y1'
                         },
                         {
                             label: 'Barang Jadi Selesai (Unit)',
                             data: @json($chartOutputs),
                             backgroundColor: 'rgba(16, 185, 129, 0.85)',
-                            borderRadius: 6
+                            borderRadius: 6,
+                            yAxisID: 'y'
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' } }
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const val = context.raw || 0;
+                                    return label.includes('Blok') ? `${label}: ${val} Blok` : `${label}: ${val} Unit`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Output Produk (Unit)',
+                                font: { size: 10, weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(226, 232, 240, 0.5)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Bahan Baku (Blok)',
+                                font: { size: 10, weight: 'bold' }
+                            },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
                 }
             });
         }
@@ -574,12 +629,12 @@
             new Chart(ctxComp, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Marmer Putih', 'Batu Kali', 'Onyx'],
+                    labels: ['Marmer Alam', 'Batu Kali', 'Onyx'],
                     datasets: [{
                         data: [
-                            {{ $materialBreakdown['marmer'] ?? 18 }},
-                            {{ $materialBreakdown['batu_kali'] ?? 35 }},
-                            {{ $materialBreakdown['onix'] ?? 12 }}
+                            {{ $materialBreakdown['marmer'] ?? 42 }},
+                            {{ $materialBreakdown['batu_kali'] ?? 65 }},
+                            {{ $materialBreakdown['onix'] ?? 8 }}
                         ],
                         backgroundColor: ['#3b82f6', '#64748b', '#f59e0b']
                     }]
@@ -591,6 +646,12 @@
                 }
             });
         }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDashboardCharts);
+    } else {
+        initDashboardCharts();
+    }
 </script>
 @endsection

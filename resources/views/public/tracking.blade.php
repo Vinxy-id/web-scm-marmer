@@ -61,7 +61,7 @@
             <!-- Header Summary -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
-                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $order->status_badge_class }}">
+                    <span class="inline-block whitespace-nowrap text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $order->status_badge_class }}">
                         {{ $order->order_status_label }}
                     </span>
                     <h2 class="text-xl font-black text-slate-900 mt-2">Pesanan #{{ $order->order_number }}</h2>
@@ -255,7 +255,7 @@
             <!-- Header Summary -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
-                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $woBadge }}">
+                    <span class="inline-block whitespace-nowrap text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border {{ $woBadge }}">
                         {{ $woLabel }}
                     </span>
                     <h2 class="text-xl font-black text-slate-900 mt-2">Surat Perintah Kerja #{{ $workOrder->spk_number }}</h2>

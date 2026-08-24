@@ -20,7 +20,7 @@
     };
 @endphp
 
-<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border {{ $classes }}">
+<span class="inline-flex whitespace-nowrap items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border {{ $classes }}">
     <span class="w-1.5 h-1.5 rounded-full {{ $dot }}"></span>
     {{ $text }}
 </span>

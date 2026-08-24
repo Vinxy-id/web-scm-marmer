@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Persetujuan ACC Pengiriman, Manajemen Surat Jalan, dan Verifikasi Packing Peti Krat Kayu')
 
 @section('topbar-actions')
-    <button onclick="document.getElementById('modal-add-shipment').classList.remove('hidden')" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus" class="w-4 h-4"></i> Terbitkan Surat Jalan
+    <button onclick="document.getElementById('modal-add-shipment').classList.remove('hidden')" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Terbitkan Surat Jalan">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Terbitkan Surat Jalan</span>
     </button>
 @endsection
 
@@ -107,22 +108,22 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b">
                     <tr>
-                        <th class="p-3">No. Surat Jalan</th>
-                        <th class="p-3">Pelanggan / Destinasi</th>
-                        <th class="p-3">Item SPK Terkait</th>
+                        <th class="p-3 whitespace-nowrap">No. Surat Jalan</th>
+                        <th class="p-3 whitespace-nowrap">Pelanggan / Destinasi</th>
+                        <th class="p-3 whitespace-nowrap">Item SPK Terkait</th>
                         <!-- MOB-05 SOLVED: Responsive column hiding on mobile -->
-                        <th class="p-3 hidden sm:table-cell">Tgl Kirim</th>
-                        <th class="p-3 hidden md:table-cell">Ekspedisi & Driver</th>
-                        <th class="p-3 hidden lg:table-cell">Checklist Packing Kayu</th>
-                        <th class="p-3">Status Logistik</th>
-                        <th class="p-3 text-right">Aksi</th>
+                        <th class="p-3 whitespace-nowrap hidden sm:table-cell">Tgl Kirim</th>
+                        <th class="p-3 whitespace-nowrap hidden md:table-cell">Ekspedisi & Driver</th>
+                        <th class="p-3 whitespace-nowrap hidden lg:table-cell">Checklist Packing Kayu</th>
+                        <th class="p-3 whitespace-nowrap">Status Logistik</th>
+                        <th class="p-3 whitespace-nowrap text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($shipments as $sh)
                     <tr class="hover:bg-slate-50/80">
-                        <td class="p-3">
-                            <span class="font-mono font-bold text-purple-700">{{ $sh->shipment_code }}</span>
+                        <td class="p-3 whitespace-nowrap">
+                            <span class="font-mono font-bold text-purple-700 inline-block whitespace-nowrap">{{ $sh->shipment_code }}</span>
                             <p class="text-[10px] text-slate-400 sm:hidden">{{ $sh->shipment_date->format('d M Y') }}</p>
                             @if($sh->tracking_number)
                             <p class="text-[10px] text-slate-500 font-mono">Resi: {{ $sh->tracking_number }}</p>
@@ -138,7 +139,7 @@
                         </td>
                         <td class="p-3">
                             @if($sh->workOrder)
-                            <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $sh->workOrder->spk_number }}</span>
+                            <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded inline-block whitespace-nowrap border border-blue-100">{{ $sh->workOrder->spk_number }}</span>
                             <p class="text-[10px] text-slate-600 mt-0.5">{{ $sh->workOrder->product->name ?? 'Wastafel' }} ({{ $sh->workOrder->completed_quantity }} Unit)</p>
                             @else
                             <span class="text-slate-400 text-[10px]">Stok Reguler</span>
@@ -149,32 +150,32 @@
                             <span class="font-semibold">{{ $sh->expedition_name ?? 'Kargo Truk Sendiri' }}</span>
                             <p class="text-[10px] text-slate-400">Driver: {{ $sh->driver_name ?? '-' }} ({{ $sh->vehicle_plate ?? '-' }})</p>
                         </td>
-                        <td class="p-3 hidden lg:table-cell">
+                        <td class="p-3 whitespace-nowrap hidden lg:table-cell">
                             @if($sh->packing_verified)
-                            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> Terverifikasi Solid
                             </span>
                             @else
-                            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold text-[10px]">
+                            <span class="inline-flex whitespace-nowrap items-center gap-1 bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 Belum Terverifikasi
                             </span>
                             @endif
                         </td>
-                        <td class="p-3">
+                        <td class="p-3 whitespace-nowrap">
                             @if($sh->delivery_status === 'delivered')
-                            <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                            <span class="inline-block whitespace-nowrap bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 TELAH DITERIMA
                             </span>
                             @elseif($sh->delivery_status === 'in_transit')
-                            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                            <span class="inline-block whitespace-nowrap bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 DALAM PERJALANAN
                             </span>
                             @elseif($sh->delivery_status === 'returned')
-                            <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                            <span class="inline-block whitespace-nowrap bg-rose-100 text-rose-800 px-2.5 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 RETUR
                             </span>
                             @else
-                            <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-semibold text-[10px] uppercase">
+                            <span class="inline-block whitespace-nowrap bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded font-semibold text-[10px] uppercase">
                                 PACKING / SIAP
                             </span>
                             @endif

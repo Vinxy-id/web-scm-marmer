@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - E-SCM Marmer Tulungagung</title>
-    <!-- Favicon SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.27 6.96 12 12.01 20.73 6.96'/><line x1='12' y1='22.08' x2='12' y2='12'/></svg>" />
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/webp" href="{{ asset('images/favicon.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icon-192.webp') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -13,9 +14,13 @@
 
     <div class="max-w-md w-full bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl p-8 space-y-6">
         <!-- Logo & Header -->
-        <div class="text-center space-y-2">
-            <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mx-auto shadow-lg shadow-blue-500/30">
-                <i data-lucide="layers" class="w-6 h-6"></i>
+        <div class="text-center space-y-3">
+            <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-white/5 border border-white/10 shadow-xl mx-auto">
+                <img src="{{ asset('images/logo-icon.webp') }}" 
+                     alt="Logo E-SCM Marmer Tulungagung" 
+                     width="48" 
+                     height="48" 
+                     class="w-12 h-12 object-contain">
             </div>
             <h1 class="text-xl font-bold text-white tracking-wide">E-SCM MARMER TULUNGAGUNG</h1>
             <p class="text-xs text-slate-400">Sistem Rantai Pasok Terintegrasi Klaster IKM</p>
@@ -41,7 +46,7 @@
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Email Pengguna</label>
                 <div class="relative">
                     <i data-lucide="mail" class="w-4 h-4 text-slate-500 absolute left-3 top-3"></i>
-                    <input type="email" name="email" value="{{ old('email', 'owner@cahayaonix.com') }}" required autofocus class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@instansi.com" required autofocus class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500 placeholder:text-slate-600">
                 </div>
             </div>
 
@@ -49,7 +54,7 @@
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Kata Sandi</label>
                 <div class="relative">
                     <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3 top-3"></i>
-                    <input type="password" name="password" value="role123" required class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <input type="password" name="password" placeholder="••••••••" required class="w-full bg-slate-900 border border-slate-700 text-white rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500 placeholder:text-slate-600">
                 </div>
             </div>
 
@@ -64,13 +69,6 @@
                 <i data-lucide="log-in" class="w-4 h-4"></i> Masuk ke Dashboard
             </button>
         </form>
-
-        <!-- Quick Demo Role Switcher Hint -->
-        <div class="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 text-center space-y-1">
-            <p class="font-semibold text-slate-400">Akun Pengujian Demo (Password: <i>role</i>123):</p>
-            <p><code>owner@cahayaonix.com</code> (Owner) | <code>gudang@cahayaonix.com</code></p>
-            <p><code>produksi@cahayaonix.com</code> | <code>distribusi@cahayaonix.com</code></p>
-        </div>
     </div>
 
     <script>lucide.createIcons();</script>

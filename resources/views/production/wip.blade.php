@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Monitoring Durasi dan Stasiun Kerja 7 Unit Mesin Bubut UD Cahaya Onix')
 
 @section('topbar-actions')
-    <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="kanban-square" class="w-4 h-4"></i> Buka Kanban SPK
+    <a href="{{ route('production.kanban') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Buka Kanban SPK">
+        <i data-lucide="kanban-square" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Buka Kanban SPK</span>
     </a>
 @endsection
 
@@ -128,14 +129,14 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b border-slate-200">
                     <tr>
-                        <th class="p-3">No. SPK</th>
-                        <th class="p-3">Produk Wastafel</th>
-                        <th class="p-3">Target & Selesai</th>
+                        <th class="p-3 whitespace-nowrap">No. SPK</th>
+                        <th class="p-3 whitespace-nowrap min-w-[180px]">Produk Wastafel</th>
+                        <th class="p-3 whitespace-nowrap">Target & Selesai</th>
                         <!-- MOB-06 SOLVED: Responsive column hiding on mobile/tablet -->
-                        <th class="p-3 hidden md:table-cell">Stasiun Kerja</th>
-                        <th class="p-3 hidden lg:table-cell">Persentase Progres</th>
-                        <th class="p-3">Status</th>
-                        <th class="p-3 text-center">Aksi / Update</th>
+                        <th class="p-3 whitespace-nowrap hidden md:table-cell">Stasiun Kerja</th>
+                        <th class="p-3 whitespace-nowrap hidden lg:table-cell">Persentase Progres</th>
+                        <th class="p-3 whitespace-nowrap">Status</th>
+                        <th class="p-3 whitespace-nowrap text-center">Aksi / Update</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -146,8 +147,8 @@
                         $pct = $wo->target_quantity > 0 ? round(($wo->completed_quantity / $wo->target_quantity) * 100) : 0;
                     @endphp
                     <tr class="hover:bg-slate-50/80 transition">
-                        <td class="p-3 font-mono font-bold text-blue-600">
-                            <span class="bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $wo->spk_number }}</span>
+                        <td class="p-3 whitespace-nowrap font-mono font-bold text-blue-600">
+                            <span class="inline-block whitespace-nowrap bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $wo->spk_number }}</span>
                         </td>
                         <td class="p-3 font-semibold text-slate-800">
                             {{ $wo->product->name ?? '-' }}
@@ -157,7 +158,7 @@
                                 {{ $stationName }}
                             </span>
                         </td>
-                        <td class="p-3">
+                        <td class="p-3 whitespace-nowrap">
                             <span class="font-bold text-slate-800">{{ $wo->completed_quantity }} / {{ $wo->target_quantity }} Unit</span>
                             <!-- Mobile-only compact percentage -->
                             <span class="lg:hidden text-[10px] text-blue-600 font-bold block">{{ $pct }}% selesai</span>
@@ -165,8 +166,8 @@
                             <span class="block text-[10px] text-amber-600 font-medium">Tambal: {{ $wo->scrap_quantity }} Unit</span>
                             @endif
                         </td>
-                        <td class="p-3 hidden md:table-cell">
-                            <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded font-semibold text-[10px]">
+                        <td class="p-3 whitespace-nowrap hidden md:table-cell">
+                            <span class="inline-block whitespace-nowrap bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded font-semibold text-[10px]">
                                 {{ $stationName }}
                             </span>
                         </td>
@@ -176,18 +177,18 @@
                             </div>
                             <span class="text-[10px] text-slate-500 mt-1 block font-medium">{{ $pct }}% selesai</span>
                         </td>
-                        <td class="p-3">
+                        <td class="p-3 whitespace-nowrap">
                             @if($wo->status === 'qc_phase')
-                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold text-[10px] uppercase">
+                                <span class="inline-block whitespace-nowrap bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-semibold text-[10px] uppercase">
                                     Inspeksi QC
                                 </span>
                             @elseif($wo->status === 'in_progress')
-                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-semibold text-[10px] uppercase">
-                                    Sedang Bubut
+                                <span class="inline-block whitespace-nowrap bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-semibold text-[10px] uppercase">
+                                    Dalam Proses
                                 </span>
                             @else
-                                <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold text-[10px] uppercase">
-                                    {{ str_replace('_', ' ', $wo->status) }}
+                                <span class="inline-block whitespace-nowrap bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full font-semibold text-[10px] uppercase">
+                                    {{ $wo->status }}
                                 </span>
                             @endif
                         </td>

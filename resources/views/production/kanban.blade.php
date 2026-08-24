@@ -5,8 +5,9 @@
 @section('page-subtitle', 'Pantau Progres Batch Wastafel dari Pembelahan hingga Siap Masuk Gudang')
 
 @section('topbar-actions')
-    <button onclick="document.getElementById('modal-add-spk').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus" class="w-4 h-4"></i> Buat SPK Baru
+    <button onclick="document.getElementById('modal-add-spk').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 shadow-sm transition" title="Buat SPK Baru">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Buat SPK Baru</span>
     </button>
 @endsection
 
@@ -56,7 +57,7 @@
             @foreach($colAntrian as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
-                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    <span class="inline-block whitespace-nowrap text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $spk->spk_number }}</span>
                     <span class="text-[9px] {{ $spk->priority === 'urgent' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700' }} font-semibold px-1.5 py-0.5 rounded uppercase">
                         {{ $spk->priority }}
                     </span>
@@ -93,7 +94,7 @@
             @foreach($colSlep as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
-                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    <span class="inline-block whitespace-nowrap text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $spk->spk_number }}</span>
                     <span class="text-[9px] bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.5 rounded">Slep</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
@@ -132,7 +133,7 @@
             @foreach($colBubut as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
-                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    <span class="inline-block whitespace-nowrap text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $spk->spk_number }}</span>
                     <span class="text-[9px] bg-amber-100 text-amber-700 font-semibold px-1.5 py-0.5 rounded">Bubut</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
@@ -170,7 +171,7 @@
             @foreach($colQc as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                 <div class="flex justify-between items-start">
-                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    <span class="inline-block whitespace-nowrap text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{{ $spk->spk_number }}</span>
                     <span class="text-[9px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded">QC & Poles</span>
                 </div>
                 <h5 class="text-xs font-bold text-slate-800">{{ $spk->product->name ?? 'Wastafel' }}</h5>
@@ -203,7 +204,7 @@
             @foreach($colCompleted as $spk)
             <div class="bg-white p-3.5 rounded-lg border border-emerald-300 shadow-sm space-y-2">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">{{ $spk->spk_number }}</span>
+                    <span class="inline-block whitespace-nowrap text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">{{ $spk->spk_number }}</span>
                     @if($spk->shipment)
                     <span class="text-[9px] font-bold px-1.5 py-0.5 rounded {{ $spk->shipment->delivery_status === 'delivered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
                         {{ strtoupper($spk->shipment->delivery_status) }}
