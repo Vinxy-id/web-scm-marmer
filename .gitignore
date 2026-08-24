@@ -97,5 +97,10 @@ Desktop.ini
 *.njsproj
 *.sln
 *.sw?
-lighthouse-*.report.html
-lighthouse-*.report.json
+
+# -----------------------------------------------------------------------------
+# Audit & Temporary Lighthouse Reports
+# -----------------------------------------------------------------------------
+Docs/Audit/Lighthouse/
+*lighthouse*report*
+
