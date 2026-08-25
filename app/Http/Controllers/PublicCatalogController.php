@@ -21,8 +21,8 @@ class PublicCatalogController extends Controller
                 'owner' => 'M. Ilham Nur Amali',
                 'tagline' => 'Spesialis Wastafel Marmer Putih, Onix Tembus Cahaya & Pedestal Mewah',
                 'description' => 'Didirikan di sentra batuan Campurdarat Tulungagung, berfokus pada pengolahan marmer putih kristal dan batuan onix transparan berkualitas ekspor dengan standar poles Hi-Glossy.',
-                'phone' => '6281234567890',
-                'location' => 'Kecamatan Campurdarat, Kabupaten Tulungagung, Jawa Timur',
+                'phone' => '6281340231737',
+                'location' => 'Jln. Raya Popoh, Cerme, Gamping, Campur Darat, Tulungagung 66272',
                 'specialties' => ['Wastafel Onix Tembus Cahaya', 'Wastafel Marmer Putih B1', 'Pedestal Luxury', 'Meja Marmer'],
                 'color' => 'blue',
             ],
@@ -31,8 +31,8 @@ class PublicCatalogController extends Controller
                 'owner' => 'Efri Saputra',
                 'tagline' => 'Spesialis Olahan Batu Kali Alami, Stepping Stone & Hilirisasi Residu Ramah Lingkungan',
                 'description' => 'Mengolah batuan kali alam asli aliran sungai Tulungagung menjadi wastafel artistik, batu pijakan taman (stepping stone), kap lampu, serta memanfaatkan residu potongan menjadi wall cladding.',
-                'phone' => '6281298765432',
-                'location' => 'Kecamatan Campurdarat, Kabupaten Tulungagung, Jawa Timur',
+                'phone' => '6281335022012',
+                'location' => 'Cerme, Gamping, Campur Darat, Tulungagung 66272',
                 'specialties' => ['Wastafel Batu Kali Alami', 'Stepping Stone Taman', 'Kap Lampu Batu Kali', 'Wall Cladding'],
                 'color' => 'emerald',
             ],
@@ -201,12 +201,12 @@ class PublicCatalogController extends Controller
         $artisan = $isPutraAbadi ? [
             'name' => 'UD Putra Abadi',
             'owner' => 'Efri Saputra',
-            'phone' => '6281298765432',
+            'phone' => '6281335022012',
             'location' => 'Campurdarat, Tulungagung',
         ] : [
             'name' => 'UD Cahaya Onix',
             'owner' => 'M. Ilham Nur Amali',
-            'phone' => '6281234567890',
+            'phone' => '6281340231737',
             'location' => 'Campurdarat, Tulungagung',
         ];
 

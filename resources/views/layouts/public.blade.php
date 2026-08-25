@@ -68,7 +68,7 @@
           "longitude": 111.8542
         },
         "url": "{{ url('/') }}",
-        "telephone": "+6281234567890",
+        "telephone": "+6281340231737",
         "priceRange": "Rp 150.000 - Rp 2.500.000"
       }
     ]
@@ -92,7 +92,7 @@
                 <span class="truncate">Sistem Rantai Pasok Digital Terpadu Klaster Marmer & Onyx Tulungagung</span>
             </div>
             <div class="hidden md:flex items-center gap-4 text-[11px]">
-                <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20konsultasi%20pemesanan%20produk." target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
+                <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20konsultasi%20pemesanan%20produk." target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
                     <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
                     <span>Pusat Informasi & Bantuan</span>
                 </a>
@@ -216,7 +216,7 @@
     <!-- 4. FLOATING WHATSAPP BUTTON (MOB-10 SOLVED: Hidden on Checkout page to prevent overlap) -->
     @if(!request()->routeIs('checkout*'))
     <div class="fixed bottom-6 right-6 z-50">
-        <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20tanya%20produk%20dan%20pemesanan%20katalog." 
+        <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20ingin%20tanya%20produk%20dan%20pemesanan%20katalog." 
            target="_blank" 
            title="Konsultasi Pesanan via WhatsApp" 
            aria-label="Konsultasi Pesanan via WhatsApp"
@@ -229,12 +229,12 @@
     </div>
     @endif
 
-    <!-- 5. FOOTER -->
-    <footer id="kontak" class="bg-slate-950 text-slate-300 border-t border-slate-800 pt-14 pb-8">
+    <!-- 5. GLOBAL PUBLIC FOOTER -->
+    <footer class="bg-slate-950 text-white pt-16 pb-12 border-t border-slate-900 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 
-                <!-- Col 1: Brand & Purpose -->
+                <!-- Col 1: Brand & Identity -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-1.5 shadow-sm">
@@ -265,12 +265,12 @@
                         <li class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800">
                             <p class="font-bold text-white">UD Cahaya Onix</p>
                             <p class="text-[11px] text-slate-300">Spesialis Wastafel Marmer & Onyx Tembus Cahaya</p>
-                            <p class="text-[10px] text-blue-300 mt-1">Pimpinan: M. Ilham Nur Amali (Campurdarat)</p>
+                            <p class="text-[10px] text-blue-300 mt-1">M. Ilham Nur Amali (+62 813-4023-1737)</p>
                         </li>
                         <li class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800">
                             <p class="font-bold text-white">UD Putra Abadi</p>
                             <p class="text-[11px] text-slate-300">Spesialis Batu Kali, Stepping Stone & Cladding</p>
-                            <p class="text-[10px] text-emerald-300 mt-1">Pimpinan: Efri Saputra (Campurdarat)</p>
+                            <p class="text-[10px] text-emerald-300 mt-1">Efri Saputra (+62 813-3502-2012)</p>
                         </li>
                     </ul>
                 </div>
@@ -278,7 +278,7 @@
                 <!-- Col 3: Quick Links -->
                 <div>
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Navigasi Cepat</h3>
-                    <ul class="space-y-2 text-xs">
+                    <ul class="space-y-2 text-xs text-slate-300">
                         <li><a href="{{ route('home') }}" class="hover:text-white transition">Beranda Utama</a></li>
                         <li><a href="{{ route('catalog') }}" class="hover:text-white transition">Katalog Wastafel & Kerajinan</a></li>
                         <li><a href="{{ route('catalog', ['material' => 'onix']) }}" class="hover:text-white transition">Koleksi Onyx Tembus Cahaya</a></li>
@@ -293,11 +293,11 @@
                     <div class="space-y-2.5 text-xs text-slate-300">
                         <div class="flex items-start gap-2">
                             <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0"></i>
-                            <span>Kawasan Industri Kerajinan Marmer Campurdarat, Kabupaten Tulungagung, Jawa Timur 66272</span>
+                            <span>Sentra Industri Kerajinan Marmer Campurdarat, Kabupaten Tulungagung, Jawa Timur 66272</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <i data-lucide="phone" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                            <span>+62 812-3456-7890 / +62 812-9876-5432</span>
+                            <span>+62 813-4023-1737 / +62 813-3502-2012</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <i data-lucide="mail" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>

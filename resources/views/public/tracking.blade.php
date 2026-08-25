@@ -222,7 +222,7 @@
                 <a href="{{ route('checkout.invoice', $order->order_number) }}" class="text-xs font-bold text-blue-700 hover:underline flex items-center gap-1">
                     <i data-lucide="file-text" class="w-4 h-4"></i> Lihat Invoice Tagihan
                 </a>
-                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status pesanan ' . $order->order_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                <a href="https://wa.me/6281340231737?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status pesanan ' . $order->order_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya CS Pengrajin
                 </a>
             </div>
@@ -391,7 +391,7 @@
             <!-- Action Buttons -->
             <div class="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
                 <span class="text-xs text-slate-500 font-medium">Batch SPK Resmi Sentra IKM Marmer Tulungagung</span>
-                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status SPK ' . $workOrder->spk_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                <a href="https://wa.me/6281340231737?text={{ urlencode('Halo Admin E-SCM, saya ingin menanyakan status SPK ' . $workOrder->spk_number) }}" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya CS Pengrajin
                 </a>
             </div>

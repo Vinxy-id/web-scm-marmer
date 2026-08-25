@@ -126,7 +126,7 @@
                                str_contains(strtolower($item->name), 'stepping') || 
                                str_contains(strtolower($item->name), 'lampu');
                 $artisanName = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
-                $artisanPhone = $isPutraAbadi ? '6281298765432' : '6281234567890';
+                $artisanPhone = $isPutraAbadi ? '6281335022012' : '6281340231737';
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer"

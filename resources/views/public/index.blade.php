@@ -45,7 +45,7 @@
                         <span>Jelajahi Katalog Produk</span>
                     </a>
                     
-                    <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20tertarik%20untuk%20konsultasi%20custom%20order%20produk." target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-center">
+                    <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20tertarik%20untuk%20konsultasi%20custom%20order%20produk." target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-center">
                         <i data-lucide="message-circle" class="w-4 h-4"></i>
                         <span>Konsultasi Custom Order WA</span>
                     </a>
@@ -190,7 +190,7 @@
                         <span>Lihat Koleksi Pengrajin</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
-                    <a href="https://wa.me/6281234567890?text=Halo%20UD%20Cahaya%20Onix,%20saya%20ingin%20tanya%20produk%20marmer/onix." target="_blank" class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+                    <a href="https://wa.me/6281340231737?text=Halo%20UD%20Cahaya%20Onix,%20saya%20ingin%20tanya%20produk%20marmer/onix." target="_blank" class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
                         <i data-lucide="phone" class="w-3.5 h-3.5 text-blue-300"></i> Kontak Pengrajin
                     </a>
                 </div>
@@ -229,7 +229,7 @@
                         <span>Lihat Produk UD Putra Abadi</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
-                    <a href="https://wa.me/6281298765432?text=Halo%20UD%20Putra%20Abadi,%20saya%20ingin%20tanya%20produk%20batu%20kali/stepping%20stone." target="_blank" class="bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+                    <a href="https://wa.me/6281335022012?text=Halo%20UD%20Putra%20Abadi,%20saya%20ingin%20tanya%20produk%20batu%20kali/stepping%20stone." target="_blank" class="bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
                         <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-300"></i> Kontak Pengrajin
                     </a>
                 </div>
@@ -290,7 +290,7 @@
                                str_contains(strtolower($item->name), 'stepping') || 
                                str_contains(strtolower($item->name), 'lampu');
                 $artisanName = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
-                $artisanPhone = $isPutraAbadi ? '6281298765432' : '6281234567890';
+                $artisanPhone = $isPutraAbadi ? '6281335022012' : '6281340231737';
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer" 
@@ -491,7 +491,7 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto flex-shrink-0">
-                <a href="https://wa.me/6281234567890?text=Halo%20Pengrajin%20Marmer,%20saya%20ingin%20konsultasi%20kebutuhan%20proyek%20arsitektur/hotel." target="_blank" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-6 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+                <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer,%20saya%20ingin%20konsultasi%20kebutuhan%20proyek%20arsitektur/hotel." target="_blank" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-6 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
                     <i data-lucide="message-circle" class="w-4 h-4 text-slate-950"></i>
                     <span>Hubungi Tim Pengrajin WA</span>
                 </a>

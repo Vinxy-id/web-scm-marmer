@@ -27,14 +27,14 @@ class CheckoutController extends Controller
         $artisan = $isPutraAbadi ? [
             'name' => 'UD Putra Abadi',
             'owner' => 'Efri Saputra',
-            'phone' => '6281298765432',
+            'phone' => '6281335022012',
             'bank_name' => 'Bank Mandiri',
             'account_number' => '144-00-1928374-1',
             'account_holder' => 'UD Putra Abadi - Efri Saputra',
         ] : [
             'name' => 'UD Cahaya Onix',
             'owner' => 'M. Ilham Nur Amali',
-            'phone' => '6281234567890',
+            'phone' => '6281340231737',
             'bank_name' => 'Bank BCA',
             'account_number' => '048-1928-384',
             'account_holder' => 'UD Cahaya Onix - M. Ilham',
@@ -153,9 +153,9 @@ class CheckoutController extends Controller
             $order->update(['order_status' => 'expired']);
         }
 
-        $artisanPhone = '6281234567890';
+        $artisanPhone = '6281340231737';
         if (str_contains(strtolower($order->product->name ?? ''), 'kali') || ($order->product->material_type ?? '') === 'batu_kali') {
-            $artisanPhone = '6281298765432';
+            $artisanPhone = '6281335022012';
         }
 
         $targetTransferAmount = ($order->payment_scheme === 'dp_50') 
