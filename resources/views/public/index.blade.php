@@ -186,8 +186,8 @@
                 </div>
 
                 <div class="mt-6 flex items-center justify-between">
-                    <a href="{{ route('catalog') }}" class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1">
-                        <span>Lihat Koleksi Pengrajin</span>
+                    <a href="{{ route('catalog', ['ikm' => 'cahaya_onix']) }}" class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1">
+                        <span>Lihat Koleksi UD Cahaya Onix</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
                     <a href="https://wa.me/6281340231737?text=Halo%20UD%20Cahaya%20Onix,%20saya%20ingin%20tanya%20produk%20marmer/onix." target="_blank" class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
@@ -225,7 +225,7 @@
                 </div>
 
                 <div class="mt-6 flex items-center justify-between">
-                    <a href="{{ route('catalog', ['material' => 'batu_kali']) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
+                    <a href="{{ route('catalog', ['ikm' => 'putra_abadi']) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
                         <span>Lihat Produk UD Putra Abadi</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>

@@ -36,20 +36,30 @@
         <!-- Filter & Search Form -->
         <form method="GET" action="{{ route('catalog') }}" class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm mb-8 space-y-4">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                 
                 <!-- Search Box -->
                 <div class="lg:col-span-1">
                     <label for="catalog-search-input" class="block text-xs font-bold text-slate-700 mb-1.5">Pencarian Produk</label>
                     <div class="relative">
                         <input type="text" 
-                               id="catalog-search-input"
-                               name="q" 
-                               value="{{ request('q') }}" 
-                               placeholder="Cari wastafel, onix, dimensi..." 
-                               class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                id="catalog-search-input"
+                                name="q" 
+                                value="{{ request('q') }}" 
+                                placeholder="Cari wastafel, onix..." 
+                                class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
                     </div>
+                </div>
+
+                <!-- IKM Filter -->
+                <div>
+                    <label for="filter-ikm" class="block text-xs font-bold text-slate-700 mb-1.5">Mitra IKM Pengrajin</label>
+                    <select id="filter-ikm" name="ikm" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="all">Semua Mitra IKM</option>
+                        <option value="cahaya_onix" {{ request('ikm') == 'cahaya_onix' ? 'selected' : '' }}>UD Cahaya Onix (Marmer & Onix)</option>
+                        <option value="putra_abadi" {{ request('ikm') == 'putra_abadi' ? 'selected' : '' }}>UD Putra Abadi (Batu Kali & Taman)</option>
+                    </select>
                 </div>
 
                 <!-- Category Select -->
@@ -70,8 +80,8 @@
                     <label for="filter-material" class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Batuan Alam</label>
                     <select id="filter-material" name="material" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="all">Semua Batuan</option>
-                        <option value="marmer" {{ request('material') == 'marmer' ? 'selected' : '' }}>Batu Marmer Tulungagung</option>
-                        <option value="onix" {{ request('material') == 'onix' ? 'selected' : '' }}>Batu Onyx Tembus Cahaya</option>
+                        <option value="marmer" {{ request('material') == 'marmer' ? 'selected' : '' }}>Marmer Tulungagung</option>
+                        <option value="onix" {{ request('material') == 'onix' ? 'selected' : '' }}>Onyx Tembus Cahaya</option>
                         <option value="batu_kali" {{ request('material') == 'batu_kali' ? 'selected' : '' }}>Batu Kali Alami</option>
                     </select>
                 </div>
@@ -80,21 +90,21 @@
                 <div>
                     <label for="filter-stock" class="block text-xs font-bold text-slate-700 mb-1.5">Ketersediaan Stok</label>
                     <select id="filter-stock" name="stock" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
-                        <option value="">Semua Ketersediaan</option>
-                        <option value="ready" {{ request('stock') == 'ready' ? 'selected' : '' }}>Ready Stock (Siap Kirim)</option>
-                        <option value="preorder" {{ request('stock') == 'preorder' ? 'selected' : '' }}>Pre-Order Pengrajin</option>
+                        <option value="">Semua Stok</option>
+                        <option value="ready" {{ request('stock') == 'ready' ? 'selected' : '' }}>Ready Stock</option>
+                        <option value="preorder" {{ request('stock') == 'preorder' ? 'selected' : '' }}>Pre-Order</option>
                     </select>
                 </div>
 
                 <!-- Sorting -->
                 <div>
-                    <label for="filter-sort" class="block text-xs font-bold text-slate-700 mb-1.5">Urutkan Berdasarkan</label>
+                    <label for="filter-sort" class="block text-xs font-bold text-slate-700 mb-1.5">Urutkan</label>
                     <select id="filter-sort" name="sort" onchange="this.form.submit()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
                         <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Paling Populer</option>
-                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Harga: Terendah ke Tertinggi</option>
-                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Harga: Tertinggi ke Terendah</option>
-                        <option value="stock_desc" {{ request('sort') == 'stock_desc' ? 'selected' : '' }}>Stok Siap Kirim Terbanyak</option>
-                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama Produk (A-Z)</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Harga: Murah ke Mahal</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Harga: Mahal ke Murah</option>
+                        <option value="stock_desc" {{ request('sort') == 'stock_desc' ? 'selected' : '' }}>Stok Terbanyak</option>
+                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama (A-Z)</option>
                     </select>
                 </div>
 
@@ -103,10 +113,10 @@
             <!-- Active Filters & Reset Buttons -->
             <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
                 <span class="text-slate-500">
-                    Menampilkan <b>{{ $products->total() }}</b> produk kerajinan marmer
+                    Menampilkan <b>{{ $products->total() }}</b> produk kerajinan marmer & batu alam
                 </span>
                 
-                @if(request()->hasAny(['q', 'category', 'material', 'sort', 'stock']))
+                @if(request()->hasAny(['q', 'ikm', 'category', 'material', 'sort', 'stock']))
                 <a href="{{ route('catalog') }}" class="text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                     <span>Reset Filter</span>
@@ -124,9 +134,23 @@
                 $isPutraAbadi = in_array($item->material_type, ['batu_kali']) || 
                                str_contains(strtolower($item->name), 'kali') || 
                                str_contains(strtolower($item->name), 'stepping') || 
-                               str_contains(strtolower($item->name), 'lampu');
+                               str_contains(strtolower($item->name), 'lampu') ||
+                               str_contains(strtolower($item->name), 'tapak') ||
+                               str_contains(strtolower($item->name), 'dokar') ||
+                               str_contains(strtolower($item->name), 'burung') ||
+                               str_contains(strtolower($item->name), 'sabun') ||
+                               str_contains(strtolower($item->name), 'shampo') ||
+                               str_contains(strtolower($item->name), 'surat') ||
+                               str_contains(strtolower($item->name), 'lilin') ||
+                               str_contains(strtolower($item->name), 'toples') ||
+                               str_contains(strtolower($item->name), 'bangku') ||
+                               str_contains(strtolower($item->name), 'kursi') ||
+                               str_contains(strtolower($item->name), 'bak ikan') ||
+                               str_contains(strtolower($item->name), 'pot bunga') ||
+                               str_contains(strtolower($item->name), 'tusuk sate');
                 $artisanName = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
                 $artisanPhone = $isPutraAbadi ? '6281335022012' : '6281340231737';
+                $artisanBadge = $isPutraAbadi ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-blue-50 text-blue-800 border-blue-200';
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer"
@@ -170,7 +194,7 @@
                     <!-- Product Content -->
                     <div class="p-4 space-y-2">
                         <div class="flex items-center justify-between text-[11px]">
-                            <span class="font-semibold text-blue-700">{{ $artisanName }}</span>
+                            <span class="font-bold text-[10px] px-2 py-0.5 rounded-md border {{ $artisanBadge }}">{{ $artisanName }}</span>
                             <span class="text-slate-400 font-mono text-[10px]">{{ $item->product_code }}</span>
                         </div>
 

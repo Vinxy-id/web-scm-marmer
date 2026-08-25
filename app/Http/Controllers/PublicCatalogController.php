@@ -122,6 +122,38 @@ class PublicCatalogController extends Controller
                 });
             }
 
+            // Filter by IKM Partner
+            if ($request->filled('ikm') && $request->ikm !== 'all') {
+                if ($request->ikm === 'putra_abadi') {
+                    $query->where(function ($q) {
+                        $q->where('material_type', 'batu_kali')
+                          ->orWhere('name', 'like', '%kali%')
+                          ->orWhere('name', 'like', '%stepping%')
+                          ->orWhere('name', 'like', '%lampu%')
+                          ->orWhere('name', 'like', '%tapak%')
+                          ->orWhere('name', 'like', '%dokar%')
+                          ->orWhere('name', 'like', '%burung%')
+                          ->orWhere('name', 'like', '%sabun%')
+                          ->orWhere('name', 'like', '%shampo%')
+                          ->orWhere('name', 'like', '%surat%')
+                          ->orWhere('name', 'like', '%lilin%')
+                          ->orWhere('name', 'like', '%toples%')
+                          ->orWhere('name', 'like', '%bangku%')
+                          ->orWhere('name', 'like', '%kursi%')
+                          ->orWhere('name', 'like', '%bak ikan%')
+                          ->orWhere('name', 'like', '%pot bunga%')
+                          ->orWhere('name', 'like', '%tusuk sate%');
+                    });
+                } elseif ($request->ikm === 'cahaya_onix') {
+                    $query->where(function ($q) {
+                        $q->whereIn('material_type', ['marmer', 'onix'])
+                          ->where('name', 'not like', '%batu kali%')
+                          ->where('name', 'not like', '%batu tapak%')
+                          ->where('name', 'not like', '%dokar%');
+                    });
+                }
+            }
+
             // Filter by Material Type
             if ($request->filled('material') && $request->material !== 'all') {
                 $query->where('material_type', $request->material);
