@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Katalog Kerajinan Marmer & Onyx Tulungagung') - E-SCM IKM</title>
-    <meta name="description" content="@yield('meta-description', 'Etalase produk kerajinan marmer, onyx tembus cahaya, wastafel batu kali, dan stepping stone dari sentra IKM Campurdarat Tulungagung (UD Cahaya Onix & UD Putra Abadi).')">
+    <title>@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')</title>
+    <meta name="description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
     <meta name="keywords" content="marmer tulungagung, kerajinan marmer, wastafel marmer, onyx tembus cahaya, wastafel batu kali, stepping stone taman, UD Cahaya Onix, UD Putra Abadi, e-scm campurdarat">
     <meta name="author" content="Klaster IKM Marmer & Onyx Tulungagung">
     <meta name="robots" content="index, follow">
@@ -16,47 +16,63 @@
     <!-- Open Graph / Facebook / WhatsApp SEO -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
-    <meta property="og:site_name" content="E-SCM Marmer Tulungagung">
-    <meta property="og:title" content="@yield('title', 'Katalog Kerajinan Marmer & Onyx Tulungagung') - E-SCM IKM">
-    <meta property="og:description" content="@yield('meta-description', 'Etalase produk kerajinan marmer, onyx tembus cahaya, wastafel batu kali, dan stepping stone dari sentra IKM Campurdarat Tulungagung.')">
+    <meta property="og:site_name" content="Onyx Tulungagung">
+    <meta property="og:title" content="@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')">
+    <meta property="og:description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}">
 
     <!-- Twitter Card SEO -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Katalog Kerajinan Marmer & Onyx Tulungagung') - E-SCM IKM">
-    <meta name="twitter:description" content="@yield('meta-description', 'Etalase produk kerajinan marmer, onyx tembus cahaya, wastafel batu kali, dan stepping stone dari sentra IKM Campurdarat Tulungagung.')">
+    <meta name="twitter:title" content="@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')">
+    <meta name="twitter:description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
     <meta name="twitter:image" content="{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}">
 
-    <!-- Schema.org JSON-LD Structured Data for Local Business & Cluster IKM -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "E-SCM Klaster IKM Kerajinan Marmer Tulungagung",
-      "image": "{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}",
-      "description": "Sistem Informasi Rantai Pasok Terintegrasi dan Etalase Digital Kerajinan Marmer, Onyx, dan Batu Kali Campurdarat Tulungagung.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Campurdarat",
-        "addressRegion": "Jawa Timur",
-        "postalCode": "66272",
-        "addressCountry": "ID"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": -8.1639,
-        "longitude": 111.8542
-      },
-      "url": "{{ url('/') }}",
-      "telephone": "+6281234567890",
-      "priceRange": "Rp 150.000 - Rp 2.500.000"
-    }
-    </script>
-
-    <!-- Favicon & Touch Icon -->
+    <!-- Favicon & Touch Icons (Googlebot-Favicon Compliant) -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
     <link rel="icon" type="image/webp" href="{{ asset('images/favicon.webp') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/icon-192.webp') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icon-192.webp') }}">
+
+    <!-- Schema.org JSON-LD Structured Data (WebSite & Local Business for Google Search Rich Snippets) -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Onyx Tulungagung",
+        "alternateName": ["E-SCM Marmer Tulungagung", "OnyxTulungagung.id"],
+        "url": "{{ url('/') }}",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "{{ url('/katalog') }}?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "E-SCM Klaster IKM Kerajinan Marmer Tulungagung",
+        "image": "{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}",
+        "description": "Sistem Informasi Rantai Pasok Terintegrasi dan Etalase Digital Kerajinan Marmer, Onyx, dan Batu Kali Campurdarat Tulungagung.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Campurdarat",
+          "addressRegion": "Jawa Timur",
+          "postalCode": "66272",
+          "addressCountry": "ID"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -8.1639,
+          "longitude": 111.8542
+        },
+        "url": "{{ url('/') }}",
+        "telephone": "+6281234567890",
+        "priceRange": "Rp 150.000 - Rp 2.500.000"
+      }
+    ]
+    </script>
 
     <!-- Preload & Link Compiled Minified CSS -->
     <link rel="preload" href="{{ asset('css/app.css') }}" as="style">

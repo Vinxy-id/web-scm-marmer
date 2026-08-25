@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Katalog Lengkap Kerajinan Marmer & Onyx Tulungagung')
+@section('title', 'Katalog Kerajinan Marmer & Onyx Tulungagung | E-SCM')
+@section('meta-description', 'Jelajahi katalog lengkap wastafel marmer, onyx tembus cahaya, wastafel batu kali, meja, pedestal, dan stepping stone langsung dari sentra IKM Campurdarat.')
 
 @section('styles')
     @if($products->first())

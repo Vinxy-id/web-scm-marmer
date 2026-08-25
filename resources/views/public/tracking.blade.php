@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Lacak Pesanan Real-Time - E-SCM Marmer & Onyx Tulungagung')
+@section('title', 'Lacak Pesanan Real-Time | E-SCM Marmer Tulungagung')
+@section('meta-description', 'Pantau status pengerjaan pesanan dan pengiriman surat jalan kerajinan marmer secara transparan dan real-time.')
 
 @section('content')
 <!-- Breadcrumb -->

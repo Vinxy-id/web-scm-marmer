@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Kerajinan Marmer & Onyx Asli Tulungagung - E-SCM Showcase')
+@section('title', 'Kerajinan Marmer & Onyx Asli Tulungagung | E-SCM')
+@section('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')
 
 @section('styles')
     <link rel="preload" as="image" href="{{ asset($heroProduct->image_path ?: 'images/products/wastafel-onyx-tembus-cahaya.webp') }}" type="image/webp" fetchpriority="high">
