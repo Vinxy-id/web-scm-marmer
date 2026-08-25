@@ -158,12 +158,12 @@
                     @auth
                     <a href="{{ route('dashboard') }}" class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
                         <i data-lucide="layout-dashboard" class="w-4 h-4 text-blue-300"></i>
-                        <span>Masuk Dashboard</span>
+                        <span>Dashboard</span>
                     </a>
                     @else
-                    <a href="{{ route('login') }}" class="bg-slate-900 hover:bg-blue-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i data-lucide="log-in" class="w-4 h-4 text-blue-400"></i>
-                        <span>Portal E-SCM</span>
+                    <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20tertarik%20konsultasi%20produk." target="_blank" class="hidden sm:flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition shadow-sm">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Konsultasi WA</span>
                     </a>
                     @endauth
 
@@ -197,13 +197,20 @@
                 Kontak & Lokasi
             </a>
             @auth
-            <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-bold bg-blue-900 text-white text-center">
-                Buka Dashboard SCM
-            </a>
+            <div class="pt-2 border-t border-slate-100">
+                <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-bold bg-blue-900 text-white text-center">
+                    Buka Dashboard SCM
+                </a>
+            </div>
             @else
-            <a href="{{ route('login') }}" class="block px-3 py-2 rounded-lg text-sm font-bold bg-slate-900 text-white text-center">
-                Masuk Portal E-SCM (Staf/Owner)
-            </a>
+            <div class="pt-2 border-t border-slate-100 flex flex-col gap-2">
+                <a href="https://wa.me/6281340231737?text=Halo%20Pengrajin%20Marmer%20Tulungagung,%20saya%20tertarik%20konsultasi%20produk." target="_blank" class="block px-3 py-2.5 rounded-lg text-sm font-bold bg-emerald-600 text-white text-center">
+                    Konsultasi Pesanan WhatsApp
+                </a>
+                <a href="{{ route('login') }}" class="block px-3 py-1.5 text-xs text-slate-400 hover:text-slate-600 text-center font-medium">
+                    Login Pengrajin / Staf IKM &rarr;
+                </a>
+            </div>
             @endauth
         </div>
     </header>
@@ -283,7 +290,7 @@
                         <li><a href="{{ route('catalog') }}" class="hover:text-white transition">Katalog Wastafel & Kerajinan</a></li>
                         <li><a href="{{ route('catalog', ['material' => 'onix']) }}" class="hover:text-white transition">Koleksi Onyx Tembus Cahaya</a></li>
                         <li><a href="{{ route('catalog', ['material' => 'batu_kali']) }}" class="hover:text-white transition">Koleksi Batu Kali & Taman</a></li>
-                        <li><a href="{{ route('login') }}" class="text-blue-400 hover:underline">Login Operator / Portal SCM</a></li>
+                        <li><a href="{{ route('login') }}" class="text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5"><i data-lucide="lock" class="w-3 h-3 text-slate-500"></i> Login Pengrajin & Staf</a></li>
                     </ul>
                 </div>
 
