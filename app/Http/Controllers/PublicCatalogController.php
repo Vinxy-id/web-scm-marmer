@@ -44,12 +44,45 @@ class PublicCatalogController extends Controller
                 ->withCount('products')
                 ->get();
 
-            // 2. Fetch Featured Products (Showcase)
-            $featuredProducts = Product::with('category')
+            // 2. Fetch Featured Products (Showcase - Only items with real photos (.webp / .jpg, exclude svg))
+            $marmerFeatured = Product::with('category')
+                ->where('material_type', 'marmer')
+                ->where(function ($q) {
+                    $q->where('image_path', 'like', '%.webp')
+                      ->orWhere('image_path', 'like', '%.jpg');
+                })
+                ->where('image_path', 'not like', '%.svg')
                 ->orderBy('ready_stock', 'desc')
-                ->orderBy('id', 'asc')
-                ->take(8)
+                ->take(3)
                 ->get();
+
+            $onixFeatured = Product::with('category')
+                ->where('material_type', 'onix')
+                ->where(function ($q) {
+                    $q->where('image_path', 'like', '%.webp')
+                      ->orWhere('image_path', 'like', '%.jpg');
+                })
+                ->where('image_path', 'not like', '%.svg')
+                ->orderBy('ready_stock', 'desc')
+                ->take(2)
+                ->get();
+
+            $batuKaliFeatured = Product::with('category')
+                ->where('material_type', 'batu_kali')
+                ->where(function ($q) {
+                    $q->where('image_path', 'like', '%.webp')
+                      ->orWhere('image_path', 'like', '%.jpg');
+                })
+                ->where('image_path', 'not like', '%.svg')
+                ->orderBy('ready_stock', 'desc')
+                ->take(3)
+                ->get();
+
+            $featuredProducts = $marmerFeatured->concat($onixFeatured)->concat($batuKaliFeatured);
+
+            if ($featuredProducts->isEmpty()) {
+                $featuredProducts = Product::with('category')->where('image_path', 'not like', '%.svg')->take(8)->get();
+            }
 
             if ($categories->isEmpty() || $featuredProducts->isEmpty()) {
                 throw new \Exception('Database empty, use fallback');
