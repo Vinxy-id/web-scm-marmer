@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')</title>
-    <meta name="description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
-    <meta name="keywords" content="marmer tulungagung, kerajinan marmer, wastafel marmer, onyx tembus cahaya, wastafel batu kali, stepping stone taman, UD Cahaya Onix, UD Putra Abadi, e-scm campurdarat">
+    <title>@yield('title', 'Pengrajin Marmer & Onyx Tulungagung | Wastafel Batu Alam')</title>
+    <meta name="description" content="@yield('meta-description', 'Pusat pengrajin wastafel marmer, onyx tembus cahaya & batu kali Campurdarat Tulungagung. Melayani pesanan custom, harga tangan pertama & peti kayu aman.')">
+    <meta name="keywords" content="pengrajin marmer tulungagung, jual wastafel marmer, wastafel onyx tembus cahaya, wastafel batu kali, stepping stone taman, harga marmer tulungagung, UD Cahaya Onix, UD Putra Abadi, marmer campurdarat, kerajinan batu alam">
     <meta name="author" content="Klaster IKM Marmer & Onyx Tulungagung">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="google32f15ef73219ac0b">
@@ -17,15 +17,15 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
     <meta property="og:site_name" content="Onyx Tulungagung">
-    <meta property="og:title" content="@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')">
-    <meta property="og:description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
+    <meta property="og:title" content="@yield('title', 'Pengrajin Marmer & Onyx Tulungagung | Wastafel Batu Alam')">
+    <meta property="og:description" content="@yield('meta-description', 'Pusat pengrajin wastafel marmer, onyx tembus cahaya & batu kali Campurdarat Tulungagung. Melayani pesanan custom, harga tangan pertama & peti kayu aman.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}">
 
     <!-- Twitter Card SEO -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Kerajinan Marmer & Onyx Tulungagung | E-SCM IKM')">
-    <meta name="twitter:description" content="@yield('meta-description', 'Pusat kerajinan wastafel marmer, onyx tembus cahaya, dan batu kali alami asli Campurdarat Tulungagung. Kualitas ekspor, harga pengrajin & packing kayu solid.')">
+    <meta name="twitter:title" content="@yield('title', 'Pengrajin Marmer & Onyx Tulungagung | Wastafel Batu Alam')">
+    <meta name="twitter:description" content="@yield('meta-description', 'Pusat pengrajin wastafel marmer, onyx tembus cahaya & batu kali Campurdarat Tulungagung. Melayani pesanan custom, harga tangan pertama & peti kayu aman.')">
     <meta name="twitter:image" content="{{ asset('images/products/wastafel-onyx-tembus-cahaya.webp') }}">
 
     <!-- Favicon & Touch Icons (Googlebot-Favicon Compliant) -->

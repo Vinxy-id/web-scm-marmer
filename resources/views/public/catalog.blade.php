@@ -1,7 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'Katalog Kerajinan Marmer & Onyx Tulungagung | E-SCM')
-@section('meta-description', 'Jelajahi katalog lengkap wastafel marmer, onyx tembus cahaya, wastafel batu kali, meja, pedestal, dan stepping stone langsung dari sentra IKM Campurdarat.')
+@section('title', 'Katalog Wastafel Marmer & Onyx Tulungagung | Harga Pengrajin')
+@section('meta-description', 'Daftar produk & harga wastafel marmer putih, onyx tembus cahaya, batu kali, meja, dan stepping stone langsung dari pengrajin Tulungagung.')
+
 
 @section('styles')
     @if($products->first())
