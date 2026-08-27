@@ -140,7 +140,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 5. SEED PRODUCTS (Master Model Inti Cahaya Onix & Putra Abadi)
-        DB::table('products')->where('id', '>=', 14)->delete();
+        DB::table('products')->where('id', '>=', 15)->delete();
         DB::table('products')->upsert([
             ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/wastafel-marmer-putih-b1.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'category_id' => 18, 'product_code' => 'PRD-STP-BKL-01', 'name' => 'Stepping Stone Pijakan Taman Batu Kali', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-35 cm, Tebal: 4 cm', 'finishing_type' => 'Gerinda Halus Anti-Slip', 'ready_stock' => 50, 'safety_stock' => 10, 'standard_cogs' => 25000.00, 'selling_price' => 45000.00, 'image_path' => 'images/products/stepping-stone.svg', 'created_at' => $now, 'updated_at' => $now],
@@ -152,6 +152,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 11, 'category_id' => 22, 'product_code' => 'PRD-MJA-MRM-01', 'name' => 'Meja Kopi Bundar Marmer Campurdarat', 'material_type' => 'marmer', 'dimension_spec' => 'D: 60 cm, T: 45 cm', 'finishing_type' => 'Hi-Glossy Urat Abu', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/meja-marmer-bundar.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 12, 'category_id' => 20, 'product_code' => 'PRD-PDS-MRM-02', 'name' => 'Pedestal Wastafel Marmer Kotak Minimalis', 'material_type' => 'marmer', 'dimension_spec' => 'T: 85 cm, P: 40 cm, L: 40 cm', 'finishing_type' => 'Pahat Alami & Poles Atas', 'ready_stock' => 4, 'safety_stock' => 2, 'standard_cogs' => 950000.00, 'selling_price' => 1650000.00, 'image_path' => 'images/products/pedestal-marmer-kotak.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 13, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-03', 'name' => 'Wastafel Marmer Bintik Silinder', 'material_type' => 'marmer', 'dimension_spec' => 'D: 38 cm, T: 16 cm', 'finishing_type' => 'Full Polished Hi-Glossy', 'ready_stock' => 7, 'safety_stock' => 3, 'standard_cogs' => 270000.00, 'selling_price' => 460000.00, 'image_path' => 'images/products/wastafel-marmer-bintik-silinder.webp', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 14, 'category_id' => 22, 'product_code' => 'PRD-ACC-PA-01', 'name' => 'Tempat Surat & Menu Holder Batu Kali', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 15-20 cm, Tebal: 6-8 cm', 'finishing_type' => 'Natural Round Smooth x Grafir Custom', 'ready_stock' => 25, 'safety_stock' => 5, 'standard_cogs' => 45000.00, 'selling_price' => 85000.00, 'image_path' => 'images/products/tempat-surat-menu-batu-kali.webp', 'created_at' => $now, 'updated_at' => $now],
         ], ['id'], ['category_id', 'product_code', 'name', 'material_type', 'dimension_spec', 'finishing_type', 'ready_stock', 'safety_stock', 'standard_cogs', 'selling_price', 'image_path', 'updated_at']);
 
         // 6. SEED CUSTOMERS
