@@ -162,17 +162,21 @@ class ForecastingController extends Controller
     private function getHistoricalSeries(string $type, int $id): array
     {
         $data = [];
+        $isSqlite = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite';
+        $productDateExpr = $isSqlite ? "strftime('%Y-%m', start_date)" : 'DATE_FORMAT(start_date, "%Y-%m")';
+        $materialDateExpr = $isSqlite ? "strftime('%Y-%m', transaction_date)" : 'DATE_FORMAT(transaction_date, "%Y-%m")';
+
         if ($type === 'product') {
             $data = WorkOrder::where('product_id', $id)
                 ->whereIn('status', ['completed', 'qc_phase', 'in_progress', 'scheduled'])
-                ->selectRaw('DATE_FORMAT(start_date, "%Y-%m") as month, SUM(completed_quantity) as total')
+                ->selectRaw("{$productDateExpr} as month, SUM(completed_quantity) as total")
                 ->groupBy('month')
                 ->orderBy('month', 'asc')
                 ->pluck('total', 'month')
                 ->toArray();
         } elseif ($type === 'material') {
             $data = StockTransaction::where('material_id', $id)
-                ->selectRaw('DATE_FORMAT(transaction_date, "%Y-%m") as month, SUM(quantity) as total')
+                ->selectRaw("{$materialDateExpr} as month, SUM(quantity) as total")
                 ->groupBy('month')
                 ->orderBy('month', 'asc')
                 ->pluck('total', 'month')
