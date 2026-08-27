@@ -431,7 +431,7 @@
                 </div>
                 <h3 class="font-bold text-sm text-slate-900">Pembubutan & Pemahatan</h3>
                 <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                    Pemotongan mesin slep, pembubutan manual oleh pengrajin berpengalaman, dan presisi lubang afur pembuangan universal 4.5 cm.
+                    Pemotongan mesin slep presisi, pembubutan manual oleh pengrajin berpengalaman, dan standar kendali mutu tinggi.
                 </p>
                 <div class="mt-3 text-[11px] font-semibold text-blue-700 flex items-center gap-1">
                     <i data-lucide="check" class="w-3.5 h-3.5"></i> Toleransi Presisi &lt; 2mm
@@ -565,8 +565,8 @@
                         <b id="modal-finishing" class="text-slate-800">Hi-Glossy</b>
                     </div>
                     <div>
-                        <span class="text-slate-600 block text-[11px] font-medium">Standar Lubang Afur:</span>
-                        <b class="text-slate-800">4.5 cm (Universal)</b>
+                        <span class="text-slate-600 block text-[11px] font-medium">Kategori:</span>
+                        <b id="modal-category" class="text-slate-800">-</b>
                     </div>
                     <div>
                         <span class="text-slate-600 block text-[11px] font-medium">Lokasi Produksi:</span>
@@ -621,12 +621,11 @@
             activeTab.classList.add('bg-blue-900', 'text-white', 'shadow-sm');
         }
 
-        // Show/hide product cards
+        // Filter items
         const cards = document.querySelectorAll('.product-card');
         cards.forEach(card => {
-            const material = card.getAttribute('data-material');
-            if (type === 'all' || material === type) {
-                card.style.display = 'flex';
+            if (type === 'all' || card.getAttribute('data-material') === type) {
+                card.style.display = 'block';
             } else {
                 card.style.display = 'none';
             }
@@ -647,6 +646,7 @@
                     document.getElementById('modal-price').innerText = data.formatted_price;
                     document.getElementById('modal-dimension').innerText = data.dimension_spec;
                     document.getElementById('modal-finishing').innerText = data.finishing_type;
+                    document.getElementById('modal-category').innerText = data.category_name;
                     document.getElementById('modal-location').innerText = data.artisan.location;
                     document.getElementById('modal-wa-btn').href = data.wa_link;
                     document.getElementById('modal-checkout-btn').href = data.checkout_url || `{{ url('/checkout') }}/${data.id}`;

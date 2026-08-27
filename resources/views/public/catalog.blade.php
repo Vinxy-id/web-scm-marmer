@@ -319,8 +319,8 @@
                         <b id="cat-modal-finish" class="text-slate-800">-</b>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Lubang Afur:</span>
-                        <b class="text-slate-800">4.5 cm (Universal)</b>
+                        <span class="text-slate-400 block text-[11px]">Kategori:</span>
+                        <b id="cat-modal-category" class="text-slate-800">-</b>
                     </div>
                     <div>
                         <span class="text-slate-400 block text-[11px]">Asal Produksi:</span>
@@ -371,6 +371,7 @@
                     document.getElementById('cat-modal-price').innerText = data.formatted_price;
                     document.getElementById('cat-modal-dim').innerText = data.dimension_spec;
                     document.getElementById('cat-modal-finish').innerText = data.finishing_type;
+                    document.getElementById('cat-modal-category').innerText = data.category_name;
                     document.getElementById('cat-modal-loc').innerText = data.artisan.location;
                     document.getElementById('cat-modal-wa').href = data.wa_link;
                     document.getElementById('cat-modal-checkout').href = data.checkout_url || `{{ url('/checkout') }}/${data.id}`;

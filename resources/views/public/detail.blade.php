@@ -66,8 +66,8 @@
                             <img src="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" class="w-full h-full object-cover">
                         </button>
                         <div class="aspect-square bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
-                            <i data-lucide="disc" class="w-4 h-4 text-blue-600 mb-1"></i>
-                            <span>Lubang 4.5cm</span>
+                            <i data-lucide="gem" class="w-4 h-4 text-blue-600 mb-1"></i>
+                            <span>100% Batu Alam</span>
                         </div>
                         <div class="aspect-square bg-slate-100 rounded-xl p-2 border border-slate-200 flex flex-col items-center justify-center text-center text-[10px] text-slate-500 font-semibold">
                             <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 mb-1"></i>
@@ -128,30 +128,14 @@
                                 <b class="text-slate-900">{{ $product->finishing_type ?: 'Hi-Glossy' }}</b>
                             </div>
                             <div class="grid grid-cols-2 p-3 bg-white">
+                                <span class="text-slate-500">Kategori Produk</span>
+                                <b class="text-slate-900">{{ $product->category->name ?? 'Kerajinan Batu Alam' }}</b>
+                            </div>
+                            <div class="grid grid-cols-2 p-3 bg-slate-50">
                                 <span class="text-slate-500">Bahan Baku Utama</span>
                                 <b class="text-slate-900 capitalize">{{ str_replace('_', ' ', $product->material_type) }} Asli Tulungagung</b>
                             </div>
-                            <div class="grid grid-cols-2 p-3 bg-slate-50">
-                                <span class="text-slate-500">Diameter Lubang Afur</span>
-                                <b class="text-slate-900">4.5 cm (Standar Afur Wastafel Universal)</b>
-                            </div>
-@php
-    $pNameLower = strtolower($product->name ?? '');
-    if (str_contains($pNameLower, 'stepping') || str_contains($pNameLower, 'pijakan')) {
-        $weightEst = '6 - 9 kg (Batu Kali Flat Padat)';
-    } elseif (str_contains($pNameLower, 'lampu')) {
-        $weightEst = '8 - 12 kg (Batuan Kali Berongga)';
-    } elseif (str_contains($pNameLower, 'pedestal') || str_contains($pNameLower, 'meja')) {
-        $weightEst = '35 - 55 kg (Bongkahan Utuh Padat)';
-    } else {
-        $weightEst = '14 - 18 kg (Batuan Utuh Padat)';
-    }
-@endphp
                             <div class="grid grid-cols-2 p-3 bg-white">
-                                <span class="text-slate-500">Estimasi Bobot Fisik</span>
-                                <b class="text-slate-900">{{ $weightEst }}</b>
-                            </div>
-                            <div class="grid grid-cols-2 p-3 bg-slate-50">
                                 <span class="text-slate-500">Standar Pengemasan</span>
                                 <b class="text-slate-900">Foam Tebal + Peti Kayu Solid Pallet</b>
                             </div>
@@ -238,7 +222,7 @@
                 </p>
                 <ul class="list-disc list-inside space-y-1.5 text-slate-700">
                     <li><b>QC Tahap 1 (Bentuk Mentah):</b> Memeriksa tidak adanya retak tembus (*crack scrap*) pada serat batuan setelah pemotongan dan pembubutan awal.</li>
-                    <li><b>QC Tahap 2 (Finishing Kilap & Lubang Afur):</b> Memeriksa kehalusan polesan *Hi-Glossy*, simetrisitas bibir wastafel, dan uji kelancaran afur pembuangan tanpa genangan air.</li>
+                    <li><b>QC Tahap 2 (Finishing & Uji Fisik):</b> Memeriksa kehalusan polesan, kesimetrisan bentuk produk, serta ketahanan fisik batuan tanpa cacat atau retak tembus.</li>
                 </ul>
             </div>
 
@@ -262,38 +246,26 @@
 
         </div>
 
-        <!-- Related Products Section -->
-        @if($relatedProducts->count() > 0)
-        <div class="space-y-6">
-            <div class="flex items-center justify-between">
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900">
-                    Koleksi Kerajinan Terkait Lainnya
-                </h3>
-                <a href="{{ route('catalog') }}" class="text-xs font-bold text-blue-700 hover:underline">
-                    Lihat Semua
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                @foreach($relatedProducts as $rel)
-                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:shadow-md transition group">
-                    <div class="aspect-square bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden mb-3">
-                        <img src="{{ asset($rel->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" alt="{{ $rel->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                    </div>
-                    <p class="text-[10px] font-semibold text-blue-700">{{ $rel->category->name ?? 'Kerajinan' }}</p>
-                    <h4 class="font-bold text-xs text-slate-900 truncate mt-1">
-                        <a href="{{ route('catalog.show', $rel->id) }}" class="hover:text-blue-700 transition">
-                            {{ $rel->name }}
-                        </a>
-                    </h4>
-                    <p class="text-xs font-black text-slate-900 mt-2">
-                        Rp {{ number_format($rel->selling_price, 0, ',', '.') }}
-                    </p>
+        <!-- Back to Catalog CTA Navigation -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 text-center shadow-xs">
+            <div class="max-w-md mx-auto space-y-3">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
                 </div>
-                @endforeach
+                <h3 class="text-base font-bold text-slate-900">
+                    Ingin Melihat Koleksi Produk Lainnya?
+                </h3>
+                <p class="text-xs text-slate-500">
+                    Jelajahi seluruh etalase kerajinan marmer, onix tembus cahaya, dan batuan alam langsung dari pengrajin Tulungagung.
+                </p>
+                <div class="pt-2">
+                    <a href="{{ route('catalog') }}" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition shadow-md shadow-slate-900/10">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>Kembali ke Katalog Produk</span>
+                    </a>
+                </div>
             </div>
         </div>
-        @endif
 
     </div>
 </div>
