@@ -9,6 +9,7 @@
 .phpunit.result.cache
 Docs/PANDUAN_SETUP_DAN_DEPLOYMENT_VPS.md
 PANDUAN_SETUP_DAN_DEPLOYMENT_VPS.md
+*.sql
 
 
 # -----------------------------------------------------------------------------
