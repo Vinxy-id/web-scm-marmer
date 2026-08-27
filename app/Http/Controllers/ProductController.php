@@ -36,7 +36,7 @@ class ProductController extends Controller
         }
 
         $products = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
-        $categories = Category::where('type', 'product')->get();
+        $categories = Category::where('type', 'product')->withCount('products')->orderBy('name')->get();
 
         $stats = [
             'total_products' => Product::count(),

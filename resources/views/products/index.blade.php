@@ -19,11 +19,15 @@
             </p>
         </div>
 
-        <div class="flex items-center gap-2.5">
-            <a href="{{ route('catalog') }}" target="_blank" class="text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5">
+        <div class="flex flex-wrap items-center gap-2.5">
+            <a href="{{ route('catalog') }}" target="_blank" class="text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-slate-200">
                 <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
                 <span>Lihat Etalase Publik</span>
             </a>
+            <button type="button" onclick="openManageCategoryModal()" class="text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 px-3.5 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5">
+                <i data-lucide="tags" class="w-4 h-4 text-indigo-600"></i>
+                <span>Kelola Kategori</span>
+            </button>
             <button type="button" onclick="openAddProductModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
                 <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 <span>Tambah Produk Baru</span>
@@ -257,7 +261,13 @@
                     <input type="text" name="name" required placeholder="Contoh: Wastafel Marmer Putih B1 Polished" class="w-full text-xs p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Produk <span class="text-red-500">*</span></label>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-xs font-bold text-slate-700">Kategori Produk <span class="text-red-500">*</span></label>
+                        <button type="button" onclick="openManageCategoryModal()" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-0.5">
+                            <i data-lucide="settings" class="w-3 h-3"></i>
+                            <span>Kelola</span>
+                        </button>
+                    </div>
                     <select name="category_id" required class="w-full text-xs p-2.5 border rounded-xl bg-white focus:ring-2 focus:ring-blue-500">
                         @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -360,7 +370,13 @@
                     <input type="text" id="edit-name" name="name" required class="w-full text-xs p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Produk <span class="text-red-500">*</span></label>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-xs font-bold text-slate-700">Kategori Produk <span class="text-red-500">*</span></label>
+                        <button type="button" onclick="openManageCategoryModal()" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-0.5">
+                            <i data-lucide="settings" class="w-3 h-3"></i>
+                            <span>Kelola</span>
+                        </button>
+                    </div>
                     <select id="edit-category_id" name="category_id" required class="w-full text-xs p-2.5 border rounded-xl bg-white focus:ring-2 focus:ring-blue-500">
                         @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -428,6 +444,151 @@
     </div>
 </div>
 
+<!-- ============================================================================ -->
+<!-- MODAL: KELOLA MASTER KATEGORI PRODUK (CRUD 1-PAGE)                           -->
+<!-- ============================================================================ -->
+<div id="modal-manage-categories" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-150">
+        
+        <!-- Header Modal -->
+        <div class="flex items-center justify-between p-5 border-b border-slate-100 sticky top-0 bg-white z-10">
+            <div class="flex items-center gap-2.5">
+                <span class="p-2 bg-indigo-100 text-indigo-700 rounded-xl">
+                    <i data-lucide="tags" class="w-5 h-5"></i>
+                </span>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">Kelola Master Kategori Produk</h3>
+                    <p class="text-[11px] text-slate-500">Tambah kategori baru, perbarui nama, atau pantau penggunaan kategori pada etalase.</p>
+                </div>
+            </div>
+            <button onclick="closeManageCategoryModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <!-- Panel Form Tambah / Edit Kategori -->
+            <div class="bg-slate-50/80 border border-slate-200 rounded-2xl p-4 shadow-xs">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 id="category-form-title" class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-blue-600"></i>
+                        <span>Tambah Kategori Baru</span>
+                    </h4>
+                    <button type="button" id="btn-cancel-edit-category" onclick="resetCategoryForm()" class="hidden text-[11px] text-blue-600 hover:text-blue-800 font-semibold underline">
+                        Batal Edit (Buat Baru)
+                    </button>
+                </div>
+
+                <form id="form-category" action="{{ route('categories.store') }}" method="POST" class="space-y-3">
+                    @csrf
+                    <input type="hidden" id="category-method-field" name="_method" value="POST">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Kategori <span class="text-red-500">*</span></label>
+                            <input type="text" id="category-name" name="name" required placeholder="Contoh: Wastafel, Meja Marmer, Guci..." class="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Singkat (Opsional)</label>
+                            <input type="text" id="category-description" name="description" placeholder="Contoh: Aneka kerajinan batu onix & marmer" class="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-xs">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-1">
+                        <button type="submit" id="btn-submit-category" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-xs flex items-center gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            <span id="btn-submit-category-text">Simpan Kategori</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabel List Kategori -->
+            <div>
+                <div class="flex items-center justify-between mb-2.5">
+                    <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <span>Daftar Kategori Saat Ini</span>
+                    </h4>
+                    <span class="text-[11px] text-slate-500 font-semibold">{{ $categories->count() }} Kategori Terdaftar</span>
+                </div>
+
+                <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-xs divide-y divide-slate-200">
+                        <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-[10px]">
+                            <tr>
+                                <th class="p-3">Nama Kategori</th>
+                                <th class="p-3">Slug URL</th>
+                                <th class="p-3 text-center">Jumlah Produk</th>
+                                <th class="p-3 text-center w-24">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 bg-white">
+                            @forelse($categories as $cat)
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="p-3">
+                                    <span class="font-bold text-slate-900">{{ $cat->name }}</span>
+                                    @if($cat->description)
+                                    <p class="text-[11px] text-slate-400 font-normal mt-0.5">{{ $cat->description }}</p>
+                                    @endif
+                                </td>
+                                <td class="p-3 font-mono text-[11px] text-slate-500">
+                                    {{ $cat->slug }}
+                                </td>
+                                <td class="p-3 text-center">
+                                    @if($cat->products_count > 0)
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                        <i data-lucide="package" class="w-3 h-3"></i>
+                                        {{ $cat->products_count }} Produk
+                                    </span>
+                                    @else
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-500">
+                                        0 Produk
+                                    </span>
+                                    @endif
+                                </td>
+                                <td class="p-3 text-center">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" onclick="editCategory({{ json_encode($cat) }})" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition" title="Edit Kategori">
+                                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        @if($cat->products_count == 0)
+                                        <form action="{{ route('categories.destroy', $cat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori {{ $cat->name }}?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition" title="Hapus Kategori">
+                                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <button type="button" disabled class="p-1.5 bg-slate-100 text-slate-300 rounded-lg cursor-not-allowed" title="Kategori tidak dapat dihapus karena masih digunakan oleh {{ $cat->products_count }} produk">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-400">
+                                    Belum ada master kategori produk.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end p-4 border-t border-slate-100 bg-slate-50">
+            <button type="button" onclick="closeManageCategoryModal()" class="text-xs px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-white font-semibold">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -458,6 +619,54 @@
 
     function closeEditProductModal() {
         document.getElementById('modal-edit-product').classList.add('hidden');
+    }
+
+    function openManageCategoryModal() {
+        resetCategoryForm();
+        document.getElementById('modal-manage-categories').classList.remove('hidden');
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    function closeManageCategoryModal() {
+        document.getElementById('modal-manage-categories').classList.add('hidden');
+    }
+
+    function editCategory(category) {
+        document.getElementById('category-form-title').innerHTML = `
+            <i data-lucide="edit-3" class="w-4 h-4 text-amber-600"></i>
+            <span>Edit Kategori: ${category.name}</span>
+        `;
+        document.getElementById('form-category').action = `{{ url('/categories') }}/${category.id}`;
+        document.getElementById('category-method-field').value = 'PUT';
+        document.getElementById('category-name').value = category.name;
+        document.getElementById('category-description').value = category.description || '';
+        document.getElementById('btn-submit-category').className = 'bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-xs flex items-center gap-1.5';
+        document.getElementById('btn-submit-category-text').innerText = 'Perbarui Kategori';
+        document.getElementById('btn-cancel-edit-category').classList.remove('hidden');
+        
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    function resetCategoryForm() {
+        document.getElementById('category-form-title').innerHTML = `
+            <i data-lucide="plus-circle" class="w-4 h-4 text-blue-600"></i>
+            <span>Tambah Kategori Baru</span>
+        `;
+        document.getElementById('form-category').action = `{{ route('categories.store') }}`;
+        document.getElementById('category-method-field').value = 'POST';
+        document.getElementById('category-name').value = '';
+        document.getElementById('category-description').value = '';
+        document.getElementById('btn-submit-category').className = 'bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-xs flex items-center gap-1.5';
+        document.getElementById('btn-submit-category-text').innerText = 'Simpan Kategori';
+        document.getElementById('btn-cancel-edit-category').classList.add('hidden');
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     }
 </script>
 @endsection

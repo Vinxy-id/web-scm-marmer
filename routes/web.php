@@ -34,6 +34,9 @@ Route::prefix('orders')->name('orders.')->group(function () {
 // Admin / Owner Product Management (CRUD Master Produk)
 Route::resource('products', \App\Http\Controllers\ProductController::class)->except(['create', 'show', 'edit']);
 
+// Admin / Owner Category Management (CRUD Master Kategori)
+Route::resource('categories', \App\Http\Controllers\CategoryController::class)->only(['store', 'update', 'destroy']);
+
 // Admin / Owner User & Access Management (CRUD Akun Pengguna & RBAC)
 Route::prefix('users')->name('users.')->group(function () {
     Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('index');
