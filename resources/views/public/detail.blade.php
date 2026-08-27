@@ -139,6 +139,10 @@
                                 <span class="text-slate-500">Standar Pengemasan</span>
                                 <b class="text-slate-900">Foam Tebal + Peti Kayu Solid Pallet</b>
                             </div>
+                            <div class="grid grid-cols-2 p-3 bg-slate-50">
+                                <span class="text-slate-500">Estimasi Bobot Fisik</span>
+                                <b class="text-slate-900">± 18 - 25 kg / unit (Sesuai Dimensi)</b>
+                            </div>
                         </div>
                     </div>
 
