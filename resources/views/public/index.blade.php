@@ -285,12 +285,9 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="product-grid">
             @foreach($featuredProducts as $item)
             @php
-                $isPutraAbadi = in_array($item->material_type, ['batu_kali']) || 
-                               str_contains(strtolower($item->name), 'kali') || 
-                               str_contains(strtolower($item->name), 'stepping') || 
-                               str_contains(strtolower($item->name), 'lampu');
-                $artisanName = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
-                $artisanPhone = $isPutraAbadi ? '6281335022012' : '6281340231737';
+                $artisan = $item->artisan;
+                $artisanName = $artisan['name'];
+                $artisanPhone = $artisan['phone'];
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer" 

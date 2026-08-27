@@ -257,23 +257,8 @@ class PublicCatalogController extends Controller
                        ?? $this->getFallbackProducts()->first();
         }
 
-        // Determine Artisan Partner Info
-        $isPutraAbadi = in_array($product->material_type ?? '', ['batu_kali']) || 
-                       str_contains(strtolower($product->name ?? ''), 'kali') || 
-                       str_contains(strtolower($product->name ?? ''), 'stepping') || 
-                       str_contains(strtolower($product->name ?? ''), 'lampu');
-
-        $artisan = $isPutraAbadi ? [
-            'name' => 'UD Putra Abadi',
-            'owner' => 'Efri Saputra',
-            'phone' => '6281335022012',
-            'location' => 'Campurdarat, Tulungagung',
-        ] : [
-            'name' => 'UD Cahaya Onix',
-            'owner' => 'M. Ilham Nur Amali',
-            'phone' => '6281340231737',
-            'location' => 'Campurdarat, Tulungagung',
-        ];
+        // Determine Artisan Partner Info from Model Accessor
+        $artisan = $product->artisan;
 
         // If AJAX / JSON Quick View requested
         if ($request->wantsJson() || $request->ajax() || $request->has('json')) {

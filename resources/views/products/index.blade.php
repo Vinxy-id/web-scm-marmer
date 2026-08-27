@@ -138,15 +138,21 @@
                             <p class="font-bold text-slate-900 text-xs mt-1">{{ $p->name }}</p>
                         </td>
 
-                        <!-- Kategori / Bahan -->
+                        <!-- Kategori / Bahan & Toko -->
                         <td class="p-3.5 whitespace-nowrap">
                             <span class="font-semibold text-slate-800 block">{{ $p->category->name ?? 'Kerajinan' }}</span>
-                            <span class="inline-block whitespace-nowrap mt-0.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full capitalize
-                                @if($p->material_type === 'marmer') bg-blue-100 text-blue-800
-                                @elseif($p->material_type === 'onix') bg-amber-100 text-amber-800
-                                @else bg-emerald-100 text-emerald-800 @endif">
-                                {{ str_replace('_', ' ', $p->material_type) }}
-                            </span>
+                            <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                <span class="inline-block whitespace-nowrap text-[10px] font-medium px-2 py-0.5 rounded-full capitalize
+                                    @if($p->material_type === 'marmer') bg-blue-100 text-blue-800
+                                    @elseif($p->material_type === 'onix') bg-amber-100 text-amber-800
+                                    @else bg-emerald-100 text-emerald-800 @endif">
+                                    {{ str_replace('_', ' ', $p->material_type) }}
+                                </span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border {{ $p->artisan['badge'] }}">
+                                    <i data-lucide="store" class="w-3 h-3"></i>
+                                    {{ $p->artisan['name'] }}
+                                </span>
+                            </div>
                         </td>
 
                         <!-- Spesifikasi -->

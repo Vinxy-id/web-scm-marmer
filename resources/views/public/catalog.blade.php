@@ -131,26 +131,10 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach($products as $item)
             @php
-                $isPutraAbadi = in_array($item->material_type, ['batu_kali']) || 
-                               str_contains(strtolower($item->name), 'kali') || 
-                               str_contains(strtolower($item->name), 'stepping') || 
-                               str_contains(strtolower($item->name), 'lampu') ||
-                               str_contains(strtolower($item->name), 'tapak') ||
-                               str_contains(strtolower($item->name), 'dokar') ||
-                               str_contains(strtolower($item->name), 'burung') ||
-                               str_contains(strtolower($item->name), 'sabun') ||
-                               str_contains(strtolower($item->name), 'shampo') ||
-                               str_contains(strtolower($item->name), 'surat') ||
-                               str_contains(strtolower($item->name), 'lilin') ||
-                               str_contains(strtolower($item->name), 'toples') ||
-                               str_contains(strtolower($item->name), 'bangku') ||
-                               str_contains(strtolower($item->name), 'kursi') ||
-                               str_contains(strtolower($item->name), 'bak ikan') ||
-                               str_contains(strtolower($item->name), 'pot bunga') ||
-                               str_contains(strtolower($item->name), 'tusuk sate');
-                $artisanName = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
-                $artisanPhone = $isPutraAbadi ? '6281335022012' : '6281340231737';
-                $artisanBadge = $isPutraAbadi ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-blue-50 text-blue-800 border-blue-200';
+                $artisan = $item->artisan;
+                $artisanName = $artisan['name'];
+                $artisanPhone = $artisan['phone'];
+                $artisanBadge = $artisan['badge'];
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer"

@@ -19,26 +19,8 @@ class CheckoutController extends Controller
     {
         $product = Product::with('category')->findOrFail($id);
 
-        $isPutraAbadi = in_array($product->material_type ?? '', ['batu_kali']) || 
-                       str_contains(strtolower($product->name ?? ''), 'kali') || 
-                       str_contains(strtolower($product->name ?? ''), 'stepping') || 
-                       str_contains(strtolower($product->name ?? ''), 'lampu');
-
-        $artisan = $isPutraAbadi ? [
-            'name' => 'UD Putra Abadi',
-            'owner' => 'Efri Saputra',
-            'phone' => '6281335022012',
-            'bank_name' => 'Bank Mandiri',
-            'account_number' => '144-00-1928374-1',
-            'account_holder' => 'UD Putra Abadi - Efri Saputra',
-        ] : [
-            'name' => 'UD Cahaya Onix',
-            'owner' => 'M. Ilham Nur Amali',
-            'phone' => '6281340231737',
-            'bank_name' => 'Bank BCA',
-            'account_number' => '048-1928-384',
-            'account_holder' => 'UD Cahaya Onix - M. Ilham',
-        ];
+        // Determine Artisan Partner Info from Model Accessor
+        $artisan = $product->artisan;
 
         $banks = [
             'bank_bca' => [
