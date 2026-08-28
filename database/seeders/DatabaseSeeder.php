@@ -140,7 +140,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 5. SEED PRODUCTS (Master Model Inti Cahaya Onix & Putra Abadi + Data VPS)
-        DB::table('products')->where('id', '>=', 40)->delete();
+        DB::table('products')->where('id', '>=', 41)->delete();
         DB::table('products')->upsert([
             ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/wastafel-marmer-putih-b1.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'category_id' => 18, 'product_code' => 'PRD-STP-PA-01', 'name' => 'Batu Tapak Pijakan Taman (Stepping Stone)', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-35 cm, Tebal: 4 cm', 'finishing_type' => 'Gerinda Halus Anti-Slip', 'ready_stock' => 50, 'safety_stock' => 10, 'standard_cogs' => 25000.00, 'selling_price' => 45000.00, 'image_path' => 'images/products/batu-tapak-stepping-stone.webp', 'created_at' => $now, 'updated_at' => $now],
@@ -178,6 +178,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 37, 'category_id' => 16, 'product_code' => 'PRD-MRM-027', 'name' => 'Kotak Acak Hitam', 'material_type' => 'marmer', 'dimension_spec' => 'P: 50 cm, L: 40 cm, T: 15 cm', 'finishing_type' => 'Polished Atas & Dalam / Acak Luar', 'ready_stock' => 15, 'safety_stock' => 5, 'standard_cogs' => 360000.00, 'selling_price' => 550000.00, 'image_path' => 'images/products/kotak-acak-hitam.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 38, 'category_id' => 16, 'product_code' => 'PRD-MRM-028', 'name' => 'Oval Andesit Full Dop Hitam', 'material_type' => 'marmer', 'dimension_spec' => 'P: 70 cm, L: 35 cm, T: 13 cm', 'finishing_type' => 'Honed Matte Full Doff', 'ready_stock' => 15, 'safety_stock' => 5, 'standard_cogs' => 330000.00, 'selling_price' => 500000.00, 'image_path' => 'images/products/oval-andesit-full-dop-hitam.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 39, 'category_id' => 16, 'product_code' => 'PRD-MRM-029', 'name' => 'Wastafel Marmer Full Polish Cream (45x15)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 45 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 15, 'safety_stock' => 5, 'standard_cogs' => 225000.00, 'selling_price' => 350000.00, 'image_path' => 'images/products/wastafel-marmer-full-polish-cream-45x15.webp', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 40, 'category_id' => 20, 'product_code' => 'PRD-MRM-030', 'name' => 'Pedistal Marmo Andesit', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 90 cm', 'finishing_type' => 'Polish Bowl Atas / Pahat Marmo Alur Kaki', 'ready_stock' => 10, 'safety_stock' => 3, 'standard_cogs' => 950000.00, 'selling_price' => 1500000.00, 'image_path' => 'images/products/pedistal-marmo-andesit.webp', 'created_at' => $now, 'updated_at' => $now],
         ], ['id'], ['category_id', 'product_code', 'name', 'material_type', 'dimension_spec', 'finishing_type', 'ready_stock', 'safety_stock', 'standard_cogs', 'selling_price', 'image_path', 'updated_at']);
 
         // 6. SEED CUSTOMERS
