@@ -178,13 +178,18 @@ Berdasarkan studi empiris di klaster pengrajin marmer Kabupaten Tulungagung (stu
 | Kolom | Tipe Data | Keterangan |
 | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED (PK) | Auto Increment |
-| `product_code` | VARCHAR(50) (UNIQUE) | Misal: `PROD-WSF-01` |
 | `category_id` | BIGINT UNSIGNED (FK) | Relasi kategori (Wastafel, Stepping Stone, dsb) |
+| `product_code` | VARCHAR(50) (UNIQUE) | Misal: `PRD-WSF-MRM-01` |
 | `name` | VARCHAR(150) | Nama produk (Wastafel Bulat D40 Marmer Bakar) |
-| `dimension_spec` | VARCHAR(100) | Dimensi: D=40cm, T=15cm |
+| `ikm_name` | VARCHAR(100) | Profil Toko / Mitra IKM (`'UD Cahaya Onix'`, `'UD Putra Abadi'`) |
+| `material_type` | ENUM | `'marmer'`, `'onix'`, `'batu_kali'`, `'kombinasi'` |
+| `dimension_spec` | VARCHAR(200) | Dimensi: D: 40 cm, T: 15 cm |
+| `finishing_type` | VARCHAR(150) | Finishing: Hi-Glossy, Honed Doff, dll. |
 | `ready_stock` | INT | Jumlah stok barang jadi di gudang |
-| `safety_stock` | INT | Batas stok aman |
+| `safety_stock` | INT | Batas stok aman minimum |
+| `standard_cogs` | DECIMAL(15,2) | HPP Standar (COGS) |
 | `selling_price` | DECIMAL(15,2) | Harga jual standar |
+| `image_path` | VARCHAR(255) | Path foto asli etalase (1:1 persegi) |
 
 #### 5. Tabel `work_orders` (Surat Perintah Kerja Produksi)
 | Kolom | Tipe Data | Keterangan |

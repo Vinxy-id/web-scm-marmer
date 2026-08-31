@@ -141,7 +141,13 @@ class DatabaseSeeder extends Seeder
 
         // 5. SEED PRODUCTS (Master Model Inti Cahaya Onix & Putra Abadi + Data VPS)
         DB::table('products')->where('id', '>=', 56)->delete();
-        DB::table('products')->upsert([
+        $seededProducts = array_map(function ($p) use ($now) {
+            if (!isset($p['ikm_name'])) {
+                $isPa = ($p['material_type'] ?? '') === 'batu_kali' || str_contains($p['product_code'] ?? '', '-PA-');
+                $p['ikm_name'] = $isPa ? 'UD Putra Abadi' : 'UD Cahaya Onix';
+            }
+            return $p;
+        }, [
             ['id' => 4, 'category_id' => 16, 'product_code' => 'PRD-WSF-MRM-01', 'name' => 'Wastafel Marmer Putih B1 (B-One)', 'material_type' => 'marmer', 'dimension_spec' => 'D: 40 cm, T: 15 cm', 'finishing_type' => 'Hi-Glossy', 'ready_stock' => 14, 'safety_stock' => 5, 'standard_cogs' => 280000.00, 'selling_price' => 450000.00, 'image_path' => 'images/products/wastafel-marmer-putih-b1.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'category_id' => 18, 'product_code' => 'PRD-STP-PA-01', 'name' => 'Batu Tapak Pijakan Taman (Stepping Stone)', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-35 cm, Tebal: 4 cm', 'finishing_type' => 'Gerinda Halus Anti-Slip', 'ready_stock' => 50, 'safety_stock' => 10, 'standard_cogs' => 25000.00, 'selling_price' => 45000.00, 'image_path' => 'images/products/batu-tapak-stepping-stone.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 6, 'category_id' => 17, 'product_code' => 'PRD-WSF-BKL-01', 'name' => 'Wastafel Batu Kali Alami Campurdarat', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 45 cm, T: 16 cm', 'finishing_type' => 'Alami Luar / Halus Dalam', 'ready_stock' => 8, 'safety_stock' => 4, 'standard_cogs' => 220000.00, 'selling_price' => 380000.00, 'image_path' => 'images/products/wastafel-batu-kali-alami.webp', 'created_at' => $now, 'updated_at' => $now],
@@ -194,7 +200,8 @@ class DatabaseSeeder extends Seeder
             ['id' => 53, 'category_id' => 22, 'product_code' => 'PRD-MJA-PA-03', 'name' => 'Kursi Stool Taman Batu Kali Alami (Riverstone Stool)', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 30-40 cm, T: 45-55 cm', 'finishing_type' => 'Natural Riverstone Outside x Flat Polished Top', 'ready_stock' => 25, 'safety_stock' => 6, 'standard_cogs' => 95000.00, 'selling_price' => 175000.00, 'image_path' => 'images/products/kursi-stool-taman-batu-kali.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 54, 'category_id' => 22, 'product_code' => 'PRD-MJA-PA-04', 'name' => 'Bangku Panjang Taman Batu Kali Alami (Riverstone Bench)', 'material_type' => 'batu_kali', 'dimension_spec' => 'P: 100-120 cm, L: 35-40 cm, T: 45 cm', 'finishing_type' => 'Flat Polished Top Slab x Natural Boulder Legs', 'ready_stock' => 8, 'safety_stock' => 2, 'standard_cogs' => 380000.00, 'selling_price' => 680000.00, 'image_path' => 'images/products/bangku-panjang-batu-kali.webp', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 55, 'category_id' => 20, 'product_code' => 'PRD-PDS-PA-02', 'name' => 'Pedestal Wastafel Kaki Tusuk Sate Batu Kali (Standing Basin)', 'material_type' => 'batu_kali', 'dimension_spec' => 'D: 45-55 cm, T: 85-90 cm', 'finishing_type' => 'Top Polished Bowl x Stacked Stone Ball Pedestal Legs', 'ready_stock' => 6, 'safety_stock' => 2, 'standard_cogs' => 750000.00, 'selling_price' => 1350000.00, 'image_path' => 'images/products/pedestal-wastafel-tusuk-sate.webp', 'created_at' => $now, 'updated_at' => $now],
-        ], ['id'], ['category_id', 'product_code', 'name', 'material_type', 'dimension_spec', 'finishing_type', 'ready_stock', 'safety_stock', 'standard_cogs', 'selling_price', 'image_path', 'updated_at']);
+        ]);
+        DB::table('products')->upsert($seededProducts, ['id'], ['category_id', 'product_code', 'name', 'ikm_name', 'material_type', 'dimension_spec', 'finishing_type', 'ready_stock', 'safety_stock', 'standard_cogs', 'selling_price', 'image_path', 'updated_at']);
 
         // 6. SEED CUSTOMERS
         DB::table('customers')->insertOrIgnore([

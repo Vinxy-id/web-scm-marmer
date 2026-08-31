@@ -35,6 +35,10 @@ class ProductController extends Controller
             $query->where('material_type', $request->material);
         }
 
+        if ($request->filled('ikm_name') && $request->ikm_name !== 'all') {
+            $query->where('ikm_name', $request->ikm_name);
+        }
+
         $products = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
         $categories = Category::where('type', 'product')->withCount('products')->orderBy('name')->get();
 
@@ -60,6 +64,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
+            'ikm_name' => ['nullable', 'string', 'in:UD Cahaya Onix,UD Putra Abadi'],
             'category_id' => ['required', 'exists:categories,id'],
             'material_type' => ['required', 'in:marmer,onix,batu_kali'],
             'dimension_spec' => ['nullable', 'string', 'max:100'],
@@ -102,9 +107,12 @@ class ProductController extends Controller
             };
         }
 
+        $ikmName = $validated['ikm_name'] ?? ($validated['material_type'] === 'batu_kali' ? 'UD Putra Abadi' : 'UD Cahaya Onix');
+
         Product::create([
             'product_code' => $productCode,
             'name' => $validated['name'],
+            'ikm_name' => $ikmName,
             'category_id' => $validated['category_id'],
             'material_type' => $validated['material_type'],
             'dimension_spec' => $validated['dimension_spec'] ?? 'Standar Pengrajin',
@@ -117,7 +125,7 @@ class ProductController extends Controller
         ]);
 
         return redirect()->route('products.index')
-            ->with('success', "Produk baru '{$validated['name']}' dengan Kode {$productCode} berhasil ditambahkan!");
+            ->with('success', "Produk baru '{$validated['name']}' ({$ikmName}) dengan Kode {$productCode} berhasil ditambahkan!");
     }
 
     /**
@@ -127,6 +135,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
+            'ikm_name' => ['nullable', 'string', 'in:UD Cahaya Onix,UD Putra Abadi'],
             'category_id' => ['required', 'exists:categories,id'],
             'material_type' => ['required', 'in:marmer,onix,batu_kali'],
             'dimension_spec' => ['nullable', 'string', 'max:100'],
@@ -140,6 +149,7 @@ class ProductController extends Controller
 
         $updateData = [
             'name' => $validated['name'],
+            'ikm_name' => $validated['ikm_name'] ?? $product->ikm_name ?? 'UD Cahaya Onix',
             'category_id' => $validated['category_id'],
             'material_type' => $validated['material_type'],
             'dimension_spec' => $validated['dimension_spec'] ?? $product->dimension_spec,

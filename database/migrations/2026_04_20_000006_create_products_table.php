@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->restrictOnDelete()->cascadeOnUpdate();
             $table->string('product_code', 50)->unique();
             $table->string('name', 150);
+            $table->string('ikm_name', 100)->default('UD Cahaya Onix');
             $table->enum('material_type', ['marmer', 'onix', 'batu_kali', 'kombinasi'])->default('marmer');
             $table->string('dimension_spec', 100)->nullable();
             $table->string('finishing_type', 50)->default('Hi-Glossy');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('product_code');
+            $table->index('ikm_name');
         });
     }
 

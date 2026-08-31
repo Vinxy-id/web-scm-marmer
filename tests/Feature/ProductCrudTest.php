@@ -57,6 +57,7 @@ class ProductCrudTest extends TestCase
     {
         $data = [
             'name' => 'Wastafel Onyx Tembus Cahaya Test',
+            'ikm_name' => 'UD Cahaya Onix',
             'category_id' => $this->category->id,
             'material_type' => 'onix',
             'dimension_spec' => 'Diameter 40cm',
@@ -72,6 +73,7 @@ class ProductCrudTest extends TestCase
 
         $this->assertDatabaseHas('products', [
             'name' => 'Wastafel Onyx Tembus Cahaya Test',
+            'ikm_name' => 'UD Cahaya Onix',
             'material_type' => 'onix',
             'ready_stock' => 5,
         ]);
@@ -84,6 +86,7 @@ class ProductCrudTest extends TestCase
         $product = Product::create([
             'product_code' => CodeGeneratorService::generateProductCode('batu_kali'),
             'name' => 'Wastafel Batu Kali Natural Test',
+            'ikm_name' => 'UD Putra Abadi',
             'category_id' => $this->category->id,
             'material_type' => 'batu_kali',
             'ready_stock' => 8,
@@ -94,6 +97,7 @@ class ProductCrudTest extends TestCase
 
         $updateData = [
             'name' => 'Wastafel Batu Kali Super Polished Test',
+            'ikm_name' => 'UD Putra Abadi',
             'category_id' => $this->category->id,
             'material_type' => 'batu_kali',
             'ready_stock' => 12,
@@ -108,6 +112,7 @@ class ProductCrudTest extends TestCase
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'name' => 'Wastafel Batu Kali Super Polished Test',
+            'ikm_name' => 'UD Putra Abadi',
             'ready_stock' => 12,
         ]);
 

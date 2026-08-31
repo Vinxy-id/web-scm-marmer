@@ -13,6 +13,7 @@ class Product extends Model
         'category_id',
         'product_code',
         'name',
+        'ikm_name',
         'material_type',
         'dimension_spec',
         'finishing_type',
@@ -45,34 +46,41 @@ class Product extends Model
      */
     public function getArtisanAttribute(): array
     {
-        $name = strtolower($this->name ?? '');
-        $code = strtoupper($this->product_code ?? '');
+        $ikm = $this->ikm_name ?? '';
 
-        // Spesialisasi UD Putra Abadi (Batu Kali, Stepping Stone, Kerajinan Taman/Rumah Tangga Khas Putra Abadi)
-        $isPutraAbadi = in_array(strtolower($this->material_type ?? ''), ['batu_kali']) || 
-                       str_contains($code, '-PA-') || 
-                       str_contains($code, 'PA-') || 
-                       str_contains($name, 'putra abadi') ||
-                       str_contains($name, 'kali') || 
-                       str_contains($name, 'stepping') || 
-                       str_contains($name, 'lampu') || 
-                       str_contains($name, 'tapak') || 
-                       str_contains($name, 'dokar') || 
-                       str_contains($name, 'burung') || 
-                       str_contains($name, 'sabun') || 
-                       str_contains($name, 'shampo') || 
-                       str_contains($name, 'surat') || 
-                       str_contains($name, 'lilin') || 
-                       str_contains($name, 'toples') || 
-                       str_contains($name, 'bangku') || 
-                       str_contains($name, 'kursi') || 
-                       str_contains($name, 'bak ikan') || 
-                       str_contains($name, 'pot bunga') || 
-                       str_contains($name, 'tusuk sate') ||
-                       str_contains($name, 'pijakan') ||
-                       str_contains($name, 'cladding');
+        // Fallback jika belum di-set di database
+        if (empty($ikm)) {
+            $name = strtolower($this->name ?? '');
+            $code = strtoupper($this->product_code ?? '');
 
-        if ($isPutraAbadi) {
+            // Spesialisasi UD Putra Abadi
+            $isPutraAbadi = in_array(strtolower($this->material_type ?? ''), ['batu_kali']) || 
+                           str_contains($code, '-PA-') || 
+                           str_contains($code, 'PA-') || 
+                           str_contains($name, 'putra abadi') ||
+                           str_contains($name, 'kali') || 
+                           str_contains($name, 'stepping') || 
+                           str_contains($name, 'lampu') || 
+                           str_contains($name, 'tapak') || 
+                           str_contains($name, 'dokar') || 
+                           str_contains($name, 'burung') || 
+                           str_contains($name, 'sabun') || 
+                           str_contains($name, 'shampo') || 
+                           str_contains($name, 'surat') || 
+                           str_contains($name, 'lilin') || 
+                           str_contains($name, 'toples') || 
+                           str_contains($name, 'bangku') || 
+                           str_contains($name, 'kursi') || 
+                           str_contains($name, 'bak ikan') || 
+                           str_contains($name, 'pot bunga') || 
+                           str_contains($name, 'tusuk sate') ||
+                           str_contains($name, 'pijakan') ||
+                           str_contains($name, 'cladding');
+
+            $ikm = $isPutraAbadi ? 'UD Putra Abadi' : 'UD Cahaya Onix';
+        }
+
+        if ($ikm === 'UD Putra Abadi') {
             return [
                 'name' => 'UD Putra Abadi',
                 'owner' => 'Efri Saputra',
@@ -86,7 +94,7 @@ class Product extends Model
             ];
         }
 
-        // Default: UD Cahaya Onix (Seluruh wastafel onix/marmer/andesit, pedestal, tempat tisu, payung, lampu, dll.)
+        // Default: UD Cahaya Onix
         return [
             'name' => 'UD Cahaya Onix',
             'owner' => 'M. Ilham Nur Amali',
@@ -102,6 +110,6 @@ class Product extends Model
 
     public function getShopNameAttribute(): string
     {
-        return $this->artisan['name'];
+        return $this->ikm_name ?: $this->artisan['name'];
     }
 }
