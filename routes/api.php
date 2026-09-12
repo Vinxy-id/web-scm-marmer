@@ -20,3 +20,7 @@ Route::get('/health', function () {
         'timestamp' => now()->toIso8601String()
     ]);
 });
+
+// Midtrans Payment Gateway Webhook Notification
+Route::post('/midtrans/notification', [\App\Http\Controllers\Api\MidtransCallbackController::class, 'handle'])->name('midtrans.notification');
+

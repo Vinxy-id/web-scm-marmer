@@ -17,11 +17,14 @@
 </div>
 
 @php
+    $isMidtrans = ($order->payment_method === 'midtrans');
+    $uniqueCode = $isMidtrans ? 0 : ($order->unique_code ?? 0);
     $billAmount = ($order->payment_scheme === 'dp_50') 
-        ? (($order->total_amount * 0.5) + $order->unique_code) 
-        : ($order->total_amount + $order->unique_code);
+        ? (($order->total_amount * 0.5) + $uniqueCode) 
+        : ($order->total_amount + $uniqueCode);
     
     $selectedBank = $banks[$order->payment_method] ?? $banks['qris'];
+
 
     $isPutraAbadi = in_array($order->product->material_type ?? '', ['batu_kali']) || 
                    str_contains(strtolower($order->product->name ?? ''), 'kali') || 
@@ -47,6 +50,13 @@
         <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-800 text-xs flex items-center gap-2 shadow-sm">
             <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
             <span>{{ session('success') }}</span>
+        </div>
+        @endif
+
+        @if(session('info'))
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-xs flex items-center gap-2 shadow-sm">
+            <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+            <span>{{ session('info') }}</span>
         </div>
         @endif
 
@@ -90,8 +100,11 @@
                         <p class="text-2xl sm:text-3xl font-black text-amber-400 mt-0.5">
                             Rp {{ number_format($billAmount, 0, ',', '.') }}
                         </p>
-                        <p class="text-[10px] text-slate-400">Termasuk kode verifikasi unik: +Rp {{ $order->unique_code }}</p>
+                        @if(!$isMidtrans && $uniqueCode > 0)
+                        <p class="text-[10px] text-slate-400">Termasuk kode verifikasi unik: +Rp {{ $uniqueCode }}</p>
+                        @endif
                     </div>
+
                 </div>
             </div>
 
@@ -99,12 +112,97 @@
             <div class="p-6 sm:p-8 space-y-8">
                 
                 @if(!$order->isCancelled())
-                <!-- Payment Instructions Box -->
+                <!-- Midtrans Automatic Payment Box -->
+                @if($order->payment_method === 'midtrans')
+
+                    @if(in_array($order->payment_status, ['paid_dp', 'paid_full']) || $order->order_status === 'verified' || $order->order_status === 'in_production')
+                    <div class="bg-emerald-50/80 p-5 sm:p-6 rounded-2xl border border-emerald-200 space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-emerald-950">Pembayaran Berhasil Terverifikasi!</h3>
+                                <p class="text-xs text-emerald-700">Transaksi Anda telah tercatat dan terverifikasi secara otomatis oleh sistem.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                            <div class="p-3 bg-white rounded-xl border border-emerald-100">
+                                <span class="text-slate-400 block text-[11px]">Metode Pembayaran</span>
+                                <b class="text-slate-800 uppercase">{{ $order->midtrans_payment_type ?: 'Pembayaran Digital' }}</b>
+                            </div>
+                            <div class="p-3 bg-white rounded-xl border border-emerald-100">
+                                <span class="text-slate-400 block text-[11px]">ID Referensi Pembayaran</span>
+                                <b class="font-mono text-slate-800 text-[11px] truncate block">{{ $order->midtrans_transaction_id ?: '-' }}</b>
+                            </div>
+                            <div class="p-3 bg-white rounded-xl border border-emerald-100">
+                                <span class="text-slate-400 block text-[11px]">Status SPK Bengkel</span>
+                                <b class="text-indigo-700 font-bold">Siap / Aktif di Kanban</b>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-slate-50 p-5 sm:p-6 rounded-2xl border-2 border-blue-200 space-y-4 shadow-sm">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+                                    <i data-lucide="zap" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-extrabold text-slate-900">Pembayaran Online Instan</h3>
+                                    <p class="text-[11px] text-slate-500">QRIS Dinamis (GoPay/ShopeePay/DANA), Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Kartu Kredit</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-black tracking-wider uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                                Verifikasi Otomatis
+                            </span>
+                        </div>
+
+                        <div class="p-5 sm:p-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div class="text-center sm:text-left space-y-1">
+                                <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider block">Tagihan Pembayaran:</span>
+                                <span class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Rp {{ number_format($billAmount, 0, ',', '.') }}</span>
+                                <div class="flex items-center gap-2 justify-center sm:justify-start pt-0.5">
+                                    <span class="text-[11px] font-semibold text-slate-600">Skema: <b>{{ $order->payment_scheme === 'dp_50' ? 'Uang Muka (DP 50%)' : 'Pelunasan Penuh (100%)' }}</b></span>
+                                    <span class="inline-block w-1 h-1 rounded-full bg-slate-300"></span>
+                                    <span class="text-[11px] text-emerald-600 font-bold">Bebas Kode Unik</span>
+                                </div>
+                            </div>
+
+                            @if(!empty($order->snap_token))
+                            <div class="flex flex-col items-center sm:items-end gap-2.5 w-full sm:w-auto">
+                                <button type="button" id="pay-button" style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%) !important; color: #ffffff !important; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.45); border: none; padding: 14px 44px; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; border-radius: 16px; min-width: 220px;" class="w-full sm:w-auto text-white transition duration-300 hover:brightness-110 text-center cursor-pointer active:scale-98">
+                                    Bayar Sekarang
+                                </button>
+                                
+                                <a href="{{ route('checkout.regenerate-snap', $order->order_number) }}" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1.5 transition">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                    <span>Ganti / Pilih Ulang Metode Bayar</span>
+                                </a>
+                            </div>
+                            @else
+                            <div class="text-xs text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center gap-2">
+                                <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-amber-600"></i>
+                                <span>Sedang menyiapkan link pembayaran... Silakan muat ulang halaman.</span>
+                            </div>
+                            @endif
+                        </div>
+
+
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+                            <span>Setelah pembayaran selesai dilakukan, sistem akan memverifikasi secara otomatis dan langsung menerbitkan SPK pengerjaan bengkel.</span>
+                        </div>
+                    </div>
+                    @endif
+
+                @else
+                <!-- Manual Payment Instructions Box -->
                 <div class="bg-blue-50/60 p-5 sm:p-6 rounded-2xl border border-blue-100 space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <i data-lucide="credit-card" class="w-5 h-5 text-blue-700"></i>
-                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Instruksi Pembayaran Resmi IKM:</h3>
+                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Instruksi Pembayaran Manual IKM:</h3>
                         </div>
                         <span class="text-[10px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
                             {{ strtoupper(str_replace('_', ' ', $order->payment_method)) }}
@@ -146,6 +244,8 @@
                     </p>
                 </div>
                 @endif
+                @endif
+
 
                 <!-- Order Detail Table -->
                 <div class="space-y-3">
@@ -191,10 +291,12 @@
                                     <td colspan="3" class="p-3 text-right text-[11px]">Packing Peti Kayu Solid (Standar Aman):</td>
                                     <td class="p-3 text-right font-bold text-emerald-600">GRATIS</td>
                                 </tr>
+                                @if(!$isMidtrans && $uniqueCode > 0)
                                 <tr>
                                     <td colspan="3" class="p-3 text-right text-[11px]">Kode Unik Verifikasi:</td>
-                                    <td class="p-3 text-right font-mono text-slate-600">+ Rp {{ $order->unique_code }}</td>
+                                    <td class="p-3 text-right font-mono text-slate-600">+ Rp {{ $uniqueCode }}</td>
                                 </tr>
+                                @endif
                                 <tr class="border-t border-slate-200 text-sm bg-blue-50/40">
                                     <td colspan="3" class="p-3.5 text-right font-extrabold text-blue-950">
                                         {{ $order->payment_scheme === 'dp_50' ? 'Total Tagihan Uang Muka (DP 50%):' : 'Total Tagihan Lunas:' }}
@@ -265,4 +367,49 @@
         alert('Nomor rekening ' + text + ' berhasil disalin!');
     }
 </script>
+
+@if($order->payment_method === 'midtrans' && !empty($order->snap_token) && !in_array($order->payment_status, ['paid_dp', 'paid_full']) && !$order->isCancelled())
+<script src="{{ $snapUrl }}" data-client-key="{{ $clientKey }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const payBtn = document.getElementById('pay-button');
+
+        function openSnapPayment() {
+            if (typeof snap === 'undefined') {
+                alert('Midtrans Snap SDK sedang dimuat. Silakan tunggu beberapa detik dan coba lagi.');
+                return;
+            }
+            snap.pay('{{ $order->snap_token }}', {
+                onSuccess: function(result) {
+                    window.location.href = "{{ route('checkout.invoice', $order->order_number) }}";
+                },
+                onPending: function(result) {
+                    window.location.href = "{{ route('checkout.invoice', $order->order_number) }}";
+                },
+                onError: function(result) {
+                    alert('Terjadi kendala pada pembayaran. Silakan coba kembali.');
+                },
+                onClose: function() {
+                    // Modal ditutup oleh user
+                }
+            });
+        }
+
+        if (payBtn) {
+            payBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                openSnapPayment();
+            });
+        }
+
+        @if(request()->has('pay'))
+        // Buka otomatis popup setelah user memilih reset/ganti metode
+        setTimeout(function() {
+            openSnapPayment();
+        }, 400);
+        @endif
+    });
+</script>
+@endif
+
 @endsection

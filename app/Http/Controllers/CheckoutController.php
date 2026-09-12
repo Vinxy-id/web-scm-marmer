@@ -6,12 +6,20 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\WorkOrder;
 use App\Models\Customer;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
+    protected MidtransService $midtransService;
+
+    public function __construct(MidtransService $midtransService)
+    {
+        $this->midtransService = $midtransService;
+    }
+
     /**
      * Show Public Checkout Page for a specific product.
      */
@@ -57,7 +65,7 @@ class CheckoutController extends Controller
             'shipping_city' => ['required', 'string', 'max:100'],
             'shipping_address' => ['required', 'string', 'max:500'],
             'payment_scheme' => ['required', 'in:dp_50,full_100'],
-            'payment_method' => ['required', 'in:qris,bank_bca,bank_bri,bank_mandiri'],
+            'payment_method' => ['required', 'in:midtrans,qris,bank_bca,bank_bri,bank_mandiri'],
             'custom_notes' => ['nullable', 'string', 'max:500'],
         ], [
             'receiver_name.required' => 'Nama lengkap penerima wajib diisi.',
@@ -67,13 +75,15 @@ class CheckoutController extends Controller
             'shipping_address.required' => 'Alamat lengkap pengiriman wajib diisi.',
         ]);
 
+
         $product = Product::findOrFail($validated['product_id']);
         $qty = (int) $validated['quantity'];
         $unitPrice = (float) $product->selling_price;
         $totalAmount = $unitPrice * $qty;
-        $uniqueCode = rand(100, 999);
+        $uniqueCode = ($validated['payment_method'] === 'midtrans') ? 0 : rand(100, 999);
 
         $order = DB::transaction(function () use ($validated, $product, $qty, $unitPrice, $totalAmount, $uniqueCode) {
+
             // 1. Create or retrieve Customer record
             $cleanPhone = preg_replace('/[^0-9]/', '', $validated['receiver_phone']);
             $customer = Customer::firstOrCreate(
@@ -117,6 +127,11 @@ class CheckoutController extends Controller
             return $newOrder;
         });
 
+        // 4. Generate Midtrans Snap Token if payment method is midtrans
+        if ($order->payment_method === 'midtrans') {
+            $this->midtransService->createSnapToken($order);
+        }
+
         return redirect()->route('checkout.invoice', $order->order_number)
                          ->with('success', 'Pesanan berhasil dibuat! Silakan selesaikan pembayaran sebelum batas waktu berakhir.');
     }
@@ -135,14 +150,20 @@ class CheckoutController extends Controller
             $order->update(['order_status' => 'expired']);
         }
 
+        // Generate Snap Token if missing for midtrans unpaid order
+        if ($order->payment_method === 'midtrans' && empty($order->snap_token) && $order->payment_status === 'unpaid' && !$order->isExpired()) {
+            $this->midtransService->createSnapToken($order);
+            $order->refresh();
+        }
+
         $artisanPhone = '6281340231737';
         if (str_contains(strtolower($order->product->name ?? ''), 'kali') || ($order->product->material_type ?? '') === 'batu_kali') {
             $artisanPhone = '6281335022012';
         }
 
         $targetTransferAmount = ($order->payment_scheme === 'dp_50') 
-            ? (($order->total_amount * 0.5) + $order->unique_code) 
-            : ($order->total_amount + $order->unique_code);
+            ? (($order->total_amount * 0.5) + ($order->payment_method === 'midtrans' ? 0 : $order->unique_code)) 
+            : ($order->total_amount + ($order->payment_method === 'midtrans' ? 0 : $order->unique_code));
 
         $waConfirmMsg = "Halo Pengrajin E-SCM, saya telah melakukan pembayaran untuk Pesanan *" . $order->order_number . "* (" . $order->product->name . ") sebesar Rp " . number_format($targetTransferAmount, 0, ',', '.') . ". Mohon diverifikasi agar SPK produksi dapat diterbitkan. Terima kasih.";
         $waConfirmUrl = "https://wa.me/{$artisanPhone}?text=" . urlencode($waConfirmMsg);
@@ -174,8 +195,12 @@ class CheckoutController extends Controller
             ],
         ];
 
-        return view('public.invoice', compact('order', 'targetTransferAmount', 'waConfirmUrl', 'banks'));
+        $snapUrl = config('midtrans.snap_url');
+        $clientKey = config('midtrans.client_key');
+
+        return view('public.invoice', compact('order', 'targetTransferAmount', 'waConfirmUrl', 'banks', 'snapUrl', 'clientKey'));
     }
+
 
     /**
      * Public Order Tracking Page.
@@ -207,5 +232,20 @@ class CheckoutController extends Controller
         }
 
         return view('public.tracking', compact('order', 'workOrder', 'searchNumber'));
+    }
+
+    /**
+     * Regenerate Midtrans Snap Token if customer wants to switch payment channel.
+     */
+    public function regenerateSnapToken($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+
+        if ($order->payment_method === 'midtrans' && !in_array($order->payment_status, ['paid_dp', 'paid_full']) && !$order->isExpired() && !$order->isCancelled()) {
+            $this->midtransService->createSnapToken($order, true);
+        }
+
+        return redirect()->route('checkout.invoice', ['orderNumber' => $order->order_number, 'pay' => 1])
+                         ->with('info', 'Sesi pembayaran diperbarui. Silakan pilih metode pembayaran baru yang Anda inginkan.');
     }
 }

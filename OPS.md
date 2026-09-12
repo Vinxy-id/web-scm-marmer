@@ -156,6 +156,9 @@ Pengujian menggunakan teknik **Equivalence Partitioning (EP)** dan **Boundary Va
 | **TC-008** | Hak Akses | Operator mencoba akses menu Manajemen Akun | URL: `/admin/users` dengan role `produksi` | Muncul response `403 Unauthorized` | Pass |
 | **TC-009** | Katalog Publik | Akses Landing Page dan Filter Kategori | URL: `/` dan `/katalog?material=onix` | Menampilkan etalase produk onix tembus cahaya & profil IKM mitra | Pass |
 | **TC-010** | Order WhatsApp | Klik tombol 'Pesan via WA' pada produk | Klik tombol WA produk ID 9 (Wastafel Onix) | Membuka link `wa.me` dengan teks pesan prefilled nama & kode produk | Pass |
+| **TC-011** | Midtrans Checkout | Checkout produk dengan skema DP 50% & metode Midtrans | URL: `/checkout/1` (DP 50%, Midtrans Gateway) | Menghasilkan Snap Token dan membuka popup Midtrans Snap di invoice | Pass |
+| **TC-012** | Midtrans Webhook | Notifikasi callback sukses dari Midtrans | POST `/api/midtrans/notification` status `settlement` | Order berubah menjadi `verified` & `paid_dp` otomatis | Pass |
+
 
 ### 3.3 Format Bug Report Log (Template Pencatatan Kendala)
 

@@ -19,9 +19,11 @@ Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('cat
 
 // E-Commerce Direct Checkout, Digital Invoice & Order Tracking (Protected with Anti-Spam Rate Limiter)
 Route::get('/checkout/{id}', [CheckoutController::class, 'show'])->name('checkout.show');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:5,10');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:30,1');
 Route::get('/order/invoice/{orderNumber}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
+Route::match(['GET', 'POST'], '/order/regenerate-snap/{orderNumber}', [CheckoutController::class, 'regenerateSnapToken'])->name('checkout.regenerate-snap')->middleware('throttle:30,1');
 Route::get('/lacak-pesanan', [CheckoutController::class, 'tracking'])->name('order.tracking');
+
 
 // Admin E-Commerce Order Management & 2-Gate SPK Verification
 Route::prefix('orders')->name('orders.')->group(function () {

@@ -67,12 +67,14 @@ Fokus: Coding modul inti aplikasi web dan deployment server.
 - [x] **Kegiatan 7: Pengkodean Modul Inti (Stok, Produksi, Distribusi, RBAC, & Showcase Publik)**
   - [x] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
   - [x] Implementasi Front-End Landing Page Publik & Katalog Produk Kerajinan Marmer/Onyx (Filter, Quick View Modal, Order WhatsApp).
+  - [x] Implementasi Midtrans Payment Gateway (Snap API & Webhook Notification) untuk transaksi checkout otomatis (QRIS, VA Bank, CC).
   - [x] Implementasi autentikasi & RBAC (Role-Based Access Control).
   - [x] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
   - [x] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).
   - [x] Implementasi Modul QC 2-Tahap & Pencatatan Limbah/Sisa Potongan.
   - [x] Implementasi Modul Distribusi & Checklist Packing.
   - [x] Pembuatan Halaman Dashboard Monitoring Interaktif (KPI Card, Pie, Column, Line Chart).
+
 - [x] **Kegiatan 8: Integrasi Algoritma ke Sistem & Deployment ke Cloud Server**
   - [x] Integrasi REST API forecasting Python dengan backend Laravel.
   - [x] Setup cloud server / VPS (Ubuntu, Nginx, PHP-FPM, MySQL, SSL LetsEncrypt).

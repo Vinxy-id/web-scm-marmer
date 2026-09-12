@@ -195,18 +195,40 @@
                         </div>
                         @endif
 
-                        <!-- Payment Method Options (CHK-02 & CHK-03 SOLVED: RENDER $banks FROM CONTROLLER) -->
+                        <!-- Payment Method Options -->
                         <div class="space-y-3">
-                            <!-- QRIS -->
-                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
+                            <!-- Instant Online Payment (Recommended) -->
+                            <label class="flex items-center justify-between p-4 bg-blue-50/40 hover:bg-blue-50/70 rounded-2xl border-2 border-blue-600 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/80 cursor-pointer transition shadow-xs">
                                 <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="qris" checked class="text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <input type="radio" name="payment_method" value="midtrans" checked class="text-blue-600 focus:ring-blue-500 h-4 w-4">
                                     <div>
-                                        <p class="text-xs font-bold text-slate-900">QRIS Instan (Semua Bank & E-Wallet)</p>
-                                        <p class="text-[10px] text-slate-500">BCA, Mandiri, BRI, BNI, GoPay, OVO, ShopeePay, DANA</p>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-xs font-black text-slate-900">Pembayaran Online Instan</p>
+                                            <span class="text-[9px] font-black uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded-full">Verifikasi Otomatis</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-600 mt-0.5">QRIS (GoPay/ShopeePay/DANA), Virtual Account (BCA/Mandiri/BRI/BNI), Kartu Kredit</p>
                                     </div>
                                 </div>
-                                <span class="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Auto QR</span>
+                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">Bebas Kode Unik</span>
+                                </div>
+                            </label>
+
+
+                            <div class="pt-2 pb-1 text-center">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">── Atau Transfer Manual Tradisional ──</span>
+                            </div>
+
+                            <!-- QRIS Manual -->
+                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment_method" value="qris" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">QRIS Statis Manual Pengrajin</p>
+                                        <p class="text-[10px] text-slate-500">Konfirmasi bukti transfer manual via WhatsApp</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Manual WA</span>
                             </label>
 
                             <!-- Dynamic Bank Options -->
@@ -215,7 +237,7 @@
                                 <div class="flex items-center gap-3">
                                     <input type="radio" name="payment_method" value="{{ $bKey }}" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
                                     <div>
-                                        <p class="text-xs font-bold text-slate-900">Transfer {{ $bank['name'] }}</p>
+                                        <p class="text-xs font-bold text-slate-900">Transfer {{ $bank['name'] }} (Manual)</p>
                                         <p class="text-[10px] text-slate-500">Rek: <b class="font-mono text-slate-800">{{ $bank['number'] }}</b> a/n {{ $bank['holder'] }}</p>
                                     </div>
                                 </div>
@@ -223,6 +245,7 @@
                             </label>
                             @endforeach
                         </div>
+
                     </div>
 
                 </div>

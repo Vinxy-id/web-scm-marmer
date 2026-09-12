@@ -17,6 +17,11 @@ class Order extends Model
         'quantity',
         'payment_scheme',
         'payment_method',
+        'snap_token',
+        'midtrans_transaction_id',
+        'midtrans_payment_type',
+        'midtrans_status',
+        'midtrans_response',
         'unit_price',
         'total_amount',
         'paid_amount',
@@ -39,9 +44,11 @@ class Order extends Model
         'paid_amount' => 'decimal:2',
         'quantity' => 'integer',
         'unique_code' => 'integer',
+        'midtrans_response' => 'array',
         'expires_at' => 'datetime',
         'cancelled_at' => 'datetime',
     ];
+
 
     public function customer()
     {
