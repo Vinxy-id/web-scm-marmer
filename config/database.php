@@ -23,7 +23,9 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => env('DB_DATABASE', file_exists('/tmp/database.sqlite') ? '/tmp/database.sqlite' : database_path('database.sqlite')),
+            'database' => (empty(env('DB_DATABASE')) || env('DB_DATABASE') === 'db_escm_marmer')
+                ? (file_exists('/tmp/database.sqlite') ? '/tmp/database.sqlite' : database_path('database.sqlite'))
+                : env('DB_DATABASE', file_exists('/tmp/database.sqlite') ? '/tmp/database.sqlite' : database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
