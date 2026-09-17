@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 const PNG_DIR = path.resolve('Docs/laporan_kegiatan/PNG');
@@ -15,6 +16,52 @@ if (!fs.existsSync(VIDEO_DIR)) {
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function markOrderPaid(orderNumber) {
+    const phpScript = `<?php
+require __DIR__ . '/vendor/autoload.php';
+$app = require_once __DIR__ . '/bootstrap/app.php';
+$app->make('Illuminate\\\\Contracts\\\\Console\\\\Kernel')->bootstrap();
+
+$o = \\App\\Models\\Order::where('order_number', '${orderNumber}')->first();
+if ($o) {
+    $spkNumber = \\App\\Services\\CodeGeneratorService::generateSpkNumber();
+    $workOrder = \\App\\Models\\WorkOrder::create([
+        'spk_number' => $spkNumber,
+        'product_id' => $o->product_id,
+        'customer_id' => $o->customer_id,
+        'target_quantity' => $o->quantity,
+        'completed_quantity' => 0,
+        'scrap_quantity' => 0,
+        'status' => 'scheduled',
+        'priority' => ($o->payment_scheme === 'full_100') ? 'high' : 'normal',
+        'start_date' => now()->toDateString(),
+        'due_date' => now()->addDays(7)->toDateString(),
+        'notes' => 'Pesanan E-Commerce: ' . $o->order_number . ' - Pembeli: ' . $o->receiver_name,
+        'created_by' => 1,
+    ]);
+
+    $paidAmount = ($o->payment_scheme === 'dp_50') ? round($o->total_amount * 0.5) : $o->total_amount;
+
+    $o->update([
+        'payment_status' => ($o->payment_scheme === 'dp_50') ? 'paid_dp' : 'paid_full',
+        'paid_amount' => $paidAmount,
+        'order_status' => 'in_production',
+        'midtrans_transaction_id' => 'TRX-MIDTRANS-' . strtoupper(substr(md5(time()), 0, 10)),
+        'midtrans_payment_type' => 'qris_gopay',
+        'midtrans_status' => 'settlement',
+        'work_order_id' => $workOrder->id,
+    ]);
+}
+`;
+    const tempFilePath = path.resolve('temp_pay_order_snap.php');
+    fs.writeFileSync(tempFilePath, phpScript);
+    try {
+        execSync(`php "${tempFilePath}"`);
+    } finally {
+        if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath);
+    }
 }
 
 async function run() {
@@ -75,35 +122,37 @@ async function run() {
         }
         await page.screenshot({ path: path.join(PNG_DIR, 'manual_04_checkout_form.png') });
 
+        // Submit checkout form to create real order
+        await Promise.all([
+            page.waitForNavigation({ waitUntil: 'networkidle' }),
+            page.click('button[type="submit"]:has-text("Konfirmasi & Buat Pesanan")')
+        ]);
+        const invoiceUrl = page.url();
+        const dynamicOrderNumber = invoiceUrl.split('/').pop().split('?')[0];
+        console.log(`✅ Order generated for screenshots: ${dynamicOrderNumber}`);
+
         // --- 5. DIGITAL INVOICE & SNAP ---
-        console.log('📸 5. Navigating to Digital Invoice...');
-        await page.goto(`${BASE_URL}/order/invoice/ORD-20260917-BXGV`, { waitUntil: 'networkidle' });
+        console.log(`📸 5. Capturing Digital Invoice (${dynamicOrderNumber})...`);
         await sleep(1500);
         await page.screenshot({ path: path.join(PNG_DIR, 'manual_05_invoice_digital.png') });
 
-        // Attempt to trigger Midtrans Snap modal if button exists
-        console.log('📸 6. Triggering Midtrans Snap Payment modal...');
+        // --- 6. MIDTRANS SNAP & VERIFIED PAYMENT ---
+        console.log('📸 6. Triggering Midtrans Payment & Verification...');
         const payBtn = page.locator('#pay-button, button:has-text("Bayar Sekarang")');
-        let snapCaptured = false;
         if (await payBtn.isVisible()) {
-            await payBtn.click();
-            await sleep(2500);
-            // Check if iframe or modal is present
-            const snapIframe = page.locator('iframe#snap-midtrans');
-            if (await snapIframe.isVisible({ timeout: 4000 }).catch(() => false)) {
-                await page.screenshot({ path: path.join(PNG_DIR, 'manual_06_midtrans_snap.png') });
-                snapCaptured = true;
-            }
+            await payBtn.click().catch(() => {});
+            await sleep(2000);
         }
-        if (!snapCaptured) {
-            // Fallback screenshot of the invoice payment section
-            await page.screenshot({ path: path.join(PNG_DIR, 'manual_06_midtrans_snap.png') });
-        }
+        await page.screenshot({ path: path.join(PNG_DIR, 'manual_06_midtrans_snap.png') });
+
+        // Simulate payment completion in DB and capture verified invoice
+        markOrderPaid(dynamicOrderNumber);
+        await page.goto(`${BASE_URL}/order/check-status/${dynamicOrderNumber}`, { waitUntil: 'networkidle' });
         await sleep(1500);
 
         // --- 7. LACAK PESANAN REAL-TIME ---
-        console.log('📸 7. Navigating to Live Tracking (/lacak-pesanan)...');
-        await page.goto(`${BASE_URL}/lacak-pesanan?search=ORD-20260917-QYN1`, { waitUntil: 'networkidle' });
+        console.log(`📸 7. Navigating to Live Tracking (${dynamicOrderNumber})...`);
+        await page.goto(`${BASE_URL}/lacak-pesanan?order_number=${dynamicOrderNumber}`, { waitUntil: 'networkidle' });
         await sleep(1500);
         await page.screenshot({ path: path.join(PNG_DIR, 'manual_07_lacak_pesanan.png') });
 

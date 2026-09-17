@@ -1,5 +1,8 @@
-/vendor
-/forecasting_service/venv
-.env
-.git
-tests
+Docs/
+*.mp4
+*.webm
+*.heic
+*.HEIC
+forecasting_service/
+scripts/
+tests/
