@@ -5,7 +5,8 @@
         "dev": "tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch",
         "build": "tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --minify",
         "capture:media": "node scripts/capture_manual_media.js",
-        "record:headed": "node scripts/capture_manual_media.js --headed",
+        "record:cinematic": "node scripts/record_cinematic_demo.js",
+        "record:headed": "node scripts/record_cinematic_demo.js --headed",
         "generate:manual": "python scripts/generate_user_manual_docx.py && powershell -ExecutionPolicy Bypass -File scripts/convert_docx_to_pdf.ps1"
     },
     "devDependencies": {
