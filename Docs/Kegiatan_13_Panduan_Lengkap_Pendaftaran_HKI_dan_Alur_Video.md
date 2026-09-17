@@ -62,90 +62,126 @@ Apabila di kemudian hari terbukti pernyataan ini tidak benar, kami bersedia ditu
 
 ---
 
-## BAGIAN III: ALUR & STORYBOARD VIDEO DEMO SISTEM E-SCM (DURASI 3 - 5 MENIT)
+## BAGIAN III: ALUR & STORYBOARD VIDEO DEMO SISTEM E-SCM (DURASI 5 - 6 MENIT)
 
-Video demonstrasi sistem ini dirancang ringkas, profesional, dan mencakup alur rantai pasok secara berurutan:
+Video demonstrasi sistem ini dirancang ringkas, profesional, dan mencakup alur rantai pasok secara berurutan dari sisi Pelanggan hingga Manajemen Bengkel:
 
 ```
 +-----------------------------------------------------------------------------------------------+
-| DURASI TOTAL: 04:00 Menit                                                                     |
-| RASIO: 16:9 (Full HD 1080p)                                                                   |
-| TOOLS PEREKAMAN: OBS Studio / Bandicam / Loom / CapCut                                        |
+| DURASI TOTAL: ~05:30 Menit                                                                    |
+| RASIO: 16:9 (Full HD 1080p, 60fps)                                                            |
+| TOOLS PEREKAMAN: OBS Studio / Bandicam / Clipchamp / CapCut                                    |
+| URL SISTEM LOKAL: http://127.0.0.1:8000                                                       |
 +-----------------------------------------------------------------------------------------------+
 ```
 
-### 🎬 Rincian Menit-per-Menit & Naskah Voice-Over (VO):
+### 🎬 Rincian Menit-per-Menit, Aksi Kursor & Naskah Voice-Over (VO):
 
 #### ⏱️ Menit 00:00 – 00:35 : SCENE 1 - OPENING & LATAR BELAKANG IKM
-- **Tampilan Layar:** Tampilan Judul Presentasi / Landing Page Web E-SCM Marmer Tulungagung (`/`).
-- **Aksi Visual:** Kursor menggeser halaman beranda, memperlihatkan banner IKM Marmer, logo mitra (UD Cahaya Onix & UD Putra Abadi), dan etalase kerajinan.
+- **Tampilan Layar:** Halaman Beranda Web E-SCM Marmer Tulungagung (`/`).
+- **Aksi Visual:** Kursor menggeser halaman beranda, menyorot banner keunggulan, logo sentra IKM (UD Cahaya Onix & UD Putra Abadi), dan ringkasan alur hulu ke hilir.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Halo semuanya! Selamat datang dalam demonstrasi Sistem E-Supply Chain Management Klaster IKM Marmer dan Batu Kali Tulungagung. Sistem ini dirancang untuk mendigitalisasi dan mengintegrasikan rantai pasok pengrajin batu alam mulai dari pengelolaan bahan baku tambang, penjadwalan produksi dengan Kanban, kendali mutu QC, proteksi packing kayu, hingga peramalan kecukupan stok berbasis Kecerdasan Buatan (AI)."*
+  > *"Halo semuanya! Selamat datang dalam demonstrasi Sistem E-Supply Chain Management Klaster IKM Kerajinan Marmer dan Onyx Kabupaten Tulungagung. Sistem ini dirancang untuk mendigitalisasi dan mengintegrasikan seluruh rantai pasok pengrajin batu alam mulai dari etalase e-commerce pelanggan, pengelolaan bahan baku tambang, penjadwalan produksi dengan Kanban, kendali mutu QC 2-tahap, proteksi packing peti kayu, hingga peramalan kecukupan stok berbasis Kecerdasan Buatan."*
 
 ---
 
-#### ⏱️ Menit 00:35 – 01:10 : SCENE 2 - ETALASE KATALOG & KONSULTASI WA PENGRAJIN
-- **Tampilan Layar:** Halaman Katalog (`/katalog`) dan Halaman Detail Produk (`/katalog/{id}`).
+#### ⏱️ Menit 00:35 – 01:10 : SCENE 2 - ETALASE KATALOG PRODUK & CHECKOUT
+- **Tampilan Layar:** Halaman Katalog (`/katalog`) dan Formulir Pemesanan (`/checkout/{id}`).
 - **Aksi Visual:**
-  1. Klik filter kategori (*Wastafel*, *Kap Lampu*).
-  2. Buka salah satu produk (misal: *Wastafel Batu Kali Natural*).
-  3. Perlihatkan spesifikasi teknis (Dimensi, Finishing Hi-Glossy, Lubang Afur).
-  4. Klik tombol hijau **"Pesan / Konsultasi via WhatsApp"** ➔ Tunjukkan bagaimana sistem otomatis membuka WhatsApp dengan draf pesan berisi Kode Produk & Spesifikasi.
+  1. Klik filter kategori (*Wastafel*, *Batuan Kali*, *Lampu Taman*).
+  2. Buka salah satu produk kerajinan (misal: *Wastafel Marmer Bulat D40 T15*).
+  3. Klik tombol **"Beli Sekarang"**.
+  4. Perlihatkan formulir checkout: isi nama penerima, nomor WhatsApp, kota tujuan, lalu sorot pilihan **Skema Pembayaran (DP 50% vs Lunas 100%)**.
+  5. Pilih metode pembayaran **Midtrans (Otomatis)**, lalu klik **"Konfirmasi & Buat Pesanan"**.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Pada modul etalase publik, calon pembeli dapat melihat spesifikasi teknis detail kerajinan. Mengingat setiap batu alam memiliki corak serat yang unik, sistem mengarahkan pemesanan ke fitur Konsultasi Langsung via WhatsApp agar pembeli dapat melihat real pic serat batu asli bersama pengrajin."*
+  > *"Pada modul etalase publik, pembeli dapat menjelajahi 52 produk kerajinan terkurasi dari mitra IKM. Sistem menyediakan opsi pemesanan fleksibel dengan skema DP 50% untuk produk custom pre-order atau Pelunasan 100% dengan prioritas pengiriman instan. Seluruh pesanan diamankan dengan sistem pembayaran otomatis tanpa ribet menghitung kode unik transfer."*
 
 ---
 
-#### ⏱️ Menit 01:10 – 01:50 : SCENE 3 - MANAJEMEN BAHAN BAKU & MUTASI STOK
-- **Tampilan Layar:** Halaman Login (`/login`) ➔ Masuk Dashboard ➔ Menu Bahan Baku (`/materials`).
+#### ⏱️ Menit 01:10 – 01:45 : SCENE 3 - INVOICE DIGITAL, MIDTRANS SNAP & AUTO-SYNC
+- **Tampilan Layar:** Halaman Faktur Tagihan Digital (`/order/invoice/{orderNumber}`).
 - **Aksi Visual:**
-  1. Tunjukkan tabel stok bahan baku (Marmer Trotol, Onyx, Batu Kali) dan *Alert Badge* (Normal, Rendah, Kritis).
-  2. Klik tombol **"+ Tambah Material Baru"** atau **"Catat Mutasi Stok"**.
-  3. Coba ketikkan angka desimal (misal `10.5`) ➔ Tunjukkan peringatan animasi merah validasi *strict integer*.
-  4. Masukkan angka bulat yang benar (misal `15`) ➔ Simpan dan tunjukkan stok terupdate.
+  1. Tunjukkan rincian invoice: nomor pesanan non-sekuensial `ORD-...`, total tagihan, dan batas waktu bayar.
+  2. Klik tombol **"Bayar Sekarang"** ➔ Tunjukkan popup modal **Midtrans Snap** yang muncul interaktif di layar (pilihan QRIS, Virtual Account BCA, Mandiri, BRI, BNI).
+  3. Tunjukkan tombol **"Sudah Bayar? Cek Status"** dan fitur sinkronisasi otomatis status pelunasan.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Setelah login ke panel pengelola, modul Bahan Baku menyajikan monitoring stok bongkahan batu secara real-time. Sistem dilengkapi validasi angka bulat ketat untuk mencegah kesalahan pencatatan desimal pada persediaan fisik bongkahan batu tambang."*
+  > *"Setelah pesanan dibuat, pembeli menerima invoice digital interaktif berstandar nasional. Pembayaran didukung oleh Midtrans Payment Gateway terintegrasi, di mana pembeli cukup membuka popup Snap untuk membayar via QRIS atau Virtual Account bank. Sistem dilengkapi fitur Auto-Sync status pelunasan secara seketika."*
 
 ---
 
-#### ⏱️ Menit 01:50 – 02:35 : SCENE 4 - MANAJEMEN PRODUKSI & BOARD KANBAN SPK
-- **Tampilan Layar:** Menu Produksi (`/production`) ➔ Papan Kanban (`/production/kanban`).
+#### ⏱️ Menit 01:45 – 02:15 : SCENE 4 - FITUR ANTI-KEHILANGAN TAGIHAN & LACAK PESANAN
+- **Tampilan Layar:** Halaman Tagihan Digital (`/order/invoice/...`) dan Halaman Lacak Pesanan (`/lacak-pesanan`).
 - **Aksi Visual:**
-  1. Klik tombol **"+ Terbitkan SPK Baru"**.
-  2. Masuk ke tampilan Board Kanban dengan 5 kolom (*Antrean, Potong Blok, Bubut/Pahat, Penghalusan/Polis, Siap QC*).
-  3. Klik tombol pergeseran tahapan pada salah satu kartu SPK dari *Antrean* ➔ *Potong Blok* ➔ *Polis* ➔ *Siap QC*.
-  4. Buka sekilas tab **Tracking WIP** (`/production/wip`).
+  1. Di halaman tagihan, sorot tombol **"Simpan Catatan ke WA"** dan **"Konfirmasi via WhatsApp"**.
+  2. Buka tab baru ke menu **Lacak Pesanan** (`/lacak-pesanan`).
+  3. Perlihatkan widget kartu **"Riwayat Pesanan di Browser Ini"** yang otomatis mendeteksi pesanan pembeli tanpa perlu login.
+  4. Coba ketikkan **Nomor HP / WhatsApp** pembeli di kolom pencarian lalu klik Lacak ➔ Tunjukkan bagaimana sistem langsung menemukan pesanan dan menampilkan progres live dari bengkel.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Pada modul produksi, penerbitan Surat Perintah Kerja atau SPK dipantau secara transparan melalui papan Kanban digital. Pengawas lapangan dapat memindahkan stage pengerjaan batu marmer dari pemotongan gergaji, pembubutan, hingga polesan akhir."*
+  > *"Untuk melindungi pembeli non-akun yang lupa mencatat nomor invoice, sistem menghadirkan 4 lapis perlindungan: pencatatan riwayat otomatis di memori browser, tombol simpan catatan ke WhatsApp, serta pelacakan cukup dengan memasukkan Nomor HP atau WhatsApp yang didaftarkan saat checkout."*
 
 ---
 
-#### ⏱️ Menit 02:35 – 03:15 : SCENE 5 - QUALITY CONTROL (QC), LIMBAH, & DISTRIBUSI PACKING KAYU
+#### ⏱️ Menit 02:15 – 02:50 : SCENE 5 - DASHBOARD ADMIN & VERIFIKASI PESANAN MASUK (2-GATE SPK)
+- **Tampilan Layar:** Halaman Login (`/login`) ➔ Dashboard Utama (`/dashboard`) ➔ Menu Pesanan (`/orders`).
+- **Aksi Visual:**
+  1. Login sebagai Admin / Owner (`owner@cahayaonix.com` / `role123`).
+  2. Tunjukkan sekilas KPI ringkasan eksekutif pada dashboard.
+  3. Masuk ke menu **Manajemen Pesanan** (`/orders`).
+  4. Jelaskan prinsip 2-Gate SPK: pesanan baru yang belum lunas tidak mencemari bengkel.
+  5. Pada pesanan yang telah dibayar, tunjukkan terbitnya nomor **SPK Produksi resmi** ke lantai kerja.
+- **Naskah Narasi (Voice-Over):**  
+  > *"Beralih ke panel operasional pengrajin, sistem menerapkan mekanisme 2-Gate SPK Verification. Pesanan baru yang belum terbayar tidak akan membebani antrean bengkel. Begitu pembayaran terverifikasi otomatis oleh gateway atau admin, sistem secara resmi menerbitkan dokumen SPK pengerjaan ke lantai produksi."*
+
+---
+
+#### ⏱️ Menit 02:50 – 03:25 : SCENE 6 - MANAJEMEN BAHAN BAKU & MUTASI STOK GUDANG
+- **Tampilan Layar:** Menu Bahan Baku (`/materials`).
+- **Aksi Visual:**
+  1. Tunjukkan tabel stok bahan baku (Bongkahan Onix Super, Marmer B1, Batu Kali) dan *Alert Badge* (Normal, Rendah, Kritis).
+  2. Klik tombol **"+ Catat Mutasi Stok"** ➔ Tunjukkan opsi mutasi (Masuk dari penambang, Keluar ke produksi, Konsinyasi).
+  3. Tunjukkan validasi angka bulat ketat untuk mencegah kesalahan kuantitas fisik bongkahan batu tambang.
+- **Naskah Narasi (Voice-Over):**  
+  > *"Pada modul gudang, staf mengelola persediaan bongkahan batu alam dari tambang lokal Campurdarat. Sistem memantau safety stock bahan baku dengan indikator visual otomatis agar pengrajin tidak mengalami kehabisan bahan saat lonjakan pesanan tiba."*
+
+---
+
+#### ⏱️ Menit 03:25 – 04:05 : SCENE 7 - WORKSHOP KANBAN BOARD & PROGRESS 5 TAHAP
+- **Tampilan Layar:** Menu Produksi (`/production`) ➔ Papan Kanban (`/production/kanban`) & WIP Tracking (`/production/wip`).
+- **Aksi Visual:**
+  1. Tampilkan papan Kanban digital dengan kartu-kartu SPK aktif.
+  2. Geser tahapan salah satu kartu SPK dari *Scheduled* ➔ *Pemotongan Blok / Slep* ➔ *Pembubutan* ➔ *Penghalusan & Poles*.
+  3. Buka tab **Tracking WIP** (`/production/wip`) untuk melihat rincian waktu dan operator mesin bubut.
+- **Naskah Narasi (Voice-Over):**  
+  > *"Di lantai bengkel, seluruh pengerjaan dipantau melalui papan Kanban digital. Mandor dapat memperbarui status batu dari proses pemotongan gergaji, pembubutan presisi, hingga pengamplasan halus, sehingga pembeli maupun admin dapat memantau progres produksi secara real-time."*
+
+---
+
+#### ⏱️ Menit 04:05 – 04:40 : SCENE 8 - QUALITY CONTROL (QC 2-TAHAP), LIMBAH, & PACKING KAYU
 - **Tampilan Layar:** Menu QC (`/qc`), Menu Limbah (`/waste`), dan Menu Distribusi (`/distribution`).
 - **Aksi Visual:**
-  1. Buka form inspeksi QC: centang parameter *Bebas Retak*, *Presisi*, dan *Kilap*, lalu input Qty Lolos.
-  2. Tunjukkan menu Pengendalian Limbah (`/waste`) pencatatan tatal batu & lumpur polesan.
-  3. Buka menu Distribusi (`/distribution`): klik **"ACC & Buat SJ"**, centang checklist **Verifikasi Packing Kayu Solid** (*Foam Sheet*, *Peti Kayu*, *Label Fragile*), lalu simpan.
+  1. Buka form inspeksi QC: tunjukkan pemisahan **QC1 (Bentuk Kasar)** dan **QC2 (Polesan Akhir & Lubang Afur)**.
+  2. Tunjukkan menu **Log Limbah** (`/waste`) pencatatan tatal batu & lumpur poles untuk prinsip *lean manufacturing*.
+  3. Buka menu **Distribusi** (`/distribution`): klik detail pengiriman, centang checklist **Verifikasi Packing Kayu Solid** (*Foam Sheet*, *Peti Kayu*, *Label Fragile*), lalu perlihatkan Surat Jalan pengiriman.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Produk yang telah selesai dipoles wajib melalui pengujian QC bebas retak struktur dan kilap polisan. Produk yang lolos diteruskan ke modul Distribusi untuk diverifikasi kelayakan packing peti kayu solidnya sebelum surat jalan pengiriman diterbitkan."*
+  > *"Pengendalian mutu dilakukan 2 tahap sebelum produk dikirim. Kerajinan yang lolos inspeksi diwajibkan melewati verifikasi kemasan peti kayu solid untuk menjamin barang tiba utuh di tangan konsumen tanpa risiko pecah atau retak di ekspedisi kargo."*
 
 ---
 
-#### ⏱️ Menit 03:15 – 03:50 : SCENE 6 - MODUL PERAMALAN PERMINTAAN AI (FORECASTING)
-- **Tampilan Layar:** Menu AI Assistant / Forecasting (`/forecasting`).
+#### ⏱️ Menit 04:40 – 05:15 : SCENE 9 - PERAMALAN PERMINTAAN AI (FORECASTING)
+- **Tampilan Layar:** Menu Peramalan / Forecasting (`/forecasting`).
 - **Aksi Visual:**
-  1. Tunjukkan banner model terbaik: **ARIMA(2,0,2)** dengan skor akurasi MAPE 5.73%.
-  2. Pilih item target (misal: *Stepping Batu Kali* atau *Wastafel*), pilih model *ARIMA(2,0,2)*, klik tombol **"Hitung Ulang"**.
-  3. Tunjukkan grafik Chart.js garis historis 17-bulan (Jan 2025 – Mei 2026) dan garis proyeksi masa depan.
+  1. Tunjukkan kartu model terbaik: **ARIMA(2,0,2)** dengan skor akurasi MAPE presisi tinggi (5.73%).
+  2. Pilih komoditas produk (misal: *Wastafel Marmer Bulat* atau *Stepping Stone*).
+  3. Tunjukkan grafik tren deret waktu 17 bulan historis dan kurva proyeksi permintaan masa depan.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Fitur unggulan sistem adalah AI Forecasting Assistant berbasis Python FastAPI. Dengan model terbaik ARIMA(2,0,2) yang memiliki akurasi presisi tinggi dengan MAPE 5.73%, pengelola dapat memproyeksikan kebutuhan bahan baku bongkahan batu hingga beberapa bulan ke depan untuk mencegah stockout."*
+  > *"Sistem dilengkapi modul AI Forecasting berbasis algoritma ARIMA(2,0,2). Dengan memanfaatkan data empiris observasi lapangan selama 17 bulan, sistem mampu memproyeksikan kebutuhan bahan baku dan kapasitas bengkel untuk bulan-bulan mendatang secara akurat."*
 
 ---
 
-#### ⏱️ Menit 03:50 – 04:00 : SCENE 7 - PENUTUP (CLOSING)
-- **Tampilan Layar:** Visualisasi Rantai Pasok (`/supply-chain-flow`) / Layar Penutup dengan logo Tim & Institusi.
+#### ⏱️ Menit 05:15 – 05:30 : SCENE 10 - PENUTUP (CLOSING)
+- **Tampilan Layar:** Visualisasi Alur Rantai Pasok (`/supply-chain-flow`) / Slide Penutup Tim Peneliti.
 - **Naskah Narasi (Voice-Over):**  
-  > *"Demikian demonstrasi Sistem E-SCM Marmer Tulungagung. Sistem ini siap mendukung efisiensi operasional dan penguatan daya saing IKM kerajinan batu alam Indonesia. Terima kasih!"*
+  > *"Demikian demonstrasi menyeluruh Sistem E-Supply Chain Management Klaster IKM Kerajinan Marmer Kabupaten Tulungagung. Sistem ini siap diimplementasikan untuk meningkatkan efisiensi operasional dan daya saing industri kerajinan batu alam Indonesia. Terima kasih!"*
 
 ---
 

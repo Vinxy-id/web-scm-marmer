@@ -126,52 +126,65 @@ Menampilkan etalase produk kerajinan marmer, onyx, dan batu kali hasil karya pen
 ### 3.2 Alur Transaksi Checkout E-Commerce (`/checkout/{id}`)
 1. Pembeli memilih produk dari etalase dan mengeklik **"Beli"**.
 2. Mengisi formulir data pesanan:
-   - **Data Penerima:** Nama Lengkap, Nomor WhatsApp aktif (format `08xxx` / `628xxx`), Kota Tujuan, dan Alamat Lengkap.
+   - **Data Penerima:** Nama Lengkap, Nomor WhatsApp aktif (format `08xxx` / `628xxx`), Kota Tujuan, dan Alamat Pengiriman Lengkap.
    - **Catatan Kustom:** (Opsional) Permintaan corak urat batu atau ukuran khusus.
    - **Skema Pembayaran:**
      - **DP 50% (Uang Muka Produksi):** Opsi fleksibel untuk produk pesanan kustom / Pre-Order.
      - **Lunas 100% (Full Payment):** Opsi untuk produk ready stock dengan prioritas pengiriman instan.
    - **Metode Pembayaran:**
-     - **QRIS Instan:** Mendukung semua e-wallet (GoPay, DANA, OVO, ShopeePay) dan Mobile Banking.
-     - **Transfer Bank Resmi IKM:** Bank BCA, Bank BRI, atau Bank Mandiri (sesuai nomor rekening pemilik IKM terkait).
+     - **Midtrans Payment Gateway (Otomatis):** Pembayaran digital instan melalui QRIS Nasional (GoPay, ShopeePay, DANA, OVO, LinkAja), Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Kartu Kredit/Debit. Bebas kode unik verifikasi manual.
+     - **Transfer Manual IKM:** Pilihan transfer konvensional ke rekening resmi pengrajin (BCA UD Cahaya Onix, Mandiri UD Putra Abadi, atau BRI Sentra Klaster) dengan 3-digit kode unik verifikasi.
 3. Klik **"Konfirmasi & Buat Pesanan"**.
 
 ### 3.3 Halaman Faktur Tagihan Digital (`/order/invoice/{orderNumber}`)
-Setelah pesanan dibuat, pembeli langsung diarahkan ke faktur digital yang menyajikan:
-- **Nomor Pesanan Unik:** Format `ORD-YYYYMMDD-XXXX`.
-- **Rincian Tagihan & Kode Verifikasi:** Nominal pembayaran disertai 3 digit kode unik transfer untuk verifikasi otomatis.
-- **Informasi Pembayaran:** QRIS dinamis atau nomor rekening bank IKM tujuan beserta tombol salin nomor rekening.
-- **Tombol Aksi:** **"Cetak Invoice"**, **"Konfirmasi via WhatsApp"**, dan **"Lacak Progres Pesanan"**.
+Setelah pesanan dibuat, pembeli langsung diarahkan ke faktur digital interaktif:
+- **Nomor Pesanan Unik:** Format standar non-sekuensial `ORD-YYYYMMDD-XXXX`.
+- **Badge Status Tagihan:** Indikator skema (DP 50% / Lunas 100%) dan status pesanan (Menunggu Pembayaran / Terverifikasi / Dalam Produksi).
+- **Pembayaran Online Midtrans Snap:**
+  - Tombol **"Bayar Sekarang"**: Membuka popup interaktif Midtrans Snap langsung di layar tanpa dialihkan ke website lain.
+  - Tombol **"Sudah Bayar? Cek Status"**: Memungkinkan pembeli atau sistem menyinkronkan status pelunasan seketika dengan server Midtrans secara otomatis.
+  - Tombol **"Ganti Metode"**: Memungkinkan pembeli memilih ulang channel pembayaran (misal dari QRIS berganti ke VA Bank).
+- **Perlindungan Anti-Kehilangan Tagihan (Guest Checkout Safety Net):**
+  - **Penyimpanan Otomatis di Browser (*localStorage*):** Detail invoice otomatis tersimpan di cache memori browser ponsel/laptop pembeli. Jika pembeli tidak sengaja menutup aplikasi Chrome, tagihan tetap tersimpan.
+  - **Tombol "Simpan Catatan ke WA":** Membuka draf chat WhatsApp berisi ringkasan pesanan dan link invoice digital untuk disimpan ke nomor pribadi pembeli.
+  - **Tombol "Konfirmasi Pembayaran via WhatsApp":** Menghubungkan pembeli langsung ke nomor telepon pengrajin terkait (UD Cahaya Onix: `0813-4023-1737` / UD Putra Abadi: `0813-3502-2012`).
+  - **Tombol "Cetak / Simpan PDF":** Mengunduh faktur tagihan resmi dalam format siap cetak.
 
 ### 3.4 Halaman Pelacakan Pesanan Real-Time (`/lacak-pesanan`)
-Pelanggan dapat memantau status pengerjaan barang secara transparan hanya dengan memasukkan Nomor Pesanan (`ORD-xxx`) atau Nomor SPK (`SPK-xxx`):
-1. `Tahap 1: Pesanan Masuk (Verifikasi Bukti Pembayaran DP/Lunas)`
-2. `Tahap 2: Proses Produksi (Pemotongan Blok, Pembubutan & Pemolesan di Bengkel)`
-3. `Tahap 3: Inspeksi Kualitas QC (Uji Bebas Retak & Kilap Polesan)`
-4. `Tahap 4: Pengemasan Peti Kayu Solid (Wooden Crate Pallet Packing)`
-5. `Tahap 5: Dalam Pengiriman Kargo Logistik / Telah Diterima Pembeli`.
+Pelanggan dapat memantau tahapan pengerjaan kerajinan batunya dari lantai bengkel hingga pengiriman:
+1. **Pencarian Fleksibel:**
+   - Pembeli dapat melacak menggunakan **Nomor Order (`ORD-...`)**, **Nomor SPK (`SPK-...`)**, atau **Nomor HP/WhatsApp yang digunakan saat checkout**.
+   - Sistem cerdas mendeteksi format nomor telepon dan menampilkan seluruh riwayat pesanan milik nomor tersebut.
+2. **Widget "Riwayat Pesanan di Browser Ini":**
+   - Menampilkan kartu pesanan aktif pembeli secara otomatis di halaman lacak tanpa perlu mengetik nomor pesanan atau login akun.
+3. **Indikator Progres 5-Tahap:**
+   - `Tahap 1: Pesanan Dibuat & Menunggu Pembayaran`
+   - `Tahap 2: Pembayaran Terverifikasi & SPK Diterbitkan ke Bengkel`
+   - `Tahap 3: Proses Produksi Aktif di Kanban (Pemotongan, Bubut, Poles)`
+   - `Tahap 4: Pengujian Mutu (QC 2-Tahap) & Pengemasan Peti Kayu Solid`
+   - `Tahap 5: Dalam Pengiriman Kargo / Pesanan Diterima Pelanggan`
 
 ---
 
 ## BAB IV: MODUL VERIFIKASI PESANAN MASUK & MANAJEMEN ORDER (ADMIN/OWNER)
 
 ### 4.1 Prinsip Keamanan 2-Gate SPK Verification
-Untuk mencegah pesanan palsu (*spam/bot*) mencemari antrean produksi di bengkel pengrajin, sistem menerapkan mekanisme verifikasi dua pintu (*2-Gate Pattern*):
-- **Gate 1 (Checkout Masuk):** Pesanan baru berstatus `pending_payment` dan hanya tersimpan di daftar pesanan masuk admin. Tidak ada SPK produksi yang dibuat sebelum ada pembayaran.
-- **Gate 2 (Verifikasi Admin):** Setelah admin memverifikasi bukti transfer pembayaran DP atau lunas, admin mengeklik tombol verifikasi untuk menerbitkan SPK resmi ke lantai bengkel.
+Untuk mencegah pesanan palsu (*spam/bot*) mencemari antrean produksi di lantai bengkel bubut, sistem menerapkan mekanisme verifikasi dua pintu (*2-Gate Pattern*):
+- **Gate 1 (Checkout Masuk):** Pesanan baru berstatus `pending_payment` dan belum memiliki relasi dengan tabel `work_orders`. Tidak ada SPK produksi yang diterbitkan ke bengkel sebelum pembayaran terkonfirmasi.
+- **Gate 2 (Verifikasi Otomatis / Manual):**
+  - **Otomatis (Midtrans Payment Gateway):** Begitu pembayaran dinyatakan sukses (`settlement` / `capture accept`), sistem secara otomatis mengubah status order menjadi `paid_full` / `paid_dp`, membuat dokumen SPK resmi ke tabel `work_orders`, dan memajukan status ke `in_production`.
+  - **Manual (Transfer Bank):** Admin memeriksa mutasi rekening bank, lalu mengeklik tombol **"Verifikasi Pembayaran & Terbitkan SPK"** pada halaman `/orders`.
 
 ### 4.2 Halaman Manajemen Pesanan (`/orders`)
 Modul bagi Admin dan Owner untuk memvalidasi pembayaran dan mengontrol siklus hidup pesanan pembeli.
 
 **Fitur & Aksi Admin:**
 1. **Verifikasi Pembayaran & Terbitkan SPK:**
-   - Klik tombol **"Verifikasi & Terbitkan SPK"** pada pesanan yang telah valid.
-   - Status pesanan berubah menjadi `paid` / `paid_dp`.
-   - Sistem secara otomatis menerbitkan dokumen **Surat Perintah Kerja (SPK)** berstatus `scheduled` ke papan Kanban bengkel.
+   - Menerbitkan dokumen SPK resmi berformat `SPK-YYYYMM-XXX` dan menugaskannya langsung ke papan Kanban bengkel.
 2. **Batalkan Pesanan (Cancel):**
-   - Digunakan jika pembeli membatalkan pesanan atau tidak menyelesaikan pembayaran melewati batas 24 jam.
+   - Mengisi alasan pembatalan dan membatalkan pesanan yang melewati masa berlaku 24 jam.
 3. **Hapus Pesanan (Delete):**
-   - Menghapus rekaman pesanan yang tidak valid atau pesanan sampah (*spam*).
+   - Menghapus rekaman pesanan yang terindikasi data uji coba atau spam.
 
 ---
 
