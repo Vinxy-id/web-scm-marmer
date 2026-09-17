@@ -131,10 +131,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach($products as $item)
             @php
-                $artisan = $item->artisan;
-                $artisanName = $artisan['name'];
-                $artisanPhone = $artisan['phone'];
-                $artisanBadge = $artisan['badge'];
+                $artisan = $item->artisan ?? [
+                    'name' => (($item->material_type ?? '') === 'batu_kali' ? 'UD Putra Abadi' : 'UD Cahaya Onix'),
+                    'phone' => (($item->material_type ?? '') === 'batu_kali' ? '6281335022012' : '6281340231737'),
+                    'badge' => (($item->material_type ?? '') === 'batu_kali' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'),
+                ];
+                $artisanName = is_array($artisan) ? ($artisan['name'] ?? 'UD Cahaya Onix') : ($artisan->name ?? 'UD Cahaya Onix');
+                $artisanPhone = is_array($artisan) ? ($artisan['phone'] ?? '6281340231737') : ($artisan->phone ?? '6281340231737');
+                $artisanBadge = is_array($artisan) ? ($artisan['badge'] ?? 'bg-blue-50 text-blue-700 border-blue-200') : ($artisan->badge ?? 'bg-blue-50 text-blue-700 border-blue-200');
                 $waMessage = "Halo {$artisanName}, saya tertarik untuk memesan produk *" . e($item->name) . "* (Kode: {$item->product_code}). Mohon info ketersediaan stok & ongkir.";
             @endphp
             <div class="product-card group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between cursor-pointer"

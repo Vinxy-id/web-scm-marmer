@@ -453,6 +453,21 @@ class PublicCatalogController extends Controller
                 'selling_price' => 420000,
                 'image_path' => 'images/products/WastafelMarmerBakarAntik.jpg',
             ],
-        ]);
+        ])->map(function ($p) {
+            $isPa = ($p->material_type ?? '') === 'batu_kali' || str_contains($p->product_code ?? '', '-PA-');
+            $p->ikm_name = $isPa ? 'UD Putra Abadi' : 'UD Cahaya Onix';
+            $p->artisan = $isPa ? [
+                'name' => 'UD Putra Abadi',
+                'owner' => 'Efri Saputra',
+                'phone' => '6281335022012',
+                'badge' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+            ] : [
+                'name' => 'UD Cahaya Onix',
+                'owner' => 'M. Ilham Nur Amali',
+                'phone' => '6281340231737',
+                'badge' => 'bg-blue-50 text-blue-700 border-blue-200',
+            ];
+            return $p;
+        });
     }
 }
