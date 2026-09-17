@@ -346,12 +346,18 @@
 
             <!-- Invoice Footer Action Buttons -->
             <div class="bg-slate-50 p-6 sm:p-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start w-full sm:w-auto">
                     <button onclick="window.print()" class="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition flex items-center gap-1.5 shadow-sm">
-                        <i data-lucide="printer" class="w-4 h-4"></i> Cetak Invoice
+                        <i data-lucide="printer" class="w-4 h-4"></i> Cetak / Simpan PDF
                     </button>
                     <a href="{{ route('order.tracking', ['order_number' => $order->order_number]) }}" class="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl border border-blue-200 transition flex items-center gap-1.5 shadow-sm">
-                        <i data-lucide="truck" class="w-4 h-4"></i> Lacak Progres Pesanan
+                        <i data-lucide="truck" class="w-4 h-4"></i> Lacak Progres
+                    </a>
+                    @php
+                        $saveWaText = "Catatan Pesanan E-SCM Marmer Tulungagung:\nNo. Invoice: #{$order->order_number}\nProduk: " . ($order->product->name ?? 'Kerajinan Marmer') . "\nTotal Tagihan: Rp " . number_format($billAmount, 0, ',', '.') . "\nLink Invoice: " . route('checkout.invoice', $order->order_number) . "\nLink Lacak: " . route('order.tracking', ['order_number' => $order->order_number]);
+                    @endphp
+                    <a href="https://api.whatsapp.com/send?text={{ urlencode($saveWaText) }}" target="_blank" class="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 transition flex items-center gap-1.5 shadow-sm" title="Simpan catatan link invoice ini ke WhatsApp Anda">
+                        <i data-lucide="share-2" class="w-4 h-4 text-emerald-600"></i> Simpan Catatan ke WA
                     </a>
                 </div>
 
@@ -372,6 +378,30 @@
         navigator.clipboard.writeText(text);
         alert('Nomor rekening ' + text + ' berhasil disalin!');
     }
+
+    // Simpan otomatis pesanan ini ke localStorage browser agar tidak hilang jika Chrome ditutup/refresh
+    (function() {
+        try {
+            const orderData = {
+                number: "{{ $order->order_number }}",
+                product: "{{ addslashes($order->product->name ?? 'Kerajinan Marmer') }}",
+                amount: "Rp {{ number_format($billAmount, 0, ',', '.') }}",
+                date: "{{ $order->created_at->translatedFormat('d M Y') }}",
+                status: "{{ $order->order_status_label }}",
+                statusClass: "{{ $order->status_badge_class }}",
+                invoiceUrl: "{{ route('checkout.invoice', $order->order_number) }}",
+                trackUrl: "{{ route('order.tracking', ['order_number' => $order->order_number]) }}"
+            };
+
+            let orders = JSON.parse(localStorage.getItem('scm_recent_orders') || '[]');
+            if (!Array.isArray(orders)) orders = [];
+            orders = orders.filter(o => o.number !== orderData.number);
+            orders.unshift(orderData);
+            localStorage.setItem('scm_recent_orders', JSON.stringify(orders.slice(0, 5)));
+        } catch (e) {
+            console.error('Failed to cache order to localStorage:', e);
+        }
+    })();
 </script>
 
 @if($order->payment_method === 'midtrans' && !empty($order->snap_token) && !in_array($order->payment_status, ['paid_dp', 'paid_full']) && !$order->isCancelled())

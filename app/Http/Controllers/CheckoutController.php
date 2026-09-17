@@ -214,35 +214,62 @@ class CheckoutController extends Controller
 
 
     /**
-     * Public Order Tracking Page.
+     * Public Order Tracking Page (Supports Order Number, SPK Number, and Phone/WhatsApp Number).
      */
     public function tracking(Request $request)
     {
         $searchNumber = trim($request->input('order_number', ''));
         $order = null;
         $workOrder = null;
+        $phoneOrders = collect();
 
         if (!empty($searchNumber)) {
-            $order = Order::with(['product.category', 'customer', 'workOrder.shipment', 'workOrder.steps'])
-                          ->where('order_number', $searchNumber)
-                          ->orWhereHas('workOrder', function ($q) use ($searchNumber) {
-                              $q->where('spk_number', $searchNumber);
-                          })
-                          ->first();
+            // 1. Cek apakah kata kunci adalah nomor HP / WhatsApp (>= 8 digit angka murni atau berawalan 08 / +62 / 62)
+            $cleanPhone = preg_replace('/[^0-9]/', '', $searchNumber);
+            $looksLikePhone = (strlen($cleanPhone) >= 8 && !str_starts_with(strtoupper($searchNumber), 'ORD') && !str_starts_with(strtoupper($searchNumber), 'SPK'));
 
-            if ($order && $order->isExpired() && $order->order_status === 'pending_payment') {
-                $order->update(['order_status' => 'expired']);
+            if ($looksLikePhone) {
+                $altPhone1 = preg_replace('/^08/', '628', $cleanPhone);
+                $altPhone2 = preg_replace('/^628/', '08', $cleanPhone);
+
+                $phoneOrders = Order::with(['product.category', 'customer', 'workOrder'])
+                                    ->where(function ($q) use ($cleanPhone, $altPhone1, $altPhone2) {
+                                        $q->where('receiver_phone', 'like', "%{$cleanPhone}%")
+                                          ->orWhere('receiver_phone', 'like', "%{$altPhone1}%")
+                                          ->orWhere('receiver_phone', 'like', "%{$altPhone2}%");
+                                    })
+                                    ->latest()
+                                    ->get();
+
+                if ($phoneOrders->count() === 1) {
+                    $order = Order::with(['product.category', 'customer', 'workOrder.shipment', 'workOrder.steps'])
+                                  ->find($phoneOrders->first()->id);
+                }
             }
 
-            if (!$order) {
-                // Fallback: Check directly in standalone WorkOrder (SPK)
-                $workOrder = \App\Models\WorkOrder::with(['product.category', 'customer', 'shipment', 'steps', 'order'])
-                                                  ->where('spk_number', $searchNumber)
-                                                  ->first();
+            // 2. Jika bukan pencarian nomor telepon atau jika nomor telepon tidak ditemukan / cocok dengan 1 order saja
+            if (!$looksLikePhone || ($looksLikePhone && $phoneOrders->isEmpty())) {
+                $order = Order::with(['product.category', 'customer', 'workOrder.shipment', 'workOrder.steps'])
+                              ->where('order_number', $searchNumber)
+                              ->orWhereHas('workOrder', function ($q) use ($searchNumber) {
+                                  $q->where('spk_number', $searchNumber);
+                              })
+                              ->first();
+
+                if ($order && $order->isExpired() && $order->order_status === 'pending_payment') {
+                    $order->update(['order_status' => 'expired']);
+                }
+
+                if (!$order) {
+                    // Fallback: Check directly in standalone WorkOrder (SPK)
+                    $workOrder = \App\Models\WorkOrder::with(['product.category', 'customer', 'shipment', 'steps', 'order'])
+                                                      ->where('spk_number', $searchNumber)
+                                                      ->first();
+                }
             }
         }
 
-        return view('public.tracking', compact('order', 'workOrder', 'searchNumber'));
+        return view('public.tracking', compact('order', 'workOrder', 'searchNumber', 'phoneOrders'));
     }
 
     /**

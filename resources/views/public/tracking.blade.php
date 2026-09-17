@@ -36,23 +36,87 @@
                 <input type="text" 
                        name="order_number" 
                        value="{{ $searchNumber }}" 
-                       placeholder="Masukkan Nomor Order (Contoh: ORD-...) atau Nomor SPK (SPK-...)" 
+                       placeholder="Masukkan Nomor Order (ORD-...), SPK, atau Nomor HP/WA Anda" 
                        required
                        class="w-full text-xs rounded-2xl border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-4 py-3 bg-slate-50">
                 <button type="submit" class="bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-6 py-3 rounded-2xl transition shadow-md flex items-center gap-2 flex-shrink-0">
                     <i data-lucide="search" class="w-4 h-4"></i> Lacak
                 </button>
             </form>
+            <p class="text-[11px] text-slate-400">
+                💡 <b class="text-slate-600">Lupa nomor pesanan?</b> Cukup masukkan nomor HP / WhatsApp yang Anda gunakan saat checkout.
+            </p>
         </div>
 
-        @if(!empty($searchNumber) && !$order && !$workOrder)
+        <!-- Recent Orders on This Device (LocalStorage Fallback) -->
+        <div id="device-history-section" class="hidden bg-white p-6 sm:p-8 rounded-3xl border border-blue-100 shadow-sm space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <i data-lucide="smartphone" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Riwayat Pesanan di Browser Ini</h3>
+                        <p class="text-[11px] text-slate-500">Daftar pesanan Anda yang tersimpan di perangkat ini (dapat dibuka kapan saja tanpa login).</p>
+                    </div>
+                </div>
+                <button type="button" onclick="clearRecentOrders()" class="text-[11px] text-slate-400 hover:text-rose-600 transition flex items-center gap-1">
+                    <i data-lucide="trash-2" class="w-3 h-3"></i> Bersihkan Riwayat
+                </button>
+            </div>
+
+            <div id="recent-orders-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <!-- Rendered dynamically by JavaScript -->
+            </div>
+        </div>
+
+        @if(!empty($phoneOrders) && $phoneOrders->count() > 1 && !$order)
+        <!-- Multiple Orders Found by Phone Number -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-blue-200 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="phone-call" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm sm:text-base font-extrabold text-slate-900">Ditemukan {{ $phoneOrders->count() }} Pesanan untuk Nomor "{{ $searchNumber }}"</h2>
+                    <p class="text-xs text-slate-500">Pilih salah satu pesanan di bawah ini untuk melihat detail pelacakan langsung.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                @foreach($phoneOrders as $pOrder)
+                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-blue-300 hover:shadow-md transition space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-mono text-xs font-bold text-slate-900">#{{ $pOrder->order_number }}</span>
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border {{ $pOrder->status_badge_class }}">
+                            {{ $pOrder->order_status_label }}
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800 line-clamp-1">{{ $pOrder->product->name ?? 'Kerajinan Marmer' }}</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Penerima: <b class="text-slate-700">{{ $pOrder->receiver_name }}</b> ({{ $pOrder->shipping_city }})</p>
+                        <p class="text-xs font-black text-blue-900 mt-1">Rp {{ number_format($pOrder->total_amount, 0, ',', '.') }}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60">
+                        <a href="{{ route('order.tracking', ['order_number' => $pOrder->order_number]) }}" class="flex-1 text-center py-2 px-3 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                            <i data-lucide="search" class="w-3.5 h-3.5"></i> Lacak Progres
+                        </a>
+                        <a href="{{ route('checkout.invoice', $pOrder->order_number) }}" class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Tagihan
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @elseif(!empty($searchNumber) && !$order && !$workOrder && (empty($phoneOrders) || $phoneOrders->isEmpty()))
         <div class="bg-white p-8 rounded-3xl border border-rose-200 text-center space-y-3 shadow-sm">
             <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 mx-auto flex items-center justify-center">
                 <i data-lucide="alert-circle" class="w-6 h-6"></i>
             </div>
             <h3 class="text-sm font-bold text-slate-900">Pesanan Tidak Ditemukan</h3>
             <p class="text-xs text-slate-500 max-w-md mx-auto">
-                Nomor pesanan atau SPK <b class="font-mono text-slate-800">"{{ $searchNumber }}"</b> tidak ditemukan di dalam sistem. Pastikan nomor yang dimasukkan sudah sesuai dengan invoice atau dokumen SPK Anda.
+                Kata kunci pencarian <b class="font-mono text-slate-800">"{{ $searchNumber }}"</b> tidak ditemukan. Pastikan Anda memasukkan nomor pesanan yang benar (contoh: <span class="font-mono">ORD-20260917-BXGV</span>) atau nomor HP/WhatsApp yang aktif saat proses pemesanan.
             </p>
         </div>
         @elseif($order)
@@ -401,4 +465,71 @@
 
     </div>
 </div>
+
+<script>
+    function renderRecentOrders() {
+        try {
+            const container = document.getElementById('device-history-section');
+            const listEl = document.getElementById('recent-orders-list');
+            if (!container || !listEl) return;
+
+            const orders = JSON.parse(localStorage.getItem('scm_recent_orders') || '[]');
+            if (!Array.isArray(orders) || orders.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            listEl.innerHTML = orders.map(o => `
+                <div class="p-4 bg-slate-50/90 rounded-2xl border border-slate-200 flex flex-col justify-between gap-2.5 hover:bg-white hover:border-blue-300 hover:shadow-xs transition">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-mono text-xs font-bold text-slate-900">#${escapeHtml(o.number)}</span>
+                        <span class="text-[10px] font-semibold text-slate-500">${escapeHtml(o.date)}</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800 line-clamp-1">${escapeHtml(o.product)}</p>
+                        <p class="text-xs font-black text-blue-900 mt-0.5">${escapeHtml(o.amount)}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-200/80">
+                        <a href="${escapeHtml(o.trackUrl)}" class="flex-1 text-center py-2 px-3 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                            <i data-lucide="search" class="w-3.5 h-3.5"></i> Lacak Live
+                        </a>
+                        <a href="${escapeHtml(o.invoiceUrl)}" class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Tagihan
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        } catch (e) {
+            console.error('Error rendering recent orders:', e);
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, function (m) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[m];
+        });
+    }
+
+    function clearRecentOrders() {
+        if (confirm('Hapus daftar riwayat pesanan dari browser ini?')) {
+            localStorage.removeItem('scm_recent_orders');
+            const container = document.getElementById('device-history-section');
+            if (container) container.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderRecentOrders);
+</script>
 @endsection

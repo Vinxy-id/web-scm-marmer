@@ -122,4 +122,17 @@ class EcommerceCheckoutTest extends TestCase
         $response = $this->get(route('checkout.check-status', $order->order_number));
         $response->assertRedirect(route('checkout.invoice', $order->order_number));
     }
+
+    public function test_guest_can_track_order_using_phone_number()
+    {
+        $order = Order::first();
+        if (!$order) {
+            $this->test_guest_can_submit_checkout_without_polluting_work_orders();
+            $order = Order::latest()->first();
+        }
+
+        $response = $this->get(route('order.tracking', ['order_number' => $order->receiver_phone]));
+        $response->assertStatus(200);
+        $response->assertSee($order->order_number);
+    }
 }
