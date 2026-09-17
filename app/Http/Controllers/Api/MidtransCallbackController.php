@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\WorkOrder;
+use App\Services\CodeGeneratorService;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MidtransCallbackController extends Controller
@@ -64,28 +67,41 @@ class MidtransCallbackController extends Controller
 
 
         // 2. Evaluasi Siklus Status Transaksi Midtrans
-        if ($transactionStatus === 'capture') {
-            if ($fraudStatus === 'accept') {
+        if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
+            $isDp = ($order->payment_scheme === 'dp_50');
+            $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
+
+            DB::transaction(function () use ($order, $paymentStatus, $grossAmount, $transactionId, $paymentType, $transactionStatus, $payload) {
+                if (!$order->work_order_id) {
+                    $spkNumber = CodeGeneratorService::generateSpkNumber();
+                    $workOrder = WorkOrder::create([
+                        'spk_number' => $spkNumber,
+                        'product_id' => $order->product_id,
+                        'customer_id' => $order->customer_id,
+                        'target_quantity' => $order->quantity,
+                        'completed_quantity' => 0,
+                        'scrap_quantity' => 0,
+                        'status' => 'scheduled',
+                        'priority' => ($order->payment_scheme === 'full_100') ? 'high' : 'normal',
+                        'start_date' => now()->toDateString(),
+                        'due_date' => now()->addDays(7)->toDateString(),
+                        'notes' => 'Pesanan E-Commerce: ' . $order->order_number . ' - Pembeli: ' . $order->receiver_name . ' (' . $order->shipping_city . ')',
+                        'created_by' => 1,
+                    ]);
+                    $order->work_order_id = $workOrder->id;
+                }
+
                 $order->update([
-                    'payment_status' => ($order->payment_scheme === 'dp_50') ? 'paid_dp' : 'paid_full',
+                    'payment_status' => $paymentStatus,
                     'paid_amount' => $grossAmount,
-                    'order_status' => 'verified',
+                    'order_status' => 'in_production',
                     'midtrans_transaction_id' => $transactionId,
                     'midtrans_payment_type' => $paymentType,
                     'midtrans_status' => $transactionStatus,
                     'midtrans_response' => $payload,
+                    'work_order_id' => $order->work_order_id,
                 ]);
-            }
-        } elseif ($transactionStatus === 'settlement') {
-            $order->update([
-                'payment_status' => ($order->payment_scheme === 'dp_50') ? 'paid_dp' : 'paid_full',
-                'paid_amount' => $grossAmount,
-                'order_status' => 'verified',
-                'midtrans_transaction_id' => $transactionId,
-                'midtrans_payment_type' => $paymentType,
-                'midtrans_status' => $transactionStatus,
-                'midtrans_response' => $payload,
-            ]);
+            });
         } elseif ($transactionStatus === 'pending') {
             $order->update([
                 'midtrans_transaction_id' => $transactionId,

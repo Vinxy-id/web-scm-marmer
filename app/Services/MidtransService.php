@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\WorkOrder;
+use App\Services\CodeGeneratorService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -129,5 +132,95 @@ class MidtransService
         $computedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
 
         return hash_equals($signatureKey, $computedSignature);
+    }
+
+    /**
+     * Cek status transaksi langsung ke API Midtrans dan sinkronkan dengan database lokal.
+     * Sangat berguna untuk pengujian di localhost di mana webhook tidak bisa menjangkau IP lokal,
+     * serta sebagai fallback otomatis jika webhook dari cloud terlambat.
+     *
+     * @param Order $order
+     * @return string|null
+     */
+    public function syncOrderStatus(Order $order): ?string
+    {
+        if (empty(config('midtrans.server_key')) || empty($order->order_number)) {
+            return null;
+        }
+
+        try {
+            $response = \Midtrans\Transaction::status($order->order_number);
+            $payload = (array) $response;
+
+            $transactionStatus = $payload['transaction_status'] ?? null;
+            $fraudStatus = $payload['fraud_status'] ?? null;
+            $paymentType = $payload['payment_type'] ?? 'midtrans';
+            $transactionId = $payload['transaction_id'] ?? null;
+            $grossAmount = (float) ($payload['gross_amount'] ?? $order->total_amount);
+
+            if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
+                $isDp = ($order->payment_scheme === 'dp_50');
+                $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
+
+                DB::transaction(function () use ($order, $paymentStatus, $grossAmount, $transactionId, $paymentType, $transactionStatus, $payload) {
+                    if (!$order->work_order_id) {
+                        $spkNumber = CodeGeneratorService::generateSpkNumber();
+                        $workOrder = WorkOrder::create([
+                            'spk_number' => $spkNumber,
+                            'product_id' => $order->product_id,
+                            'customer_id' => $order->customer_id,
+                            'target_quantity' => $order->quantity,
+                            'completed_quantity' => 0,
+                            'scrap_quantity' => 0,
+                            'status' => 'scheduled',
+                            'priority' => ($order->payment_scheme === 'full_100') ? 'high' : 'normal',
+                            'start_date' => now()->toDateString(),
+                            'due_date' => now()->addDays(7)->toDateString(),
+                            'notes' => 'Pesanan E-Commerce: ' . $order->order_number . ' - Pembeli: ' . $order->receiver_name . ' (' . $order->shipping_city . ')',
+                            'created_by' => 1,
+                        ]);
+                        $order->work_order_id = $workOrder->id;
+                    }
+
+                    $order->update([
+                        'payment_status' => $paymentStatus,
+                        'paid_amount' => $grossAmount,
+                        'order_status' => 'in_production',
+                        'midtrans_transaction_id' => $transactionId,
+                        'midtrans_payment_type' => $paymentType,
+                        'midtrans_status' => $transactionStatus,
+                        'midtrans_response' => $payload,
+                        'work_order_id' => $order->work_order_id,
+                    ]);
+                });
+
+                return $transactionStatus;
+            } elseif ($transactionStatus === 'pending') {
+                $order->update([
+                    'midtrans_transaction_id' => $transactionId,
+                    'midtrans_payment_type' => $paymentType,
+                    'midtrans_status' => $transactionStatus,
+                    'midtrans_response' => $payload,
+                ]);
+
+                return $transactionStatus;
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $newOrderStatus = ($transactionStatus === 'expire') ? 'expired' : 'cancelled';
+                $order->update([
+                    'order_status' => $newOrderStatus,
+                    'midtrans_status' => $transactionStatus,
+                    'midtrans_response' => $payload,
+                    'cancelled_at' => now(),
+                    'cancellation_reason' => "Status transaksi Midtrans: {$transactionStatus}",
+                ]);
+
+                return $transactionStatus;
+            }
+        } catch (\Throwable $e) {
+            // Midtrans melempar exception 404 jika belum pernah dibuat transaksi oleh pembeli
+            return null;
+        }
+
+        return null;
     }
 }

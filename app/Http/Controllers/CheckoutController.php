@@ -150,6 +150,17 @@ class CheckoutController extends Controller
             $order->update(['order_status' => 'expired']);
         }
 
+        // Auto-sync status with Midtrans API for unpaid midtrans order (essential for localhost testing & fast fallback)
+        if ($order->payment_method === 'midtrans' && !in_array($order->payment_status, ['paid_dp', 'paid_full']) && !$order->isExpired() && !$order->isCancelled()) {
+            $syncedStatus = $this->midtransService->syncOrderStatus($order);
+            if ($syncedStatus) {
+                $order->refresh();
+                if (in_array($order->payment_status, ['paid_dp', 'paid_full']) && !session()->has('success')) {
+                    session()->flash('success', 'Pembayaran Midtrans berhasil terverifikasi otomatis! SPK pengerjaan bengkel telah resmi aktif.');
+                }
+            }
+        }
+
         // Generate Snap Token if missing for midtrans unpaid order
         if ($order->payment_method === 'midtrans' && empty($order->snap_token) && $order->payment_status === 'unpaid' && !$order->isExpired()) {
             $this->midtransService->createSnapToken($order);
@@ -247,5 +258,33 @@ class CheckoutController extends Controller
 
         return redirect()->route('checkout.invoice', ['orderNumber' => $order->order_number, 'pay' => 1])
                          ->with('info', 'Sesi pembayaran diperbarui. Silakan pilih metode pembayaran baru yang Anda inginkan.');
+    }
+
+    /**
+     * Explicit check of payment status from Midtrans API.
+     */
+    public function checkPaymentStatus($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+
+        if ($order->payment_method === 'midtrans') {
+            $status = $this->midtransService->syncOrderStatus($order);
+            $order->refresh();
+
+            if (in_array($order->payment_status, ['paid_dp', 'paid_full'])) {
+                return redirect()->route('checkout.invoice', $order->order_number)
+                                 ->with('success', 'Pembayaran Midtrans terkonfirmasi lunas! SPK pengerjaan bengkel telah otomatis diterbitkan.');
+            }
+
+            if ($status === 'pending') {
+                return redirect()->route('checkout.invoice', $order->order_number)
+                                 ->with('info', 'Transaksi terdeteksi di Midtrans namun masih menunggu pembayaran Anda.');
+            }
+
+            return redirect()->route('checkout.invoice', $order->order_number)
+                             ->with('info', 'Belum ada catatan pembayaran baru yang terdeteksi di Midtrans untuk tagihan ini.');
+        }
+
+        return redirect()->route('checkout.invoice', $order->order_number);
     }
 }

@@ -175,10 +175,16 @@
                                     Bayar Sekarang
                                 </button>
                                 
-                                <a href="{{ route('checkout.regenerate-snap', $order->order_number) }}" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1.5 transition">
-                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                                    <span>Ganti / Pilih Ulang Metode Bayar</span>
-                                </a>
+                                <div class="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
+                                    <a href="{{ route('checkout.check-status', $order->order_number) }}" class="text-[11px] text-emerald-700 hover:text-emerald-900 font-bold hover:underline flex items-center gap-1 transition bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 shadow-xs">
+                                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                        <span>Sudah Bayar? Cek Status</span>
+                                    </a>
+                                    <a href="{{ route('checkout.regenerate-snap', $order->order_number) }}" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1 transition">
+                                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                        <span>Ganti Metode</span>
+                                    </a>
+                                </div>
                             </div>
                             @else
                             <div class="text-xs text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-center gap-2">
@@ -381,10 +387,10 @@
             }
             snap.pay('{{ $order->snap_token }}', {
                 onSuccess: function(result) {
-                    window.location.href = "{{ route('checkout.invoice', $order->order_number) }}";
+                    window.location.href = "{{ route('checkout.check-status', $order->order_number) }}";
                 },
                 onPending: function(result) {
-                    window.location.href = "{{ route('checkout.invoice', $order->order_number) }}";
+                    window.location.href = "{{ route('checkout.check-status', $order->order_number) }}";
                 },
                 onError: function(result) {
                     alert('Terjadi kendala pada pembayaran. Silakan coba kembali.');

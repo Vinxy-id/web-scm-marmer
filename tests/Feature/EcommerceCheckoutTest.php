@@ -110,4 +110,16 @@ class EcommerceCheckoutTest extends TestCase
         $responseNotFound->assertStatus(200);
         $responseNotFound->assertSee('Pesanan Tidak Ditemukan');
     }
+
+    public function test_guest_can_check_payment_status_route()
+    {
+        $order = Order::first();
+        if (!$order) {
+            $this->test_guest_can_submit_checkout_without_polluting_work_orders();
+            $order = Order::latest()->first();
+        }
+
+        $response = $this->get(route('checkout.check-status', $order->order_number));
+        $response->assertRedirect(route('checkout.invoice', $order->order_number));
+    }
 }

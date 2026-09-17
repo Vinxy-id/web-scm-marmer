@@ -22,6 +22,7 @@ $checkoutThrottle = app()->environment('testing') ? 'throttle:5,10' : 'throttle:
 Route::get('/checkout/{id}', [CheckoutController::class, 'show'])->name('checkout.show');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware($checkoutThrottle);
 Route::get('/order/invoice/{orderNumber}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
+Route::get('/order/check-status/{orderNumber}', [CheckoutController::class, 'checkPaymentStatus'])->name('checkout.check-status')->middleware('throttle:30,1');
 Route::match(['GET', 'POST'], '/order/regenerate-snap/{orderNumber}', [CheckoutController::class, 'regenerateSnapToken'])->name('checkout.regenerate-snap')->middleware('throttle:30,1');
 Route::get('/lacak-pesanan', [CheckoutController::class, 'tracking'])->name('order.tracking');
 
