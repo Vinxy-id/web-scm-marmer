@@ -62,8 +62,10 @@ Bima2026.ipynb
 # Dokumen Privat, Invoice & Backup Database
 # -----------------------------------------------------------------------------
 *.pdf
+!Docs/laporan_kegiatan/PDF/*.pdf
 *invoice*
 *Invoice*
+!Docs/laporan_kegiatan/**/*
 *.sql
 *.sql.gz
 *.dump

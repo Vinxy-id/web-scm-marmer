@@ -109,8 +109,8 @@ Fokus: Penyusunan laporan, pendaftaran hak cipta, dan publikasi jurnal.
   - [ ] Kompilasi seluruh data luaran Kegiatan 1–11 ke format laporan akhir.
   - [ ] Proofreading dan review laporan bersama tim pembimbing.
 - [ ] **Kegiatan 13: Pendaftaran Hak Kekayaan Intelektual (HKI) Software**
-  - [ ] Penyiapan dokumen pendukung (listing source code, buku panduan, tangkapan layar).
-  - [ ] Submit pendaftaran Hak Cipta Program Komputer ke portal DJKI.
+  - [x] Penyiapan dokumen pendukung (listing source code `scripts/generate_hki_pdf.py`, buku manual pengguna format DOCX & PDF `Docs/laporan_kegiatan/DOCX/Buku_Manual_Pengguna_ESCM_Marmer.docx` & `Docs/laporan_kegiatan/PDF/Buku_Manual_Pengguna_ESCM_Marmer.pdf`, 20 tangkapan layar antarmuka Playwright `Docs/laporan_kegiatan/PNG/`, serta video demo sistem `Docs/videos/Demo_Sistem_ESCM_Marmer.webm`).
+  - [ ] Submit pendaftaran Hak Cipta Program Komputer ke portal DJKI Kemenkumham RI.
 - [ ] **Kegiatan 14: Submit & Publikasi Artikel Ilmiah Jurnal Sinta 2**
   - [ ] Penulisan naskah artikel ilmiah berbasis data efisiensi KPI & implementasi E-SCM.
   - [ ] Cek kemiripan Turnitin ($< 20\%$) dan proofreading.

@@ -88,10 +88,28 @@ pip install -r requirements.txt
 uvicorn main:app --host 127.0.0.1 --port 8001 --reload
 ```
 
+### 4. Otomatisasi Media, Video Demo & Buku Panduan Pengguna
+```bash
+# Capture 20 tangkapan layar antarmuka & rekam video demo (Headless):
+npm run capture:media
+
+# Jalankan Playwright dalam mode visual untuk direkam menggunakan Recordly.dev (Headed):
+npm run record:headed
+
+# Kompilasi Buku Panduan Pengguna ke format DOCX dan PDF native:
+npm run generate:manual
+```
+
 ---
 
 ## 📋 Riwayat Perubahan (Changelog)
 
+- **v1.2.0 (2026-09-17):**
+  - Implementasi E-Commerce Checkout Multi-IKM terintegrasi Midtrans Snap API (QRIS, VA, E-Wallet) dan WhatsApp Direct Link.
+  - Mekanisme perlindungan kehilangan invoice (Guest Checkout Safety Net & Local Cache).
+  - Mekanisme keamanan 2-Gate SPK Verification & sinkronisasi otomatis status Midtrans.
+  - Otomatisasi tangkapan layar Playwright dan perekaman video demo walkthrough (`Docs/videos/Demo_Sistem_ESCM_Marmer.webm`).
+  - Penyusunan Buku Manual Pengguna resmi 22 halaman format `.docx` dan `.pdf` (`Docs/laporan_kegiatan/DOCX/` & `PDF/`).
 - **v1.1.0 (2026-08-22):**
   - Pembaruan acuan arsitektur backend ke Laravel 11+ (Versi Terbaru/Latest) dan PHP 8.2+/8.3+.
   - Pembaruan dependensi library Python microservice peramalan (FastAPI, PyDantic v2, Pandas, Statsmodels, Scikit-learn) dan library frontend ke versi terbaru.
