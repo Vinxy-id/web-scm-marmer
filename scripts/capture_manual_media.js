@@ -26,10 +26,10 @@ async function run() {
     });
 
     const context = await browser.newContext({
-        viewport: { width: 1280, height: 720 },
+        viewport: { width: 1920, height: 1080 },
         recordVideo: {
             dir: VIDEO_DIR,
-            size: { width: 1280, height: 720 }
+            size: { width: 1920, height: 1080 }
         }
     });
 

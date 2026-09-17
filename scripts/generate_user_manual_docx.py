@@ -252,7 +252,7 @@ def insert_image_block(doc, img_filename, caption_text):
         p_img.paragraph_format.space_after = Pt(3)
         p_img.paragraph_format.keep_with_next = True
         r_img = p_img.add_run()
-        r_img.add_picture(img_path, width=Inches(5.8))
+        r_img.add_picture(img_path, width=Inches(6.0))
 
         p_cap = doc.add_paragraph()
         p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
