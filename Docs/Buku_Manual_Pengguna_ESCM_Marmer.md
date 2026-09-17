@@ -43,24 +43,11 @@ Sistem menggunakan arsitektur *Decoupled System*:
 - **Web Application Core (Laravel 11+):** Mengelola transaksi e-commerce, basis data relasional, autentikasi multi-role RBAC, master produk & kategori, stok material, SPK produksi, Kanban, QC, distribusi, dan laporan.
 - **AI Forecasting Microservice (FastAPI Python):** Layanan komputasi time-series yang mengeksekusi algoritma ARIMA dan pemulusan deret waktu dari 17 bulan data observasi lapangan.
 
-```
-+---------------------------------------------------------------------------------+
-|                              PELANGGAN / BUYER                                  |
-|         (Katalog Publik, Checkout DP 50%/Lunas, Live Tracking Pesanan)          |
-+----------------------------------------┬----------------------------------------+
-                                         │
-                                         ▼
-+---------------------------------------------------------------------------------+
-|                          LARAVEL 11 CORE APPLICATION                            |
-| (Auth/RBAC, Orders, Master Produk, Materials, Kanban, QC, Distribusi, Reports) |
-+----------------------------------------┬----------------------------------------+
-                                         │
-                                         ▼
-+---------------------------------------------------------------------------------+
-|                     PYTHON FASTAPI FORECASTING MICROSERVICE                     |
-|           (ARIMA(2,0,2), Single Exp Smoothing, Holt-Winters, Moving Average)   |
-+---------------------------------------------------------------------------------+
-```
+| Layer Arsitektur | Entitas / Modul Utama | Tanggung Jawab Operasional |
+| :--- | :--- | :--- |
+| **Client & Buyer Layer** | Pelanggan / Buyer Publik | Akses katalog produk multi-IKM, checkout pembayaran DP 50% / Lunas 100%, serta live tracking pesanan real-time. |
+| **Application Core Layer** | Laravel 11 Backend & MySQL | Manajemen transaksi e-commerce, otentikasi multi-role RBAC, master produk, kontrol stok bahan baku, SPK produksi, papan Kanban, inspeksi QC 2-tahap, dan pengiriman kargo. |
+| **AI Intelligence Layer** | FastAPI Python Microservice | Eksekusi model peramalan deret waktu terbaik ARIMA(2,0,2), SES, Holt-Winters, dan Moving Average untuk proyeksi kebutuhan bahan baku & barang jadi. |
 
 ---
 
@@ -269,14 +256,10 @@ Digunakan oleh petugas gudang untuk memonitor persediaan bongkahan batu dari pen
 ### 8.1 Papan Kanban Produksi Digital (`/production/kanban`)
 Antarmuka visual kartu kerja yang mencerminkan lantai bengkel pengrajin marmer:
 
-```
-+-----------------------------------------------------------------------------------------+
-| ANTREAN (SPK) | POTONG BLOK    | BUBUT / PAHAT  | POLES FINISHING | SIAP QC             |
-+---------------+----------------+----------------+-----------------+---------------------+
-| SPK-202608-01 | SPK-202608-03  | SPK-202608-05  | SPK-202608-07   | SPK-202608-09       |
-| Wastafel B1   | Stepping Stone | Kap Lampu Onyx | Pedestal Luxury | Wastafel Batu Kali  |
-+-----------------------------------------------------------------------------------------+
-```
+| ANTREAN (SPK) | POTONG BLOK | BUBUT / PAHAT | POLES FINISHING | SIAP QC |
+| :--- | :--- | :--- | :--- | :--- |
+| **SPK-202608-01**<br>Wastafel Marmer B1 | **SPK-202608-03**<br>Stepping Stone | **SPK-202608-05**<br>Kap Lampu Onyx | **SPK-202608-07**<br>Pedestal Luxury | **SPK-202608-09**<br>Wastafel Batu Kali |
+
 
 ### 8.2 Penerbitan SPK Produksi Baru (`/production`)
 1. Klik tombol **"+ Terbitkan SPK Produksi Baru"**.
@@ -344,14 +327,12 @@ Status pengiriman diperbarui bertahap oleh petugas distribusi:
 ### 11.1 Halaman Forecasting AI (`/forecasting`)
 Modul kecerdasan buatan terintegrasi untuk memproyeksikan kebutuhan bahan baku dan permintaan produk jadi 1 hingga 12 bulan ke depan.
 
-```
-+---------------------------------------------------------------------------------+
-| MODEL AI TERBAIK: ARIMA(2,0,2) Model AI (Tingkat Error Presisi MAPE: 5.73%)     |
-+---------------------------------------------------------------------------------+
-| Basis Data: 17 Bulan Data Empiris IKM Tulungagung (Januari 2025 - Mei 2026)     |
-| Horizon Default: 3 Bulan Proyeksi ke Depan                                      |
-+---------------------------------------------------------------------------------+
-```
+| Parameter Model AI | Spesifikasi & Konfigurasi Empiris |
+| :--- | :--- |
+| **Model AI Terbaik** | **ARIMA(2,0,2)** (Tingkat Error Presisi MAPE: 5.73%) |
+| **Basis Data Riset** | 17 Bulan Data Empiris IKM Tulungagung (Januari 2025 – Mei 2026) |
+| **Horizon Proyeksi** | 3 Bulan Proyeksi ke Depan (Dapat Disesuaikan 1–12 Bulan) |
+
 
 ### 11.2 Pilihan Algoritma Peramalan Terintegrasi
 1. **ARIMA(2,0,2) [Sangat Direkomendasikan]:** Model deret waktu terbaik hasil uji empiris notebook riset (*Bima2026.ipynb*) dengan akurasi presisi tinggi (**MAPE = 5.73%**).
