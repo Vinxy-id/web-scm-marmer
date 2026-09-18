@@ -95,9 +95,13 @@ class MidtransService
 
             $snapToken = Snap::getSnapToken($params);
 
-            // Simpan snap token ke record order
+            // Simpan snap token dan orderId aktif ke record order
+            $existingResponse = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+            $existingResponse['midtrans_order_id'] = $orderId;
+
             $order->update([
                 'snap_token' => $snapToken,
+                'midtrans_response' => $existingResponse,
             ]);
 
             return $snapToken;
@@ -148,77 +152,95 @@ class MidtransService
             return null;
         }
 
-        try {
-            $response = \Midtrans\Transaction::status($order->order_number);
-            $payload = (array) $response;
+        $activeOrderId = $order->midtrans_response['midtrans_order_id'] ?? null;
+        $candidates = array_unique(array_filter([
+            $activeOrderId,
+            $order->midtrans_transaction_id,
+            $order->order_number,
+        ]));
 
-            $transactionStatus = $payload['transaction_status'] ?? null;
-            $fraudStatus = $payload['fraud_status'] ?? null;
-            $paymentType = $payload['payment_type'] ?? 'midtrans';
-            $transactionId = $payload['transaction_id'] ?? null;
-            $grossAmount = (float) ($payload['gross_amount'] ?? $order->total_amount);
+        foreach ($candidates as $candidateId) {
+            try {
+                $response = \Midtrans\Transaction::status($candidateId);
+                $payload = (array) $response;
 
-            if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
-                $isDp = ($order->payment_scheme === 'dp_50');
-                $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
+                $transactionStatus = $payload['transaction_status'] ?? null;
+                $fraudStatus = $payload['fraud_status'] ?? null;
+                $paymentType = $payload['payment_type'] ?? 'midtrans';
+                $transactionId = $payload['transaction_id'] ?? null;
+                $grossAmount = (float) ($payload['gross_amount'] ?? $order->total_amount);
 
-                DB::transaction(function () use ($order, $paymentStatus, $grossAmount, $transactionId, $paymentType, $transactionStatus, $payload) {
-                    if (!$order->work_order_id) {
-                        $spkNumber = CodeGeneratorService::generateSpkNumber();
-                        $workOrder = WorkOrder::create([
-                            'spk_number' => $spkNumber,
-                            'product_id' => $order->product_id,
-                            'customer_id' => $order->customer_id,
-                            'target_quantity' => $order->quantity,
-                            'completed_quantity' => 0,
-                            'scrap_quantity' => 0,
-                            'status' => 'scheduled',
-                            'priority' => ($order->payment_scheme === 'full_100') ? 'high' : 'normal',
-                            'start_date' => now()->toDateString(),
-                            'due_date' => now()->addDays(7)->toDateString(),
-                            'notes' => 'Pesanan E-Commerce: ' . $order->order_number . ' - Pembeli: ' . $order->receiver_name . ' (' . $order->shipping_city . ')',
-                            'created_by' => 1,
+                if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
+                    $isDp = ($order->payment_scheme === 'dp_50');
+                    $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
+
+                    DB::transaction(function () use ($order, $paymentStatus, $grossAmount, $transactionId, $paymentType, $transactionStatus, $payload) {
+                        if (!$order->work_order_id) {
+                            $spkNumber = CodeGeneratorService::generateSpkNumber();
+                            $workOrder = WorkOrder::create([
+                                'spk_number' => $spkNumber,
+                                'product_id' => $order->product_id,
+                                'customer_id' => $order->customer_id,
+                                'target_quantity' => $order->quantity,
+                                'completed_quantity' => 0,
+                                'scrap_quantity' => 0,
+                                'status' => 'scheduled',
+                                'priority' => ($order->payment_scheme === 'full_100') ? 'high' : 'normal',
+                                'start_date' => now()->toDateString(),
+                                'due_date' => now()->addDays(7)->toDateString(),
+                                'notes' => 'Pesanan E-Commerce: ' . $order->order_number . ' - Pembeli: ' . $order->receiver_name . ' (' . $order->shipping_city . ')',
+                                'created_by' => 1,
+                            ]);
+                            $order->work_order_id = $workOrder->id;
+                        }
+
+                        $mergedResponse = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+                        $mergedResponse = array_merge($mergedResponse, $payload);
+
+                        $order->update([
+                            'payment_status' => $paymentStatus,
+                            'paid_amount' => $grossAmount,
+                            'order_status' => 'in_production',
+                            'midtrans_transaction_id' => $transactionId,
+                            'midtrans_payment_type' => $paymentType,
+                            'midtrans_status' => $transactionStatus,
+                            'midtrans_response' => $mergedResponse,
+                            'work_order_id' => $order->work_order_id,
                         ]);
-                        $order->work_order_id = $workOrder->id;
-                    }
+                    });
+
+                    return $transactionStatus;
+                } elseif ($transactionStatus === 'pending') {
+                    $mergedResponse = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+                    $mergedResponse = array_merge($mergedResponse, $payload);
 
                     $order->update([
-                        'payment_status' => $paymentStatus,
-                        'paid_amount' => $grossAmount,
-                        'order_status' => 'in_production',
                         'midtrans_transaction_id' => $transactionId,
                         'midtrans_payment_type' => $paymentType,
                         'midtrans_status' => $transactionStatus,
-                        'midtrans_response' => $payload,
-                        'work_order_id' => $order->work_order_id,
+                        'midtrans_response' => $mergedResponse,
                     ]);
-                });
 
-                return $transactionStatus;
-            } elseif ($transactionStatus === 'pending') {
-                $order->update([
-                    'midtrans_transaction_id' => $transactionId,
-                    'midtrans_payment_type' => $paymentType,
-                    'midtrans_status' => $transactionStatus,
-                    'midtrans_response' => $payload,
-                ]);
+                    return $transactionStatus;
+                } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                    $newOrderStatus = ($transactionStatus === 'expire') ? 'expired' : 'cancelled';
+                    $mergedResponse = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+                    $mergedResponse = array_merge($mergedResponse, $payload);
 
-                return $transactionStatus;
-            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-                $newOrderStatus = ($transactionStatus === 'expire') ? 'expired' : 'cancelled';
-                $order->update([
-                    'order_status' => $newOrderStatus,
-                    'midtrans_status' => $transactionStatus,
-                    'midtrans_response' => $payload,
-                    'cancelled_at' => now(),
-                    'cancellation_reason' => "Status transaksi Midtrans: {$transactionStatus}",
-                ]);
+                    $order->update([
+                        'order_status' => $newOrderStatus,
+                        'midtrans_status' => $transactionStatus,
+                        'midtrans_response' => $mergedResponse,
+                        'cancelled_at' => now(),
+                        'cancellation_reason' => "Status transaksi Midtrans: {$transactionStatus}",
+                    ]);
 
-                return $transactionStatus;
+                    return $transactionStatus;
+                }
+            } catch (\Throwable $e) {
+                // Lanjut coba kandidat ID berikutnya jika ada
+                continue;
             }
-        } catch (\Throwable $e) {
-            // Midtrans melempar exception 404 jika belum pernah dibuat transaksi oleh pembeli
-            return null;
         }
 
         return null;

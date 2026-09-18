@@ -191,11 +191,11 @@
                                 <p class="font-extrabold text-slate-900">
                                     Rp {{ number_format($item->total_amount, 0, ',', '.') }}
                                 </p>
-                                <div class="flex items-center gap-1">
+                                <div class="flex items-center gap-1.5 flex-wrap">
                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded inline-block whitespace-nowrap {{ $item->payment_scheme === 'dp_50' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
                                         {{ $item->payment_scheme === 'dp_50' ? 'DP 50%' : 'Lunas 100%' }}
                                     </span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-mono">{{ $item->payment_method }}</span>
+                                    <span class="text-[10px] text-slate-500 font-medium whitespace-nowrap">{{ $item->formatted_payment_type }}</span>
                                 </div>
                             </div>
                         </td>

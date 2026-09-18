@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('work_order_id')->nullable()->constrained('work_orders')->nullOnDelete()->cascadeOnUpdate();
             $table->integer('quantity')->default(1);
             $table->enum('payment_scheme', ['dp_50', 'full_100'])->default('dp_50');
-            $table->enum('payment_method', ['qris', 'bank_bca', 'bank_bri', 'bank_mandiri'])->default('qris');
+            $table->string('payment_method', 50)->default('midtrans');
             $table->decimal('unit_price', 15, 2);
             $table->decimal('total_amount', 15, 2);
             $table->decimal('paid_amount', 15, 2)->default(0);

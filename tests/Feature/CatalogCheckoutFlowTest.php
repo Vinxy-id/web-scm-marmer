@@ -65,7 +65,7 @@ class CatalogCheckoutFlowTest extends TestCase
         $response->assertSee('Estimasi Bobot Fisik');
     }
 
-    public function test_checkout_page_renders_dynamic_banks(): void
+    public function test_checkout_page_renders_automated_midtrans_payment_channels(): void
     {
         $product = Product::first();
 
@@ -73,10 +73,11 @@ class CatalogCheckoutFlowTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Ringkasan Pesanan');
-        $response->assertSee('Transfer Bank BCA');
-        $response->assertSee('048-1928-384');
-        $response->assertSee('Transfer Bank BRI');
-        $response->assertSee('Transfer Bank Mandiri');
+        $response->assertSee('Saluran Pembayaran Digital (Otomatis)');
+        $response->assertSee('Pembayaran Terintegrasi Midtrans');
+        $response->assertSee('QRIS Dinamis');
+        $response->assertSee('Virtual Account');
+        $response->assertSee('Bebas Kode Unik');
     }
 
     public function test_checkout_submission_and_invoice_generation(): void

@@ -135,4 +135,95 @@ class EcommerceCheckoutTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($order->order_number);
     }
+
+    public function test_paid_midtrans_order_disables_pay_button_and_shows_verification()
+    {
+        $order = Order::create([
+            'order_number' => 'ORD-TEST-PAID-001',
+            'customer_id' => 1,
+            'product_id' => $this->product->id,
+            'quantity' => 1,
+            'unit_price' => $this->product->price ?? 1000000,
+            'total_amount' => $this->product->price ?? 1000000,
+            'paid_amount' => $this->product->price ?? 1000000,
+            'payment_scheme' => 'full_100',
+            'payment_method' => 'midtrans',
+            'snap_token' => 'mock-snap-token-123',
+            'midtrans_transaction_id' => 'TRX-MIDTRANS-999',
+            'midtrans_payment_type' => 'bca_va',
+            'midtrans_status' => 'settlement',
+            'payment_status' => 'paid_full',
+            'order_status' => 'in_production',
+            'receiver_name' => 'Bpk. Hendra',
+            'receiver_phone' => '081233445566',
+            'shipping_city' => 'Jakarta Selatan',
+            'shipping_address' => 'Jl. Sudirman No. 1',
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $response = $this->get(route('checkout.invoice', $order->order_number));
+        $response->assertStatus(200);
+        $response->assertSee('Pembayaran Berhasil Terverifikasi!');
+        $response->assertSee('TRX-MIDTRANS-999');
+        $response->assertDontSee('id="pay-button"', false);
+        $response->assertDontSee('Ganti Metode');
+
+        // Test check-status on already paid order
+        $checkStatusResponse = $this->get(route('checkout.check-status', $order->order_number));
+        $checkStatusResponse->assertRedirect(route('checkout.invoice', $order->order_number));
+        $checkStatusResponse->assertSessionHas('success');
+        $checkStatusResponse->assertSessionMissing('info');
+
+        // Test regenerate snap token on already paid order
+        $regenResponse = $this->get(route('checkout.regenerate-snap', $order->order_number));
+        $regenResponse->assertRedirect(route('checkout.invoice', $order->order_number));
+        $regenResponse->assertSessionHas('info');
+    }
+
+    public function test_invoice_view_renders_clean_labels_and_print_layout_without_raw_snake_case()
+    {
+        $product = Product::first();
+
+        // Create an order with Midtrans bank_transfer channel
+        $order = Order::create([
+            'order_number' => 'ORD-TEST-PRINT-001',
+            'customer_id' => 1,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => $product->selling_price ?? 1250000,
+            'total_amount' => $product->selling_price ?? 1250000,
+            'payment_scheme' => 'dp_50',
+            'payment_method' => 'midtrans',
+            'midtrans_payment_type' => 'bank_transfer',
+            'midtrans_status' => 'settlement',
+            'payment_status' => 'paid_dp',
+            'order_status' => 'in_production',
+            'receiver_name' => 'Dr. H. Bambang',
+            'receiver_phone' => '081234567890',
+            'shipping_city' => 'Surabaya',
+            'shipping_address' => 'Jl. Pemuda No. 45',
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $response = $this->get(route('checkout.invoice', $order->order_number));
+        $response->assertStatus(200);
+
+        // Verify clean human-friendly Indonesian payment label is shown
+        $response->assertSee('Transfer Virtual Account / Bank');
+        $response->assertSee('Uang Muka (DP 50%)');
+        $response->assertSee('DP 50% TERVERIFIKASI');
+
+        // Verify Kop Surat & Official A4 Print Elements are present
+        $response->assertSee('KLASTER IKM KERAJINAN MARMER & ONYX TULUNGAGUNG', false);
+        $response->assertSee('FAKTUR PENJUALAN & BUKTI PEMBAYARAN', false);
+        $response->assertSee('PEMESAN / DITUJUKAN KEPADA:', false);
+        $response->assertSee('INFORMASI TRANSAKSI & SCM:', false);
+        $response->assertSee('Catatan & Jaminan Garansi Mutu Pengrajin:', false);
+        $response->assertSee('Verifikasi Digital:', false);
+        $response->assertSee('TERVALIDASI SISTEM E-SCM', false);
+
+        // Verify raw snake_case "bank_transfer" is NOT rendered as raw text in payment channel
+        $this->assertEquals('Transfer Virtual Account / Bank', $order->formatted_payment_type);
+        $this->assertEquals('Uang Muka (DP 50%)', $order->payment_scheme_label);
+    }
 }

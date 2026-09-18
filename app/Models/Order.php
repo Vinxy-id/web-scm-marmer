@@ -94,14 +94,87 @@ class Order extends Model
         };
     }
 
+    public function getPaymentSchemeLabelAttribute(): string
+    {
+        return match ($this->payment_scheme) {
+            'dp_50' => 'Uang Muka (DP 50%)',
+            'full_100' => 'Pelunasan Penuh (100%)',
+            default => ucwords(str_replace('_', ' ', $this->payment_scheme ?? '')),
+        };
+    }
+
+    public function getPaymentMethodLabelAttribute(): string
+    {
+        return match ($this->payment_method) {
+            'midtrans' => 'Pembayaran Digital (Midtrans)',
+            'qris' => 'QRIS Standar Nasional',
+            'bank_bca' => 'Transfer Bank BCA',
+            'bank_bri' => 'Transfer Bank BRI',
+            'bank_mandiri' => 'Transfer Bank Mandiri',
+            'bank_bni' => 'Transfer Bank BNI',
+            'bank_cimb' => 'Transfer Bank CIMB Niaga',
+            'bank_permata' => 'Transfer Bank Permata',
+            'bank_bsi' => 'Transfer Bank Syariah Indonesia (BSI)',
+            default => ucwords(str_replace(['_', '-'], ' ', $this->payment_method ?? '')),
+        };
+    }
+
+    public function getFormattedPaymentTypeAttribute(): string
+    {
+        $type = strtolower($this->midtrans_payment_type ?? '');
+
+        if (!empty($type)) {
+            return match ($type) {
+                'bank_transfer' => 'Transfer Virtual Account / Bank',
+                'bca_va' => 'BCA Virtual Account',
+                'bni_va' => 'BNI Virtual Account',
+                'bri_va' => 'BRI Virtual Account',
+                'permata_va' => 'Permata Virtual Account',
+                'cimb_va' => 'CIMB Niaga Virtual Account',
+                'other_va' => 'Virtual Account Bank Lainnya',
+                'echannel', 'mandiri_bill', 'mandiri_clickpay' => 'Mandiri Bill Payment',
+                'qris', 'qris_gopay', 'gopay' => 'QRIS Dinamis (GoPay / OVO / DANA)',
+                'shopeepay' => 'ShopeePay / SPayLater',
+                'credit_card' => 'Kartu Kredit / Debit Online',
+                'cstore', 'indomaret' => 'Gerai Indomaret',
+                'alfamart' => 'Gerai Alfamart',
+                'akulaku' => 'Akulaku PayLater',
+                'kredivo' => 'Kredivo PayLater',
+                'bca_klikbca' => 'BCA KlikBCA',
+                'bca_klikpay' => 'BCA KlikPay',
+                'cimb_clicks' => 'CIMB Clicks',
+                'danamon_online' => 'Danamon Online Banking',
+                'bri_epay' => 'BRI E-Pay',
+                'dana' => 'DANA',
+                'ovo' => 'OVO',
+                'linkaja' => 'LinkAja',
+                default => ucwords(str_replace(['_', '-'], ' ', $type)),
+            };
+        }
+
+        return $this->payment_method_label;
+    }
+
     public function getOrderStatusLabelAttribute(): string
     {
         if ($this->isExpired()) {
             return 'Kadaluarsa (Melewati 24 Jam)';
         }
 
+        if ($this->order_status === 'pending_payment') {
+            if (in_array($this->payment_status, ['paid_dp', 'paid_full'])) {
+                return 'Pembayaran Diterima (Menunggu Konfirmasi)';
+            }
+            if ($this->payment_method === 'midtrans' && $this->midtrans_status === 'pending') {
+                return 'Menunggu Penyelesaian Pembayaran';
+            }
+            if ($this->payment_method === 'midtrans') {
+                return 'Menunggu Pembayaran Online';
+            }
+            return 'Menunggu Transfer Pembayaran';
+        }
+
         return match ($this->order_status) {
-            'pending_payment' => 'Menunggu Konfirmasi Pembayaran',
             'verified' => 'Pembayaran Terverifikasi (Siap SPK)',
             'in_production' => 'Sedang Dikerjakan di Bengkel',
             'qc_phase' => 'Tahap Pengujian Kualitas (QC)',
@@ -120,9 +193,18 @@ class Order extends Model
             return 'bg-rose-100 text-rose-800 border-rose-200';
         }
 
+        if ($this->order_status === 'pending_payment') {
+            if (in_array($this->payment_status, ['paid_dp', 'paid_full'])) {
+                return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            }
+            if ($this->payment_method === 'midtrans' && $this->midtrans_status === 'pending') {
+                return 'bg-amber-100 text-amber-800 border-amber-200';
+            }
+            return 'bg-blue-100 text-blue-800 border-blue-200';
+        }
+
         return match ($this->order_status) {
-            'pending_payment' => 'bg-amber-100 text-amber-800 border-amber-200',
-            'verified' => 'bg-blue-100 text-blue-800 border-blue-200',
+            'verified' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
             'in_production' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
             'qc_phase' => 'bg-purple-100 text-purple-800 border-purple-200',
             'packing' => 'bg-cyan-100 text-cyan-800 border-cyan-200',

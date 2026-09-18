@@ -172,13 +172,13 @@
                         </div>
                     </div>
 
-                    <!-- Section 3: Payment Methods -->
+                    <!-- Section 3: Payment Process Info -->
                     <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
                             <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">3</div>
                             <div>
-                                <h3 class="text-sm font-bold text-slate-900">Pilih Metode Pembayaran</h3>
-                                <p class="text-[11px] text-slate-400">Pembayaran langsung ke rekening resmi IKM Tulungagung.</p>
+                                <h3 class="text-sm font-bold text-slate-900">Saluran Pembayaran Digital (Otomatis)</h3>
+                                <p class="text-[11px] text-slate-400">Verifikasi real-time tanpa perlu kirim bukti transfer secara manual.</p>
                             </div>
                         </div>
 
@@ -195,55 +195,51 @@
                         </div>
                         @endif
 
-                        <!-- Payment Method Options -->
-                        <div class="space-y-3">
-                            <!-- Instant Online Payment (Recommended) -->
-                            <label class="flex items-center justify-between p-4 bg-blue-50/40 hover:bg-blue-50/70 rounded-2xl border-2 border-blue-600 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/80 cursor-pointer transition shadow-xs">
+                        <!-- Payment Flow Explanation Container -->
+                        <div class="p-5 bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/40 rounded-2xl border border-blue-200/80 space-y-4">
+                            <input type="hidden" name="payment_method" value="midtrans">
+                            
+                            <div class="flex items-start justify-between gap-3">
                                 <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="midtrans" checked class="text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                    </div>
                                     <div>
-                                        <div class="flex items-center gap-2">
-                                            <p class="text-xs font-black text-slate-900">Pembayaran Online Instan</p>
-                                            <span class="text-[9px] font-black uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded-full">Verifikasi Otomatis</span>
-                                        </div>
-                                        <p class="text-[10px] text-slate-600 mt-0.5">QRIS (GoPay/ShopeePay/DANA), Virtual Account (BCA/Mandiri/BRI/BNI), Kartu Kredit</p>
+                                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900">Pembayaran Terintegrasi Midtrans</h4>
+                                        <p class="text-[11px] text-slate-500">Tersertifikasi resmi Bank Indonesia & enkripsi keamanan tingkat tinggi.</p>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-1.5 flex-shrink-0">
-                                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">Bebas Kode Unik</span>
-                                </div>
-                            </label>
-
-
-                            <div class="pt-2 pb-1 text-center">
-                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">── Atau Transfer Manual Tradisional ──</span>
+                                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-full whitespace-nowrap">
+                                    Bebas Kode Unik
+                                </span>
                             </div>
 
-                            <!-- QRIS Manual -->
-                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="qris" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-900">QRIS Statis Manual Pengrajin</p>
-                                        <p class="text-[10px] text-slate-500">Konfirmasi bukti transfer manual via WhatsApp</p>
-                                    </div>
-                                </div>
-                                <span class="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Manual WA</span>
-                            </label>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Anda tidak perlu memilih rekening bank di sini. Setelah menekan tombol <b>"Konfirmasi & Buat Pesanan"</b> di bawah, jendela pop-up Midtrans akan langsung terbuka di layar Anda untuk memilih:
+                            </p>
 
-                            <!-- Dynamic Bank Options -->
-                            @foreach($banks as $bKey => $bank)
-                            <label class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_method" value="{{ $bKey }}" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-900">Transfer {{ $bank['name'] }} (Manual)</p>
-                                        <p class="text-[10px] text-slate-500">Rek: <b class="font-mono text-slate-800">{{ $bank['number'] }}</b> a/n {{ $bank['holder'] }}</p>
-                                    </div>
-                                </div>
-                                <span class="text-[10px] font-bold text-blue-700 uppercase">{{ str_replace('bank_', '', $bKey) }}</span>
-                            </label>
-                            @endforeach
+                            <!-- Channel Badges (Non-interactive info chips) -->
+                            <div class="flex flex-wrap gap-2 text-[11px]">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-800 rounded-xl font-semibold shadow-2xs">
+                                    <i data-lucide="qr-code" class="w-3.5 h-3.5 text-blue-600"></i> QRIS Dinamis (GoPay / OVO / DANA / ShopeePay)
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-800 rounded-xl font-semibold shadow-2xs">
+                                    <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-600"></i> Virtual Account (BCA, Mandiri, BRI, BNI, Permata, CIMB)
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-800 rounded-xl font-semibold shadow-2xs">
+                                    <i data-lucide="credit-card" class="w-3.5 h-3.5 text-emerald-600"></i> Kartu Kredit / Debit (Visa / Mastercard)
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-800 rounded-xl font-semibold shadow-2xs">
+                                    <i data-lucide="store" class="w-3.5 h-3.5 text-amber-600"></i> Gerai Indomaret & Alfamart
+                                </span>
+                            </div>
+
+                            <!-- Guidance alert -->
+                            <div class="pt-2 border-t border-blue-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500">
+                                <span class="flex items-center gap-1.5">
+                                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> SPK pengerjaan bengkel langsung terbit secara otomatis setelah pembayaran Anda selesai.
+                                </span>
+                            </div>
                         </div>
 
                     </div>

@@ -139,6 +139,23 @@ Setiap kartu metrik menampilkan:
 - **Visualisasi Hasil Ramalan:** Line chart memuat data aktual historis 12 bulan terakhir vs garis proyeksi 3–6 bulan ke depan (disertai batas atas & batas bawah confidence interval).
 - **Tabel Rekomendasi Pengadaan:** Rekomendasi volume order blok batu marmer sebelum tanggal kritis kehabisan stok.
 
+### 3.6 Layar Tagihan & Invoice Digital Publik (`/checkout/invoice/{order_number}`)
+- **Header:** Skema tagihan (DP 50% / Lunas 100%), status badge adaptif (Menunggu Pembayaran, Terverifikasi, Produksi), batas waktu countdown 24 jam.
+- **Standar Label Pembayaran:** Seluruh saluran pembayaran diterjemahkan ke dalam Bahasa Indonesia yang bersih tanpa *underscore* / *raw string* (misal: *Transfer Virtual Account / Bank*, *BCA Virtual Account*, *QRIS Dinamis*, *Mandiri Bill Payment*).
+- **Pencegahan Pembayaran Ganda (*Anti-Overpayment Warning*):** Banner peringatan tebal agar pelanggan tidak membayar berulang ketika transaksi sudah diselesaikan di aplikasi perbankan/e-wallet.
+- **Kartu Status Pembayaran Dinamis:**
+  - *Status Terverifikasi / Lunas:* Banner hijau emerald dengan detail referensi Midtrans/Bank, SPK aktif, dan tombol pembayaran otomatis di-disable.
+  - *Status Pending / Menunggu Transfer:* Banner amber informatif dengan tombol "Buka Layar Bayar" & "Sudah Bayar? Cek Status".
+  - *Status Belum Bayar:* Banner biru instan dengan tombol CTA primer "Bayar Sekarang" & "Ganti Metode".
+- **Rincian Barang & Pengiriman:** Tabel produk kerajinan, spesifikasi dimensi, bebas biaya peti kayu solid, alamat pengiriman, dan integrasi nomor SPK Kanban.
+- **Standar Cetak Faktur Resmi A4 (`@media print`):**
+  - Menyembunyikan seluruh navigasi web (navbar, breadcrumb, banner, footer, tombol aksi).
+  - Menampilkan Kop Surat Resmi Klaster IKM Kerajinan Marmer & Onyx Tulungagung (UD Cahaya Onix / UD Putra Abadi).
+  - Format 2 kolom tertata rapi (Data Pemesan / Buyer & Integrasi SCM Bengkel).
+  - Tabel rincian barang dan komputasi DP/Lunas berstandar faktur bisnis resmi.
+  - QR Code Verifikasi Keaslian Faktur & Live Tracking serta tanda tangan resmi pimpinan IKM dan cap digital.
+- **Footer Aksi Web:** Tombol Cetak/Simpan PDF, Lacak Progres Pengerjaan, Simpan Ringkasan ke WA, dan Tombol Interaktif WhatsApp Pengrajin.
+
 ---
 
 ## 4. Standar Breakpoint Responsif

@@ -65,7 +65,7 @@ class CheckoutController extends Controller
             'shipping_city' => ['required', 'string', 'max:100'],
             'shipping_address' => ['required', 'string', 'max:500'],
             'payment_scheme' => ['required', 'in:dp_50,full_100'],
-            'payment_method' => ['required', 'in:midtrans,qris,bank_bca,bank_bri,bank_mandiri'],
+            'payment_method' => ['nullable', 'string', 'in:midtrans,qris,bank_bca,bank_bri,bank_mandiri'],
             'custom_notes' => ['nullable', 'string', 'max:500'],
         ], [
             'receiver_name.required' => 'Nama lengkap penerima wajib diisi.',
@@ -75,14 +75,14 @@ class CheckoutController extends Controller
             'shipping_address.required' => 'Alamat lengkap pengiriman wajib diisi.',
         ]);
 
-
         $product = Product::findOrFail($validated['product_id']);
         $qty = (int) $validated['quantity'];
         $unitPrice = (float) $product->selling_price;
         $totalAmount = $unitPrice * $qty;
-        $uniqueCode = ($validated['payment_method'] === 'midtrans') ? 0 : rand(100, 999);
+        $paymentMethod = $validated['payment_method'] ?? 'midtrans';
+        $uniqueCode = ($paymentMethod === 'midtrans') ? 0 : rand(100, 999);
 
-        $order = DB::transaction(function () use ($validated, $product, $qty, $unitPrice, $totalAmount, $uniqueCode) {
+        $order = DB::transaction(function () use ($validated, $product, $qty, $unitPrice, $totalAmount, $paymentMethod, $uniqueCode) {
 
             // 1. Create or retrieve Customer record
             $cleanPhone = preg_replace('/[^0-9]/', '', $validated['receiver_phone']);
@@ -109,7 +109,7 @@ class CheckoutController extends Controller
                 'work_order_id' => null, // Will be assigned by Admin when payment is verified
                 'quantity' => $qty,
                 'payment_scheme' => $validated['payment_scheme'],
-                'payment_method' => $validated['payment_method'],
+                'payment_method' => $paymentMethod,
                 'unit_price' => $unitPrice,
                 'total_amount' => $totalAmount,
                 'paid_amount' => 0,
@@ -176,7 +176,14 @@ class CheckoutController extends Controller
             ? (($order->total_amount * 0.5) + ($order->payment_method === 'midtrans' ? 0 : $order->unique_code)) 
             : ($order->total_amount + ($order->payment_method === 'midtrans' ? 0 : $order->unique_code));
 
-        $waConfirmMsg = "Halo Pengrajin E-SCM, saya telah melakukan pembayaran untuk Pesanan *" . $order->order_number . "* (" . $order->product->name . ") sebesar Rp " . number_format($targetTransferAmount, 0, ',', '.') . ". Mohon diverifikasi agar SPK produksi dapat diterbitkan. Terima kasih.";
+        $isPaid = in_array($order->payment_status, ['paid_dp', 'paid_full']) || in_array($order->order_status, ['verified', 'in_production', 'qc_phase', 'packing', 'shipped', 'delivered']);
+
+        if ($isPaid) {
+            $spkNumber = $order->workOrder->spk_number ?? 'SPK Terbit';
+            $waConfirmMsg = "Halo Pengrajin E-SCM, saya telah menyelesaikan pembayaran untuk Pesanan *" . $order->order_number . "* (" . ($order->product->name ?? 'Kerajinan Marmer') . " - SPK: " . $spkNumber . "). Mohon informasi jadwal dan progres pengerjaannya. Terima kasih.";
+        } else {
+            $waConfirmMsg = "Halo Pengrajin E-SCM, saya telah melakukan pembayaran untuk Pesanan *" . $order->order_number . "* (" . ($order->product->name ?? 'Kerajinan Marmer') . ") sebesar Rp " . number_format($targetTransferAmount, 0, ',', '.') . ". Mohon diverifikasi agar SPK produksi dapat diterbitkan. Terima kasih.";
+        }
         $waConfirmUrl = "https://wa.me/{$artisanPhone}?text=" . urlencode($waConfirmMsg);
 
         $banks = [
@@ -279,7 +286,17 @@ class CheckoutController extends Controller
     {
         $order = Order::where('order_number', $orderNumber)->firstOrFail();
 
-        if ($order->payment_method === 'midtrans' && !in_array($order->payment_status, ['paid_dp', 'paid_full']) && !$order->isExpired() && !$order->isCancelled()) {
+        if (in_array($order->payment_status, ['paid_dp', 'paid_full']) || in_array($order->order_status, ['verified', 'in_production', 'qc_phase', 'packing', 'shipped', 'delivered'])) {
+            return redirect()->route('checkout.invoice', $order->order_number)
+                             ->with('info', 'Tagihan pesanan ini sudah berhasil dibayarkan, metode pembayaran tidak dapat diubah.');
+        }
+
+        if ($order->isExpired() || $order->isCancelled()) {
+            return redirect()->route('checkout.invoice', $order->order_number)
+                             ->with('info', 'Pesanan ini telah kadaluarsa atau dibatalkan.');
+        }
+
+        if ($order->payment_method === 'midtrans') {
             $this->midtransService->createSnapToken($order, true);
         }
 
@@ -287,29 +304,95 @@ class CheckoutController extends Controller
                          ->with('info', 'Sesi pembayaran diperbarui. Silakan pilih metode pembayaran baru yang Anda inginkan.');
     }
 
-    /**
-     * Explicit check of payment status from Midtrans API.
-     */
-    public function checkPaymentStatus($orderNumber)
+    public function checkPaymentStatus(Request $request, $orderNumber)
     {
         $order = Order::where('order_number', $orderNumber)->firstOrFail();
 
+        // 1. Jika pesanan sudah tercatat lunas/DP di database
+        if (in_array($order->payment_status, ['paid_dp', 'paid_full']) || in_array($order->order_status, ['verified', 'in_production', 'qc_phase', 'packing', 'shipped', 'delivered'])) {
+            return redirect()->route('checkout.invoice', $order->order_number)
+                             ->with('success', 'Pembayaran telah berhasil diverifikasi! SPK pengerjaan bengkel telah aktif.');
+        }
+
         if ($order->payment_method === 'midtrans') {
+            $frontStatus = $request->input('transaction_status');
+            $frontTrxId = $request->input('transaction_id');
+            $frontType = $request->input('payment_type');
+
+            if ($frontStatus === 'settlement' || ($frontStatus === 'capture' && $request->input('fraud_status') !== 'challenge')) {
+                $isDp = ($order->payment_scheme === 'dp_50');
+                $paymentStatus = $isDp ? 'paid_dp' : 'paid_full';
+                $grossAmount = ($order->payment_scheme === 'dp_50') ? ($order->total_amount * 0.5) : $order->total_amount;
+
+                \Illuminate\Support\Facades\DB::transaction(function () use ($order, $paymentStatus, $grossAmount, $frontTrxId, $frontType, $frontStatus, $request) {
+                    if (!$order->work_order_id) {
+                        $spkNumber = \App\Services\CodeGeneratorService::generateSpkNumber();
+                        $workOrder = \App\Models\WorkOrder::create([
+                            'spk_number' => $spkNumber,
+                            'product_id' => $order->product_id,
+                            'customer_id' => $order->customer_id,
+                            'target_quantity' => $order->quantity,
+                            'completed_quantity' => 0,
+                            'scrap_quantity' => 0,
+                            'status' => 'scheduled',
+                            'priority' => ($order->payment_scheme === 'full_100') ? 'high' : 'normal',
+                            'start_date' => now()->toDateString(),
+                            'due_date' => now()->addDays(7)->toDateString(),
+                            'notes' => 'Pesanan E-Commerce: ' . $order->order_number . ' - Pembeli: ' . $order->receiver_name . ' (' . $order->shipping_city . ')',
+                            'created_by' => 1,
+                        ]);
+                        $order->work_order_id = $workOrder->id;
+                    }
+
+                    $merged = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+                    $merged = array_merge($merged, $request->all());
+
+                    $order->update([
+                        'payment_status' => $paymentStatus,
+                        'paid_amount' => $grossAmount,
+                        'order_status' => 'in_production',
+                        'midtrans_transaction_id' => $frontTrxId ?: $order->midtrans_transaction_id,
+                        'midtrans_payment_type' => $frontType ?: $order->midtrans_payment_type,
+                        'midtrans_status' => $frontStatus,
+                        'midtrans_response' => $merged,
+                        'work_order_id' => $order->work_order_id,
+                    ]);
+                });
+
+                return redirect()->route('checkout.invoice', $order->order_number)
+                                 ->with('success', 'Pembayaran Midtrans berhasil terkonfirmasi! SPK pengerjaan bengkel telah otomatis diterbitkan.');
+            } elseif ($frontStatus === 'pending') {
+                $merged = is_array($order->midtrans_response) ? $order->midtrans_response : [];
+                $merged = array_merge($merged, $request->all());
+
+                $order->update([
+                    'midtrans_transaction_id' => $frontTrxId ?: $order->midtrans_transaction_id,
+                    'midtrans_payment_type' => $frontType ?: $order->midtrans_payment_type,
+                    'midtrans_status' => 'pending',
+                    'midtrans_response' => $merged,
+                ]);
+            }
+
             $status = $this->midtransService->syncOrderStatus($order);
             $order->refresh();
 
             if (in_array($order->payment_status, ['paid_dp', 'paid_full'])) {
                 return redirect()->route('checkout.invoice', $order->order_number)
-                                 ->with('success', 'Pembayaran Midtrans terkonfirmasi lunas! SPK pengerjaan bengkel telah otomatis diterbitkan.');
+                                 ->with('success', 'Pembayaran Midtrans berhasil terkonfirmasi! SPK pengerjaan bengkel telah otomatis diterbitkan.');
             }
 
-            if ($status === 'pending') {
+            if ($status === 'pending' || $order->midtrans_status === 'pending') {
                 return redirect()->route('checkout.invoice', $order->order_number)
-                                 ->with('info', 'Transaksi terdeteksi di Midtrans namun masih menunggu pembayaran Anda.');
+                                 ->with('info', 'Transaksi terdeteksi dalam proses di Midtrans (' . $order->formatted_payment_type . '). Jika Anda sudah mentransfer, mohon tunggu 1-2 menit untuk validasi sistem.');
+            }
+
+            if ($order->isCancelled() || in_array($status, ['deny', 'expire', 'cancel'])) {
+                return redirect()->route('checkout.invoice', $order->order_number)
+                                 ->with('info', 'Status transaksi pembayaran Midtrans dibatalkan atau telah kadaluarsa.');
             }
 
             return redirect()->route('checkout.invoice', $order->order_number)
-                             ->with('info', 'Belum ada catatan pembayaran baru yang terdeteksi di Midtrans untuk tagihan ini.');
+                             ->with('info', 'Sistem belum mendeteksi konfirmasi pembayaran baru dari saluran pembayaran. Jika Anda baru saja menyelesaikan transfer, mohon tunggu 1-2 menit lalu coba klik Cek Status kembali.');
         }
 
         return redirect()->route('checkout.invoice', $order->order_number);

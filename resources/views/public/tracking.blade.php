@@ -228,7 +228,7 @@
                         <div>
                             <p class="font-bold text-slate-900">{{ $order->product->name }}</p>
                             <p class="text-[11px] text-slate-500">Jumlah: {{ $order->quantity }} unit ({{ $order->product->dimension_spec ?: 'Standar' }})</p>
-                            <p class="text-[11px] text-blue-700 font-semibold">Skema: {{ $order->payment_scheme === 'dp_50' ? 'Uang Muka DP 50%' : 'Lunas 100%' }}</p>
+                            <p class="text-[11px] text-blue-700 font-semibold">Skema: {{ $order->payment_scheme_label }} &bull; {{ $order->formatted_payment_type }}</p>
                         </div>
                     </div>
                 </div>
