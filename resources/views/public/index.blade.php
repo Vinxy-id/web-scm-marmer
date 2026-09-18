@@ -140,7 +140,7 @@
 <!-- ============================================================================ -->
 <!-- 2. PROFIL 2 IKM MITRA BINAAN                                                 -->
 <!-- ============================================================================ -->
-<section id="profil-ikm" class="py-16 bg-white border-b border-slate-200">
+<section id="profil-ikm" class="scroll-mt-20 py-16 bg-white border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="text-center max-w-3xl mx-auto mb-12">
@@ -394,7 +394,7 @@
 <!-- ============================================================================ -->
 <!-- 4. ALUR RANTAI PASOK & TRANSPARANSI MUTU (SUPPLY CHAIN STORY)                -->
 <!-- ============================================================================ -->
-<section id="alur-rantai-pasok" class="py-16 bg-white border-y border-slate-200">
+<section id="alur-rantai-pasok" class="scroll-mt-20 py-16 bg-white border-y border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="text-center max-w-3xl mx-auto mb-14">
@@ -473,9 +473,9 @@
 </section>
 
 <!-- ============================================================================ -->
-<!-- 5. CALLOUT BANNER: CUSTOM ORDER ARSITEKTUR & PROYEK                         -->
+<!-- 5. CALLOUT BANNER: CUSTOM ORDER ARSITEKTUR & PROYEK (KONTAK B2B)            -->
 <!-- ============================================================================ -->
-<section class="py-14 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white">
+<section id="kontak" class="scroll-mt-20 py-14 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row items-center justify-between gap-8 bg-white/5 p-8 sm:p-12 rounded-3xl border border-white/10 backdrop-blur-md">
             
