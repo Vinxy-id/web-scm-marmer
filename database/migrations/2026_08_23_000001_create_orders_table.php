@@ -35,6 +35,9 @@ return new class extends Migration
             ])->default('pending_payment');
             $table->text('shipping_address');
             $table->string('shipping_city', 100);
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->string('maps_url', 500)->nullable();
             $table->string('receiver_name', 150);
             $table->string('receiver_phone', 25);
             $table->text('custom_notes')->nullable();
