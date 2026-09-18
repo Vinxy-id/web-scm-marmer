@@ -514,10 +514,23 @@
 
                 <!-- Customer & Shipping Information Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1 text-xs">
-                        <h4 class="font-bold text-slate-900 mb-2">Tujuan Pengiriman:</h4>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                            <h4 class="font-bold text-slate-900">Tujuan Pengiriman:</h4>
+                            @if($order->google_maps_url)
+                            <a href="{{ $order->google_maps_url }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200 shadow-xs hover:underline">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-red-500"></i>
+                                <span>Buka Google Maps</span>
+                            </a>
+                            @endif
+                        </div>
                         <p class="text-slate-800 font-semibold">{{ $order->receiver_name }} ({{ $order->receiver_phone }})</p>
                         <p class="text-slate-600 leading-relaxed">{{ $order->shipping_address }}, {{ $order->shipping_city }}</p>
+                        @if($order->latitude && $order->longitude)
+                        <div class="pt-1 text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
+                            <span class="bg-slate-200/80 px-2 py-0.5 rounded text-slate-700">GPS: {{ number_format($order->latitude, 6) }}, {{ number_format($order->longitude, 6) }}</span>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1 text-xs">
@@ -651,6 +664,11 @@
                 <div style="font-size: 8.5pt; color: #334155; margin-top: 2px; line-height: 1.35;">
                     Alamat Pengiriman: {{ $order->shipping_address }}, <strong>{{ $order->shipping_city }}</strong>
                 </div>
+                @if($order->latitude && $order->longitude)
+                <div style="font-size: 7.5pt; color: #475569; margin-top: 3px; font-family: monospace;">
+                    Titik GPS Kargo: {{ number_format($order->latitude, 6) }}, {{ number_format($order->longitude, 6) }}
+                </div>
+                @endif
             </td>
             
             <td style="width: 2%; border: none;"></td>

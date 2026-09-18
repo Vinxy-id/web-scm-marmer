@@ -2,6 +2,23 @@
 
 @section('title', 'Checkout Pemesanan - ' . $product->name)
 
+@section('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+    #map-picker {
+        height: 280px;
+        width: 100%;
+        border-radius: 1rem;
+        z-index: 1;
+    }
+    .leaflet-popup-content-wrapper {
+        border-radius: 0.75rem;
+        font-family: inherit;
+        font-size: 12px;
+    }
+</style>
+@endsection
+
 @section('content')
 <!-- Breadcrumb -->
 <div class="bg-slate-900 text-white py-6 border-b border-slate-800">
@@ -112,13 +129,87 @@
                                    class="w-full text-xs rounded-xl border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-3 bg-slate-50/50">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Lengkap Pengiriman Kargo *</label>
-                            <textarea name="shipping_address" 
-                                      rows="3" 
-                                      placeholder="Nama jalan, nomor rumah, RT/RW, kelurahan, kecamatan, dan patokan lokasi"
-                                      required
-                                      class="w-full text-xs rounded-xl border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-3 bg-slate-50/50">{{ old('shipping_address') }}</textarea>
+                        <!-- Map Pinpoint Selector (GPS & Draggable Pin) -->
+                        <div class="p-4 sm:p-5 bg-blue-50/30 rounded-2xl border-2 border-blue-200 space-y-3.5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-100 pb-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                        <i data-lucide="map-pin" class="w-4 h-4 text-red-500"></i>
+                                        <span>Titik Alamat Pengiriman (Peta & GPS) *</span>
+                                    </label>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">
+                                        Ketik nama alamat / jalan pada kolom pencarian di bawah, klik deteksi GPS, atau geser pin merah tepat di depan rumah Anda.
+                                    </p>
+                                </div>
+                                <button type="button" 
+                                        id="btn-detect-gps"
+                                        onclick="detectGPSLocation()" 
+                                        class="self-start sm:self-auto text-xs font-bold bg-blue-700 hover:bg-blue-600 text-white px-3.5 py-2 rounded-xl transition shadow-xs flex items-center gap-1.5 flex-shrink-0">
+                                    <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+                                    <span>Deteksi GPS Saya</span>
+                                </button>
+                            </div>
+
+                            <!-- Map Search / Address Search Input with Enhanced Visibility -->
+                            <div class="space-y-1">
+                                <label class="block text-[11px] font-bold text-slate-700">Cari Alamat / Nama Jalan / Kelurahan di Peta:</label>
+                                <div class="flex gap-2">
+                                    <div class="flex-1">
+                                        <input type="text" 
+                                               id="map-search-input" 
+                                               placeholder="Contoh: Jl. Basuki Rahmat No. 12, Genteng, Surabaya" 
+                                               class="w-full text-xs rounded-xl border-2 border-blue-400/80 bg-blue-50/50 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-200 px-3.5 py-2.5 font-medium transition shadow-2xs"
+                                               onkeydown="if(event.key === 'Enter'){ event.preventDefault(); searchLocation(); }">
+                                    </div>
+                                    <button type="button" 
+                                            onclick="searchLocation()" 
+                                            class="px-4 py-2.5 bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm flex-shrink-0">
+                                        <i data-lucide="search" class="w-3.5 h-3.5"></i>
+                                        <span>Cari di Peta</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Leaflet Map Container -->
+                            <div class="relative rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner">
+                                <div id="map-picker"></div>
+                                <div id="map-loading" class="hidden absolute inset-0 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center z-10 text-white text-xs font-bold">
+                                    <div class="bg-white text-slate-800 px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
+                                        <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-blue-600"></i>
+                                        <span id="map-loading-text">Mencari titik lokasi...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selected Address & Coordinates Indicator Card -->
+                            <div class="space-y-2 bg-white p-3.5 rounded-xl border border-slate-200 text-xs shadow-xs">
+                                <div class="flex items-start gap-2">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Alamat Pengiriman Terdeteksi dari Peta:</span>
+                                        <p id="address-display" class="font-semibold text-slate-800 text-xs leading-snug break-words">
+                                            {{ old('shipping_address', 'Belum ada titik dipilih. Silakan klik GPS atau cari alamat pada kolom di atas.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                                    <div class="flex items-center gap-1.5 font-mono">
+                                        <span id="coords-display" class="truncate">{{ old('latitude') && old('longitude') ? 'GPS: ' . old('latitude') . ', ' . old('longitude') : 'GPS: Menunggu pemilihan titik' }}</span>
+                                    </div>
+                                    <a id="btn-open-gmaps" 
+                                       href="{{ old('maps_url', '#') }}" 
+                                       target="_blank" 
+                                       class="{{ old('latitude') && old('longitude') ? '' : 'hidden' }} text-blue-700 hover:text-blue-900 font-bold hover:underline flex items-center gap-1 flex-shrink-0">
+                                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Tes Buka di Google Maps
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Hidden Form Inputs for Shipping Address, Latitude, Longitude & Maps URL -->
+                            <input type="hidden" name="shipping_address" id="input-shipping-address" value="{{ old('shipping_address') }}">
+                            <input type="hidden" name="latitude" id="input-latitude" value="{{ old('latitude') }}">
+                            <input type="hidden" name="longitude" id="input-longitude" value="{{ old('longitude') }}">
+                            <input type="hidden" name="maps_url" id="input-maps-url" value="{{ old('maps_url') }}">
                         </div>
 
                         <div>
@@ -331,8 +422,12 @@
 
     </div>
 </div>
+@endsection
 
+@section('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+    // --- Product Price & Quantity Calculation ---
     const basePrice = {{ (float) $product->selling_price }};
     let currentQty = 1;
 
@@ -365,6 +460,218 @@
             document.getElementById('lbl-tagihan').innerText = 'Total Tagihan (Lunas 100%):';
             document.getElementById('txt-total').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
         }
+    }
+
+    // --- Interactive Map Picker (Leaflet + OpenStreetMap) ---
+    let map, marker;
+    const defaultLat = {{ old('latitude', -7.2575) }}; // Default Surabaya/East Java or previously submitted
+    const defaultLng = {{ old('longitude', 112.7521) }};
+    const hasInitialCoord = {{ old('latitude') && old('longitude') ? 'true' : 'false' }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initMapPicker();
+    });
+
+    function initMapPicker() {
+        const mapContainer = document.getElementById('map-picker');
+        if (!mapContainer) return;
+
+        // Custom red pin icon for marble cargo delivery
+        const cargoIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        const zoomLevel = hasInitialCoord ? 16 : 11;
+        map = L.map('map-picker').setView([defaultLat, defaultLng], zoomLevel);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        marker = L.marker([defaultLat, defaultLng], {
+            draggable: true,
+            icon: cargoIcon
+        }).addTo(map);
+
+        marker.bindPopup("<b>Titik Pengiriman Kargo</b><br>Geser pin tepat di gerbang / pintu Anda.").openPopup();
+
+        // Marker drag event
+        marker.on('dragend', function(e) {
+            const pos = marker.getLatLng();
+            updateCoordinates(pos.lat, pos.lng, true);
+        });
+
+        // Map click event
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            updateCoordinates(e.latlng.lat, e.latlng.lng, true);
+        });
+
+        if (hasInitialCoord) {
+            updateCoordinates(defaultLat, defaultLng, false);
+        }
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 400);
+    }
+
+    function updateCoordinates(lat, lng, doReverseGeocode = false) {
+        const fixedLat = parseFloat(lat).toFixed(7);
+        const fixedLng = parseFloat(lng).toFixed(7);
+        const gmapsUrl = `https://www.google.com/maps?q=${fixedLat},${fixedLng}`;
+
+        const latInput = document.getElementById('input-latitude');
+        const lngInput = document.getElementById('input-longitude');
+        const urlInput = document.getElementById('input-maps-url');
+        const display = document.getElementById('coords-display');
+        const gmapsBtn = document.getElementById('btn-open-gmaps');
+
+        if (latInput) latInput.value = fixedLat;
+        if (lngInput) lngInput.value = fixedLng;
+        if (urlInput) urlInput.value = gmapsUrl;
+
+        if (display) {
+            display.innerHTML = `<b>Koordinat:</b> ${fixedLat}, ${fixedLng}`;
+        }
+
+        if (gmapsBtn) {
+            gmapsBtn.href = gmapsUrl;
+            gmapsBtn.classList.remove('hidden');
+        }
+
+        if (doReverseGeocode) {
+            reverseGeocode(fixedLat, fixedLng);
+        }
+    }
+
+    function detectGPSLocation() {
+        if (!navigator.geolocation) {
+            alert('Browser Anda tidak mendukung fitur deteksi lokasi GPS.');
+            return;
+        }
+
+        showMapLoading('Mendeteksi sinyal GPS perangkat Anda...');
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                hideMapLoading();
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                if (map && marker) {
+                    map.setView([lat, lng], 17);
+                    marker.setLatLng([lat, lng]);
+                    marker.bindPopup("<b>📍 Lokasi GPS Anda Terdeteksi!</b><br>Geser jika perlu disesuaikan dengan gerbang.").openPopup();
+                    updateCoordinates(lat, lng, true);
+                }
+            },
+            function(error) {
+                hideMapLoading();
+                let msg = 'Gagal mendeteksi lokasi GPS.';
+                if (error.code === error.PERMISSION_DENIED) {
+                    msg = 'Izin akses lokasi GPS ditolak di browser. Anda dapat mencari kelurahan / jalan pada kolom pencarian atau menggeser pin di peta.';
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    msg = 'Sinyal lokasi perangkat tidak tersedia.';
+                } else if (error.code === error.TIMEOUT) {
+                    msg = 'Waktu permintaan deteksi GPS habis. Silakan coba lagi.';
+                }
+                alert(msg);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    }
+
+    function searchLocation() {
+        const query = document.getElementById('map-search-input').value.trim();
+        if (!query) {
+            alert('Ketikkan nama jalan, kelurahan, atau kota untuk mencari di peta.');
+            return;
+        }
+
+        showMapLoading('Mencari "' + query + '"...');
+
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=1&addressdetails=1`)
+            .then(res => res.json())
+            .then(data => {
+                hideMapLoading();
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    map.setView([lat, lng], 16);
+                    marker.setLatLng([lat, lng]);
+
+                    const fullAddress = data[0].display_name;
+                    const addrInput = document.getElementById('input-shipping-address');
+                    const addrDisplay = document.getElementById('address-display');
+                    if (addrInput) addrInput.value = fullAddress;
+                    if (addrDisplay) addrDisplay.innerText = fullAddress;
+
+                    const cityField = document.querySelector('input[name="shipping_city"]');
+                    if (cityField && data[0].address) {
+                        const detectedCity = data[0].address.city || data[0].address.county || data[0].address.state_district || data[0].address.town || data[0].address.municipality || '';
+                        if (!cityField.value.trim() && detectedCity) {
+                            cityField.value = detectedCity;
+                        }
+                    }
+
+                    marker.bindPopup(`<b>${data[0].display_name.split(',')[0]}</b><br>Geser pin jika ingin menentukan titik gerbang.`).openPopup();
+                    updateCoordinates(lat, lng, false);
+                } else {
+                    alert('Lokasi "' + query + '" tidak ditemukan. Coba ketikkan nama kecamatan atau kota yang lebih umum.');
+                }
+            })
+            .catch(err => {
+                hideMapLoading();
+                console.error(err);
+                alert('Gagal menghubungi layanan pencarian peta. Anda tetap bisa menggeser pin merah di peta.');
+            });
+    }
+
+    function reverseGeocode(lat, lng) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    const fullAddress = data.display_name;
+                    const addrInput = document.getElementById('input-shipping-address');
+                    const addrDisplay = document.getElementById('address-display');
+                    if (addrInput) addrInput.value = fullAddress;
+                    if (addrDisplay) addrDisplay.innerText = fullAddress;
+
+                    if (data.address) {
+                        const cityField = document.querySelector('input[name="shipping_city"]');
+                        const detectedCity = data.address.city || data.address.county || data.address.state_district || data.address.town || data.address.municipality || '';
+                        if (cityField && !cityField.value.trim() && detectedCity) {
+                            cityField.value = detectedCity;
+                        }
+                    }
+                    
+                    if (marker) {
+                        const shortName = data.display_name.split(',').slice(0, 3).join(',');
+                        marker.bindPopup(`<b>Titik Terpilih:</b><br>${shortName}`).openPopup();
+                    }
+                }
+            })
+            .catch(err => console.log('Reverse geocoding silent fallback:', err));
+    }
+
+    function showMapLoading(text) {
+        const el = document.getElementById('map-loading');
+        const txt = document.getElementById('map-loading-text');
+        if (txt) txt.innerText = text;
+        if (el) el.classList.remove('hidden');
+    }
+
+    function hideMapLoading() {
+        const el = document.getElementById('map-loading');
+        if (el) el.classList.add('hidden');
     }
 </script>
 @endsection

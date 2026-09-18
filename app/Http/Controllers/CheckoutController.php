@@ -63,7 +63,10 @@ class CheckoutController extends Controller
             'receiver_name' => ['required', 'string', 'max:150'],
             'receiver_phone' => ['required', 'string', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,11}$/'],
             'shipping_city' => ['required', 'string', 'max:100'],
-            'shipping_address' => ['required', 'string', 'max:500'],
+            'shipping_address' => ['nullable', 'string', 'max:500'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'maps_url' => ['nullable', 'url', 'max:500'],
             'payment_scheme' => ['required', 'in:dp_50,full_100'],
             'payment_method' => ['nullable', 'string', 'in:midtrans,qris,bank_bca,bank_bri,bank_mandiri'],
             'custom_notes' => ['nullable', 'string', 'max:500'],
@@ -72,7 +75,6 @@ class CheckoutController extends Controller
             'receiver_phone.required' => 'Nomor WhatsApp / HP wajib diisi.',
             'receiver_phone.regex' => 'Format nomor WhatsApp tidak valid (Contoh: 081234567890).',
             'shipping_city.required' => 'Kota tujuan pengiriman wajib diisi.',
-            'shipping_address.required' => 'Alamat lengkap pengiriman wajib diisi.',
         ]);
 
         $product = Product::findOrFail($validated['product_id']);
@@ -82,7 +84,19 @@ class CheckoutController extends Controller
         $paymentMethod = $validated['payment_method'] ?? 'midtrans';
         $uniqueCode = ($paymentMethod === 'midtrans') ? 0 : rand(100, 999);
 
-        $order = DB::transaction(function () use ($validated, $product, $qty, $unitPrice, $totalAmount, $paymentMethod, $uniqueCode) {
+        // Auto-generate Google Maps URL & shipping address fallback
+        $latitude = !empty($validated['latitude']) ? (float) $validated['latitude'] : null;
+        $longitude = !empty($validated['longitude']) ? (float) $validated['longitude'] : null;
+        $mapsUrl = $validated['maps_url'] ?? null;
+        if (empty($mapsUrl) && !is_null($latitude) && !is_null($longitude)) {
+            $mapsUrl = "https://www.google.com/maps?q={$latitude},{$longitude}";
+        }
+
+        $shippingAddress = !empty($validated['shipping_address']) 
+            ? $validated['shipping_address'] 
+            : ($validated['shipping_city'] . (!empty($latitude) && !empty($longitude) ? " (Titik Peta: {$latitude}, {$longitude})" : ''));
+
+        $order = DB::transaction(function () use ($validated, $product, $qty, $unitPrice, $totalAmount, $paymentMethod, $uniqueCode, $latitude, $longitude, $mapsUrl, $shippingAddress) {
 
             // 1. Create or retrieve Customer record
             $cleanPhone = preg_replace('/[^0-9]/', '', $validated['receiver_phone']);
@@ -92,11 +106,24 @@ class CheckoutController extends Controller
                     'customer_code' => \App\Services\CodeGeneratorService::generateCustomerCode(),
                     'name' => $validated['receiver_name'],
                     'phone' => $cleanPhone,
-                    'address' => $validated['shipping_address'],
+                    'address' => $shippingAddress,
                     'city' => $validated['shipping_city'],
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'maps_url' => $mapsUrl,
                     'customer_type' => 'retail',
                 ]
             );
+
+            // Update customer location if exists
+            $customer->update([
+                'name' => $validated['receiver_name'],
+                'address' => $shippingAddress,
+                'city' => $validated['shipping_city'],
+                'latitude' => $latitude ?? $customer->latitude,
+                'longitude' => $longitude ?? $customer->longitude,
+                'maps_url' => $mapsUrl ?? $customer->maps_url,
+            ]);
 
             // 2. Generate unique non-sequential order number
             $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(4));
@@ -116,8 +143,11 @@ class CheckoutController extends Controller
                 'unique_code' => $uniqueCode,
                 'payment_status' => 'unpaid',
                 'order_status' => 'pending_payment',
-                'shipping_address' => $validated['shipping_address'],
+                'shipping_address' => $shippingAddress,
                 'shipping_city' => $validated['shipping_city'],
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'maps_url' => $mapsUrl,
                 'receiver_name' => $validated['receiver_name'],
                 'receiver_phone' => $validated['receiver_phone'],
                 'custom_notes' => $validated['custom_notes'] ?? null,

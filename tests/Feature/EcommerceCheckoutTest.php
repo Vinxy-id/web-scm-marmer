@@ -139,7 +139,7 @@ class EcommerceCheckoutTest extends TestCase
     public function test_paid_midtrans_order_disables_pay_button_and_shows_verification()
     {
         $order = Order::create([
-            'order_number' => 'ORD-TEST-PAID-001',
+            'order_number' => 'ORD-TEST-PAID-' . uniqid(),
             'customer_id' => 1,
             'product_id' => $this->product->id,
             'quantity' => 1,
@@ -186,7 +186,7 @@ class EcommerceCheckoutTest extends TestCase
 
         // Create an order with Midtrans bank_transfer channel
         $order = Order::create([
-            'order_number' => 'ORD-TEST-PRINT-001',
+            'order_number' => 'ORD-TEST-PRINT-' . uniqid(),
             'customer_id' => 1,
             'product_id' => $product->id,
             'quantity' => 1,
@@ -225,5 +225,51 @@ class EcommerceCheckoutTest extends TestCase
         // Verify raw snake_case "bank_transfer" is NOT rendered as raw text in payment channel
         $this->assertEquals('Transfer Virtual Account / Bank', $order->formatted_payment_type);
         $this->assertEquals('Uang Muka (DP 50%)', $order->payment_scheme_label);
+    }
+
+    public function test_checkout_with_map_coordinates_persists_and_renders_google_maps_links()
+    {
+        $payload = [
+            'product_id' => $this->product->id,
+            'quantity' => 1,
+            'receiver_name' => 'Bpk. Surya Wijaya',
+            'receiver_phone' => '081299887766',
+            'shipping_city' => 'Surabaya',
+            'shipping_address' => 'Jl. Basuki Rahmat No. 12, Genteng',
+            'latitude' => -7.2654321,
+            'longitude' => 112.7432109,
+            'maps_url' => 'https://www.google.com/maps?q=-7.2654321,112.7432109',
+            'payment_scheme' => 'dp_50',
+            'payment_method' => 'midtrans',
+            'custom_notes' => 'Tolong serat abu-abu alami',
+        ];
+
+        $response = $this->post(route('checkout.store'), $payload);
+        $order = Order::where('receiver_phone', '081299887766')->latest()->first();
+
+        $this->assertNotNull($order);
+        $this->assertEquals(-7.2654321, $order->latitude);
+        $this->assertEquals(112.7432109, $order->longitude);
+        $this->assertStringContainsString('https://www.google.com/maps', $order->google_maps_url);
+
+        // Verify customer also gets the coordinates
+        $customer = Customer::where('phone', '081299887766')->first();
+        $this->assertNotNull($customer);
+        $this->assertEquals(-7.2654321, $customer->latitude);
+        $this->assertEquals(112.7432109, $customer->longitude);
+        $this->assertStringContainsString('https://www.google.com/maps', $customer->google_maps_url);
+
+        // Verify invoice renders Google Maps button & GPS coordinates
+        $invoiceResponse = $this->get(route('checkout.invoice', $order->order_number));
+        $invoiceResponse->assertStatus(200);
+        $invoiceResponse->assertSee('Buka Google Maps');
+        $invoiceResponse->assertSee('-7.265432');
+        $invoiceResponse->assertSee('112.743211');
+
+        // Verify public tracking renders Google Maps button & GPS coordinates
+        $trackingResponse = $this->get(route('order.tracking', ['order_number' => $order->order_number]));
+        $trackingResponse->assertStatus(200);
+        $trackingResponse->assertSee('Buka Google Maps');
+        $trackingResponse->assertSee('-7.265432');
     }
 }

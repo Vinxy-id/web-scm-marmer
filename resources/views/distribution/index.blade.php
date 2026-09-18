@@ -131,7 +131,14 @@
                         </td>
                         <td class="p-3 font-semibold text-slate-800">
                             {{ $sh->customer->company_name ?? $sh->customer->name }}
-                            <p class="text-[10px] text-slate-400 font-normal">{{ $sh->customer->city }}</p>
+                            <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                                <span class="text-[10px] text-slate-400 font-normal">{{ $sh->customer->city ?? 'Tulungagung' }}</span>
+                                @if($sh->customer && $sh->customer->google_maps_url)
+                                <a href="{{ $sh->customer->google_maps_url }}" target="_blank" class="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-200 shadow-2xs hover:underline" title="Buka Titik Pengiriman di Google Maps">
+                                    <i data-lucide="map-pin" class="w-3 h-3 text-red-500"></i> Maps
+                                </a>
+                                @endif
+                            </div>
                             <!-- Mobile-only expedition name -->
                             <p class="text-[10px] text-blue-600 md:hidden mt-0.5">
                                 {{ $sh->expedition_name ?? 'Kargo Truk' }}

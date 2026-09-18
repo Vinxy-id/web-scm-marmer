@@ -235,10 +235,23 @@
 
                 <!-- Shipping Destination -->
                 <div class="space-y-3">
-                    <h4 class="font-bold text-slate-900">Alamat Tujuan Pengiriman:</h4>
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="font-bold text-slate-900">Alamat Tujuan Pengiriman:</h4>
+                        @if($order->google_maps_url)
+                        <a href="{{ $order->google_maps_url }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200 shadow-xs hover:underline">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-red-500"></i>
+                            <span>Buka Google Maps</span>
+                        </a>
+                        @endif
+                    </div>
                     <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-1">
                         <p class="font-bold text-slate-800">{{ $order->receiver_name }} ({{ $order->receiver_phone }})</p>
                         <p class="text-slate-600 leading-relaxed">{{ $order->shipping_address }}, {{ $order->shipping_city }}</p>
+                        @if($order->latitude && $order->longitude)
+                        <div class="pt-1 text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
+                            <span class="bg-slate-200/80 px-2 py-0.5 rounded text-slate-700">GPS: {{ number_format($order->latitude, 6) }}, {{ number_format($order->longitude, 6) }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
 

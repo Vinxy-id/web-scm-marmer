@@ -30,6 +30,9 @@ class Order extends Model
         'order_status',
         'shipping_address',
         'shipping_city',
+        'latitude',
+        'longitude',
+        'maps_url',
         'receiver_name',
         'receiver_phone',
         'custom_notes',
@@ -44,6 +47,8 @@ class Order extends Model
         'paid_amount' => 'decimal:2',
         'quantity' => 'integer',
         'unique_code' => 'integer',
+        'latitude' => 'float',
+        'longitude' => 'float',
         'midtrans_response' => 'array',
         'expires_at' => 'datetime',
         'cancelled_at' => 'datetime',
@@ -213,5 +218,23 @@ class Order extends Model
             'cancelled', 'expired' => 'bg-rose-100 text-rose-800 border-rose-200',
             default => 'bg-slate-100 text-slate-800 border-slate-200',
         };
+    }
+
+    public function getGoogleMapsUrlAttribute(): ?string
+    {
+        if (!empty($this->maps_url)) {
+            return $this->maps_url;
+        }
+
+        if (!empty($this->latitude) && !empty($this->longitude)) {
+            return "https://www.google.com/maps?q={$this->latitude},{$this->longitude}";
+        }
+
+        if (!empty($this->shipping_address)) {
+            $query = urlencode($this->shipping_address . ($this->shipping_city ? ', ' . $this->shipping_city : ''));
+            return "https://www.google.com/maps/search/?api=1&query={$query}";
+        }
+
+        return null;
     }
 }

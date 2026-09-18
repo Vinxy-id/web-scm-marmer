@@ -68,6 +68,7 @@ Fokus: Coding modul inti aplikasi web dan deployment server.
   - [x] Inisialisasi struktur proyek Laravel 11+ MVC (Versi Terbaru) & migrasi database.
   - [x] Implementasi Front-End Landing Page Publik & Katalog Produk Kerajinan Marmer/Onyx (Filter, Quick View Modal, Order WhatsApp).
   - [x] Implementasi Midtrans Payment Gateway (Snap API & Webhook Notification) untuk transaksi checkout otomatis (QRIS, VA Bank, CC).
+  - [x] Implementasi Fitur Geolocation & Map Pinpoint Interaktif (Leaflet.js/OSM) pada checkout & navigasi Google Maps untuk pengiriman armada kargo berat marmer.
   - [x] Implementasi autentikasi & RBAC (Role-Based Access Control).
   - [x] Implementasi Modul Manajemen Stok Bahan Baku (Opening, In, Out, Consign, Alert Min Stock).
   - [x] Implementasi Modul SPK Produksi & Tracking Tahapan (Slep, Bubut, Poles).

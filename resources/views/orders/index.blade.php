@@ -158,12 +158,20 @@
 
                         <!-- Customer Details -->
                         <td class="py-3.5 px-4 align-top">
-                            <div class="space-y-0.5">
+                            <div class="space-y-1">
                                 <p class="font-bold text-slate-900">{{ $item->receiver_name }}</p>
-                                <p class="text-[11px] text-slate-500">{{ $item->shipping_city }}</p>
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $item->receiver_phone) }}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-emerald-700 hover:underline font-semibold">
-                                    <i data-lucide="message-circle" class="w-3 h-3"></i> {{ $item->receiver_phone }}
-                                </a>
+                                <p class="text-[11px] text-slate-500 font-medium">{{ $item->shipping_city }}</p>
+                                <p class="text-[11px] text-slate-600 line-clamp-2" title="{{ $item->shipping_address }}">{{ $item->shipping_address }}</p>
+                                <div class="flex items-center gap-1.5 pt-0.5 flex-wrap">
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $item->receiver_phone) }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] text-emerald-700 hover:underline font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                        <i data-lucide="message-circle" class="w-3 h-3"></i> {{ $item->receiver_phone }}
+                                    </a>
+                                    @if($item->google_maps_url)
+                                    <a href="{{ $item->google_maps_url }}" target="_blank" class="inline-flex items-center gap-1 text-[10px] text-blue-700 hover:underline font-semibold bg-blue-50 px-2 py-0.5 rounded border border-blue-200" title="Buka Titik Peta Google Maps">
+                                        <i data-lucide="map-pin" class="w-3 h-3 text-red-500"></i> Maps
+                                    </a>
+                                    @endif
+                                </div>
                                 @if($item->custom_notes)
                                 <p class="text-[10px] text-slate-500 italic bg-slate-50 p-1.5 rounded border border-slate-100 mt-1">
                                     "{{ Str::limit($item->custom_notes, 50) }}"
