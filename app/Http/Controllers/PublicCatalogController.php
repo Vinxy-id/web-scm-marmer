@@ -262,6 +262,16 @@ class PublicCatalogController extends Controller
 
         // If AJAX / JSON Quick View requested
         if ($request->wantsJson() || $request->ajax() || $request->has('json')) {
+            // Strip sensitive banking and account data from public API response (P0 Security)
+            $publicArtisan = [
+                'name' => $artisan['name'] ?? 'Pengrajin IKM',
+                'owner' => $artisan['owner'] ?? '',
+                'phone' => $artisan['phone'] ?? '',
+                'location' => $artisan['location'] ?? 'Tulungagung',
+                'badge' => $artisan['badge'] ?? '',
+                'badge_simple' => $artisan['badge_simple'] ?? '',
+            ];
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -276,11 +286,11 @@ class PublicCatalogController extends Controller
                     'selling_price' => $product->selling_price,
                     'formatted_price' => 'Rp ' . number_format($product->selling_price, 0, ',', '.'),
                     'image_url' => asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg'),
-                    'artisan' => $artisan,
+                    'artisan' => $publicArtisan,
                     'checkout_url' => route('checkout.show', $product->id),
                     'detail_url' => route('catalog.show', $product->id),
-                    'wa_link' => 'https://wa.me/' . $artisan['phone'] . '?text=' . urlencode(
-                        "Halo {$artisan['name']}, saya tertarik dengan produk *{$product->name}* (Kode: {$product->product_code}) yang ada di katalog E-SCM. Apakah stok ready atau bisa custom ukuran?"
+                    'wa_link' => 'https://wa.me/' . ($artisan['phone'] ?? '') . '?text=' . urlencode(
+                        "Halo " . ($artisan['name'] ?? 'Pengrajin') . ", saya tertarik dengan produk *{$product->name}* (Kode: {$product->product_code}) yang ada di katalog E-SCM. Apakah stok ready atau bisa custom ukuran?"
                     ),
                 ]
             ]);
@@ -470,4 +480,26 @@ class PublicCatalogController extends Controller
             return $p;
         });
     }
+
+    /**
+     * Generate Dynamic XML Sitemap for Search Engines (Google, Bing, dll.)
+     */
+    public function sitemap()
+    {
+        $baseUrl = rtrim(config('app.url', 'https://onyxtulungagung.id'), '/');
+
+        try {
+            $products = Product::select('id', 'name', 'updated_at')->orderBy('id', 'asc')->get();
+            if ($products->isEmpty()) {
+                $products = $this->getFallbackProducts();
+            }
+        } catch (\Throwable $e) {
+            $products = $this->getFallbackProducts();
+        }
+
+        return response()
+            ->view('public.sitemap', compact('baseUrl', 'products'))
+            ->header('Content-Type', 'application/xml; charset=utf-8');
+    }
 }
+

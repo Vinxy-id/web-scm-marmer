@@ -8,7 +8,7 @@
     <link rel="icon" type="image/webp" href="{{ asset('images/favicon.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/icon-192.webp') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js"></script>
 </head>
 <body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
 

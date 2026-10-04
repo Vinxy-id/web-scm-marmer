@@ -16,6 +16,7 @@ use App\Http\Controllers\CheckoutController;
 Route::get('/', [PublicCatalogController::class, 'index'])->name('home');
 Route::get('/katalog', [PublicCatalogController::class, 'catalog'])->name('catalog');
 Route::get('/katalog/{id}', [PublicCatalogController::class, 'show'])->name('catalog.show');
+Route::get('/sitemap.xml', [PublicCatalogController::class, 'sitemap'])->name('sitemap');
 
 // E-Commerce Direct Checkout, Digital Invoice & Order Tracking (Protected with Anti-Spam Rate Limiter)
 $checkoutThrottle = app()->environment('testing') ? 'throttle:5,10' : 'throttle:30,1';

@@ -81,7 +81,7 @@
 
     <!-- Deferred Lucide & Chart.js CDNs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js" defer></script>
 
     <!-- Scripts -->
     <script>

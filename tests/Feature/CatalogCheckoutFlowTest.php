@@ -65,6 +65,39 @@ class CatalogCheckoutFlowTest extends TestCase
         $response->assertSee('Estimasi Bobot Fisik');
     }
 
+    public function test_public_catalog_json_endpoint_does_not_leak_bank_details(): void
+    {
+        $product = Product::first();
+
+        $response = $this->get('/katalog/' . $product->id . '?json=1');
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('data.name', $product->name);
+        
+        // Assert sensitive financial data is strictly NOT exposed in public JSON
+        $data = $response->json('data.artisan');
+        $this->assertArrayNotHasKey('account_number', $data);
+        $this->assertArrayNotHasKey('bank_name', $data);
+        $this->assertArrayNotHasKey('account_holder', $data);
+    }
+
+    public function test_dynamic_xml_sitemap_renders_all_products(): void
+    {
+        $response = $this->get('/sitemap.xml');
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('application/xml', $response->headers->get('Content-Type'));
+        $response->assertSee('<urlset', false);
+        $response->assertSee('/katalog', false);
+        $response->assertSee('/lacak-pesanan', false);
+        
+        $product = Product::first();
+        if ($product) {
+            $response->assertSee('/katalog/' . $product->id, false);
+        }
+    }
+
     public function test_checkout_page_renders_automated_midtrans_payment_channels(): void
     {
         $product = Product::first();
@@ -118,4 +151,14 @@ class CatalogCheckoutFlowTest extends TestCase
         $trackResponse->assertSee($order->order_number);
         $trackResponse->assertSee('Budi Santoso');
     }
+
+    public function test_custom_404_page_renders_clean_branded_error(): void
+    {
+        $response = $this->get('/non-existent-page-test-audit-xyz');
+        $response->assertStatus(404);
+        $response->assertSee('404');
+        $response->assertSee('Halaman atau Produk Tidak Ditemukan');
+        $response->assertSee('Jelajahi Katalog Produk');
+    }
 }
+

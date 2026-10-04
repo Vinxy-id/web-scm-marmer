@@ -326,8 +326,8 @@
         </div>
     </footer>
 
-    <!-- Deferred Lucide Icons Script -->
-    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <!-- Pinned Lucide Icons Script -->
+    <script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) {

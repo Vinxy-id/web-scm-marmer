@@ -671,7 +671,27 @@
     }
 
     function closeProductModal() {
-        document.getElementById('product-modal').classList.add('hidden');
+        const modal = document.getElementById('product-modal');
+        if (modal) modal.classList.add('hidden');
     }
+
+    // Close Modal on Escape key (P2 Accessibility)
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            closeProductModal();
+        }
+    });
+
+    // Close Modal on Backdrop Click (P2 UX)
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('product-modal');
+        if (modal) {
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    closeProductModal();
+                }
+            });
+        }
+    });
 </script>
 @endsection

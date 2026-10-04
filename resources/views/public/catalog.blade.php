@@ -379,7 +379,27 @@
     }
 
     function closeCatalogModal() {
-        document.getElementById('catalog-modal').classList.add('hidden');
+        const modal = document.getElementById('catalog-modal');
+        if (modal) modal.classList.add('hidden');
     }
+
+    // Close Modal on Escape key (P2 Accessibility)
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            closeCatalogModal();
+        }
+    });
+
+    // Close Modal on Backdrop Click (P2 UX)
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('catalog-modal');
+        if (modal) {
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    closeCatalogModal();
+                }
+            });
+        }
+    });
 </script>
 @endsection

@@ -5,13 +5,32 @@ import { execSync } from 'child_process';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 const VIDEO_DIR = path.resolve('Docs/videos');
+const AUDIO_DIR = path.resolve('Docs/videos/audio');
+const ASSETS_DIR = path.resolve('Docs/videos/assets');
 
-if (!fs.existsSync(VIDEO_DIR)) {
-    fs.mkdirSync(VIDEO_DIR, { recursive: true });
+if (!fs.existsSync(VIDEO_DIR)) fs.mkdirSync(VIDEO_DIR, { recursive: true });
+if (!fs.existsSync(AUDIO_DIR)) fs.mkdirSync(AUDIO_DIR, { recursive: true });
+if (!fs.existsSync(ASSETS_DIR)) fs.mkdirSync(ASSETS_DIR, { recursive: true });
+
+// Load audio timings
+const timingsPath = path.join(AUDIO_DIR, 'audio_timings.json');
+let audioTimings = null;
+if (fs.existsSync(timingsPath)) {
+    audioTimings = JSON.parse(fs.readFileSync(timingsPath, 'utf-8'));
 }
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Global recording timeline tracker
+let recordingStartTime = 0;
+const timelineEvents = [];
+
+function recordAudioEvent(type, meta = {}) {
+    const time = recordingStartTime ? Math.max(0, (Date.now() - recordingStartTime) / 1000) : 0;
+    timelineEvents.push({ type, time, ...meta });
+    console.log(`   [AUDIO TIMELINE] ${type} at ${time.toFixed(2)}s`);
 }
 
 // Injects precision virtual cursor, smooth zoom engine, and lower-third HUD (Optimized for 2K)
@@ -86,6 +105,26 @@ async function setCaption(page, badge, title, desc) {
     }, { badge, title, desc });
 }
 
+let curSceneStartTime = 0;
+
+async function startScene(page, sceneId, badge, title, desc) {
+    curSceneStartTime = Date.now();
+    await setCaption(page, badge, title, desc);
+    recordAudioEvent('vo', { scene: sceneId });
+}
+
+async function endScene(sceneId) {
+    if (!audioTimings || !audioTimings.scenes) return;
+    const key = `scene_${sceneId}`;
+    const targetDur = audioTimings.scenes[key] ? audioTimings.scenes[key].duration : 8.0;
+    const spentSec = (Date.now() - curSceneStartTime) / 1000;
+    const remaining = (targetDur + 0.5) - spentSec;
+    if (remaining > 0) {
+        console.log(`   ⏳ Pacing Scene ${sceneId}: waiting ${remaining.toFixed(2)}s for voiceover narration to complete...`);
+        await sleep(Math.round(remaining * 1000));
+    }
+}
+
 // Smoothly moves virtual cursor to exact center of element and applies gentle zoom
 async function pointTo(page, selectorOrCoords, { zoom = 1, pause = 1500, click = false } = {}) {
     let targetX = 1280;
@@ -132,6 +171,10 @@ async function pointTo(page, selectorOrCoords, { zoom = 1, pause = 1500, click =
 
     await sleep(400);
 
+    if (zoom > 1) {
+        recordAudioEvent('sfx_whoosh');
+    }
+
     // Apply scroll-aware zoom origin & subtle camera scale
     await page.evaluate(({ targetX, targetY, zoom, click }) => {
         if (zoom > 1) {
@@ -156,11 +199,16 @@ async function pointTo(page, selectorOrCoords, { zoom = 1, pause = 1500, click =
         }
     }, { targetX, targetY, zoom, click });
 
+    if (click) {
+        recordAudioEvent('sfx_click');
+    }
+
     await sleep(pause);
 }
 
 // Reset camera zoom back to 1.0 (overview)
 async function zoomReset(page, pause = 600) {
+    recordAudioEvent('sfx_whoosh');
     await page.evaluate(() => {
         document.body.style.transform = 'scale(1)';
     });
@@ -221,7 +269,7 @@ if ($o) {
 
 async function recordCinematicDemo() {
     const isHeaded = process.argv.includes('--headed') || process.env.HEADED === 'true';
-    console.log(`🎬 Launching High-Definition Cinematic Walkthrough in 2K Quad HD (2560x1440, Mode: ${isHeaded ? 'HEADED' : 'HEADLESS'})...`);
+    console.log(`🎬 Launching High-Definition Cinematic Walkthrough with AI Voice-Over & SaaS SFX (2K Quad HD, Mode: ${isHeaded ? 'HEADED' : 'HEADLESS'})...`);
 
     const browser = await chromium.launch({
         headless: !isHeaded,
@@ -246,70 +294,73 @@ async function recordCinematicDemo() {
     });
 
     const page = await context.newPage();
+    recordingStartTime = Date.now();
 
     try {
         // ==========================================
         // SCENE 1: BERANDA PUBLIK KLASTER IKM
         // ==========================================
         console.log('🎥 Scene 1: Beranda Landing Page (2K)...');
-        await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            1,
             'Langkah 01 / 13',
             'Beranda Publik Klaster IKM Marmer & Onyx Tulungagung',
             'Platform terpadu digitalisasi rantai pasok dan etalase komersial pengrajin marmer Campurdarat.'
         );
-        await pointTo(page, { x: 700, y: 480 }, { zoom: 1, pause: 1600 });
-        // Cursor points precisely to "Katalog Produk"
-        await pointTo(page, 'a[href*="/katalog"], button:has-text("Katalog")', { zoom: 1.15, pause: 1800, click: true });
-        await zoomReset(page, 500);
+        await pointTo(page, { x: 700, y: 480 }, { zoom: 1, pause: 2000 });
+        await pointTo(page, 'a[href*="/katalog"], button:has-text("Katalog")', { zoom: 1.15, pause: 2400, click: true });
+        await zoomReset(page, 600);
+        await endScene(1);
 
         // ==========================================
         // SCENE 2: KATALOG MULTI-FILTER
         // ==========================================
         console.log('🎥 Scene 2: Katalog & Multi-Filter...');
-        await page.goto(`${BASE_URL}/katalog`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/katalog`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            2,
             'Langkah 02 / 13',
             'Katalog Terkurasi & Multi-Filter Toko IKM',
             'Menyaring produk berdasarkan mitra pengrajin (UD Cahaya Onix & UD Putra Abadi) dan kategori batu alam.'
         );
-        // Point to filter checkbox with gentle zoom
-        await pointTo(page, 'input[name="ikm"], label:has-text("Cahaya Onix")', { zoom: 1.2, pause: 1800, click: true });
+        await pointTo(page, 'input[name="ikm"], label:has-text("Cahaya Onix")', { zoom: 1.2, pause: 2000, click: true });
         await zoomReset(page, 500);
-        // Point to product card 4 (Wastafel Marmer Putih B1)
-        await pointTo(page, 'a[href*="/katalog/4"], .product-card:first-child', { zoom: 1.18, pause: 1800, click: true });
+        await pointTo(page, 'a[href*="/katalog/4"], .product-card:first-child', { zoom: 1.18, pause: 2400, click: true });
         await zoomReset(page, 500);
+        await endScene(2);
 
         // ==========================================
         // SCENE 3: DETAIL SPESIFIKASI PRODUK
         // ==========================================
         console.log('🎥 Scene 3: Detail Spesifikasi Produk (Wastafel Marmer)...');
-        await page.goto(`${BASE_URL}/katalog/4`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/katalog/4`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            3,
             'Langkah 03 / 13',
             'Rincian Spesifikasi Teknis & Opsi Pembelian',
             'Menampilkan harga pengrajin langsung (Rp 450.000), dimensi D40 T15, uji kilap Hi-Glossy, dan garansi peti kayu solid.'
         );
-        // Zoom into specifications table
-        await pointTo(page, 'table, .specifications, dl', { zoom: 1.18, pause: 2000 });
-        // Move to "Beli / Checkout Online" button with precision
-        await pointTo(page, 'a[href*="/checkout"], button:has-text("Beli")', { zoom: 1.22, pause: 2000, click: true });
+        await pointTo(page, 'table, .specifications, dl', { zoom: 1.18, pause: 2600 });
+        await pointTo(page, 'a[href*="/checkout"], button:has-text("Beli")', { zoom: 1.22, pause: 2400, click: true });
         await zoomReset(page, 500);
+        await endScene(3);
 
         // ==========================================
         // SCENE 4: CHECKOUT FORM (DP 50% / LUNAS)
         // ==========================================
         console.log('🎥 Scene 4: Formulir Checkout E-Commerce (Wastafel Marmer)...');
-        await page.goto(`${BASE_URL}/checkout/4`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/checkout/4`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            4,
             'Langkah 04 / 13',
             'Checkout Online Fleksibel: DP 50% atau Lunas 100%',
             'Mendukung uang muka (DP 50%) Rp 225.000 untuk pengerjaan bengkel serta metode pembayaran online otomatis.'
@@ -320,19 +371,35 @@ async function recordCinematicDemo() {
             await nameInput.fill('Bpk. Hendra Wijaya');
             await page.locator('input[name="receiver_phone"]').fill('081234567890');
             await page.locator('input[name="shipping_city"]').fill('Surabaya');
-            await page.locator('textarea[name="shipping_address"]').fill('Jl. Dharmahusada Indah No. 45, Surabaya');
+            
+            // Map Search Input & Pinpoint
+            const mapSearch = page.locator('#map-search-input');
+            if (await mapSearch.isVisible().catch(() => false)) {
+                await pointTo(page, '#map-search-input', { zoom: 1.18, pause: 800, click: true });
+                await mapSearch.fill('Jl. Dharmahusada Indah No. 45, Surabaya');
+            }
+
+            // Fill hidden form coordinate values for submission
+            await page.evaluate(() => {
+                const addr = document.getElementById('input-shipping-address');
+                const lat = document.getElementById('input-latitude');
+                const lng = document.getElementById('input-longitude');
+                const mapsUrl = document.getElementById('input-maps-url');
+                if (addr) addr.value = 'Jl. Dharmahusada Indah No. 45, Mulyorejo, Surabaya, Jawa Timur';
+                if (lat) lat.value = '-7.2654';
+                if (lng) lng.value = '112.7561';
+                if (mapsUrl) mapsUrl.value = 'https://www.google.com/maps?q=-7.2654,112.7561';
+            });
             await sleep(600);
         }
-        // Focus on payment scheme radio (DP 50%)
-        await pointTo(page, 'input[value="dp_50"], label:has-text("DP 50%")', { zoom: 1.22, pause: 1400, click: true });
-        
-        // Point to "Konfirmasi & Buat Pesanan" button and submit
-        await pointTo(page, 'button[type="submit"]:has-text("Konfirmasi & Buat Pesanan")', { zoom: 1.2, pause: 1600, click: true });
+        await pointTo(page, 'input[value="dp_50"], label:has-text("DP 50%")', { zoom: 1.22, pause: 1600, click: true });
+        await pointTo(page, 'button[type="submit"]:has-text("Konfirmasi & Buat Pesanan")', { zoom: 1.2, pause: 1800, click: true });
         await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle' }),
+            page.waitForURL(url => url.pathname.includes('/order/invoice/'), { timeout: 20000 }),
             page.click('button[type="submit"]:has-text("Konfirmasi & Buat Pesanan")')
         ]);
         await zoomReset(page, 500);
+        await endScene(4);
 
         // Retrieve dynamic order number from redirected invoice URL
         const invoiceUrl = page.url();
@@ -344,197 +411,220 @@ async function recordCinematicDemo() {
         // ==========================================
         console.log(`🎥 Scene 5: Faktur Tagihan Digital (${dynamicOrderNumber})...`);
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            5,
             'Langkah 05 / 13',
             'Faktur Tagihan Digital & Payment Gateway Midtrans',
             'Faktur otomatis terbit untuk Wastafel Marmer Putih B1: DP 50% (Rp 225.000) dengan opsi bayar instan QRIS/VA.'
         );
-        // Point to invoice header & status badge
-        await pointTo(page, 'span:has-text("TAGIHAN UANG MUKA"), span:has-text("Menunggu")', { zoom: 1.18, pause: 2000 });
+        await pointTo(page, 'span:has-text("TAGIHAN UANG MUKA"), span:has-text("Menunggu")', { zoom: 1.18, pause: 2400 });
         
-        // Point to "Bayar Sekarang" button with precision
         const payBtn = page.locator('#pay-button, button:has-text("Bayar Sekarang")');
         if (await payBtn.isVisible()) {
-            await pointTo(page, '#pay-button, button:has-text("Bayar Sekarang")', { zoom: 1.25, pause: 1600, click: true });
+            await pointTo(page, '#pay-button, button:has-text("Bayar Sekarang")', { zoom: 1.25, pause: 1800, click: true });
             await payBtn.click().catch(() => {});
             await sleep(2500);
         }
         await zoomReset(page, 500);
+        await endScene(5);
 
         // ==========================================
         // SCENE 6: VERIFIKASI PEMBAYARAN BERHASIL (PAYMENT GATEWAY SUCCESS)
         // ==========================================
         console.log(`🎥 Scene 6: Pembayaran Berhasil Terverifikasi (${dynamicOrderNumber})...`);
-        // Simulate payment completion in database
         markOrderPaid(dynamicOrderNumber);
 
-        // Check payment status endpoint which syncs and redirects with flash success banner
-        await page.goto(`${BASE_URL}/order/check-status/${dynamicOrderNumber}`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/order/check-status/${dynamicOrderNumber}`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            6,
             'Langkah 06 / 13',
             'Verifikasi Pembayaran Berhasil (Payment Gateway Success)',
             'Sistem otomatis memverifikasi pembayaran DP 50% (Rp 225.000), menerbitkan SPK bengkel, dan mengaktifkan tombol lacak.'
         );
-        // Point to verified payment banner / box
-        await pointTo(page, 'div:has-text("Pembayaran Berhasil Terverifikasi!"), .bg-emerald-50', { zoom: 1.18, pause: 2800 });
-
-        // Point to and click "Lacak Progres"
-        await pointTo(page, 'a:has-text("Lacak Progres")', { zoom: 1.22, pause: 1800, click: true });
+        recordAudioEvent('sfx_success_chime');
+        await pointTo(page, 'div:has-text("Pembayaran Berhasil Terverifikasi!"), .bg-emerald-50', { zoom: 1.18, pause: 3000 });
+        await pointTo(page, 'a:has-text("Lacak Progres")', { zoom: 1.22, pause: 2000, click: true });
         await zoomReset(page, 500);
+        await endScene(6);
 
         // ==========================================
         // SCENE 7: LACAK PESANAN REAL-TIME
         // ==========================================
         console.log(`🎥 Scene 7: Pelacakan Pesanan Real-Time (${dynamicOrderNumber})...`);
-        await page.goto(`${BASE_URL}/lacak-pesanan?order_number=${dynamicOrderNumber}`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/lacak-pesanan?order_number=${dynamicOrderNumber}`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            7,
             'Langkah 07 / 13',
             'Pelacakan Pesanan Real-Time (Live Tracking)',
             'Transparansi 5 tahap: Antrean Bengkel, Produksi Bubut/Poles, QC 2-Tahap, hingga Ekspedisi Kargo.'
         );
-        await pointTo(page, '.tracking-milestones, .timeline, h2:has-text("Status")', { zoom: 1.18, pause: 2600 });
+        await pointTo(page, '.tracking-milestones, .timeline, h2:has-text("Status")', { zoom: 1.18, pause: 3000 });
         await zoomReset(page, 500);
+        await endScene(7);
 
         // ==========================================
         // SCENE 8: LOGIN ADMIN & RBAC
         // ==========================================
         console.log('🎥 Scene 8: Login Admin & RBAC...');
-        await page.goto(`${BASE_URL}/login`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/login`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            8,
             'Langkah 08 / 13',
             'Autentikasi Multi-Role RBAC Petugas IKM',
             'Pintu masuk terproteksi untuk 5 peran operasional: Owner, Admin, Gudang, Produksi, dan Distribusi.'
         );
-        await pointTo(page, 'input[name="email"]', { zoom: 1.15, pause: 600, click: true });
+        await pointTo(page, 'input[name="email"]', { zoom: 1.15, pause: 800, click: true });
         await page.fill('input[name="email"]', 'owner@cahayaonix.com');
         await page.fill('input[name="password"]', 'role123');
-        await pointTo(page, 'button[type="submit"]', { zoom: 1.22, pause: 1200, click: true });
+        await pointTo(page, 'button[type="submit"]', { zoom: 1.22, pause: 1400, click: true });
         await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle' }),
+            page.waitForURL(url => url.pathname.includes('/dashboard'), { timeout: 20000 }),
             page.click('button[type="submit"]')
         ]);
         await zoomReset(page, 500);
+        await endScene(8);
 
         // ==========================================
         // SCENE 9: DASHBOARD & CONTEXTUAL MICRO-TOOLTIPS
         // ==========================================
         console.log('🎥 Scene 9: Dashboard KPI & Micro-Tooltips (2K)...');
-        await page.goto(`${BASE_URL}/dashboard`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/dashboard`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            9,
             'Langkah 09 / 13',
             'Dashboard SCM: Micro-Tooltips Panduan Tombol',
             'Setiap tombol kritis rantai pasok dilengkapi panduan mengambang untuk mencegah kesalahan operasional staf.'
         );
-        // Point to "Verifikasi & Buat SPK" button to reveal micro-tooltip
-        await pointTo(page, 'a:has-text("Verifikasi & Buat SPK")', { zoom: 1.18, pause: 2200 });
-        // Point to "AI Forecast" button to reveal micro-tooltip
-        await pointTo(page, 'a:has-text("AI Forecast")', { zoom: 1.18, pause: 2200 });
+        recordAudioEvent('sfx_pop');
+        await pointTo(page, 'a:has-text("Verifikasi & Buat SPK")', { zoom: 1.18, pause: 2400 });
+        recordAudioEvent('sfx_pop');
+        await pointTo(page, 'a:has-text("AI Forecast")', { zoom: 1.18, pause: 2400 });
         await zoomReset(page, 500);
+        await endScene(9);
 
         // ==========================================
         // SCENE 10: INTERACTIVE FEATURE TOUR (SPOTLIGHT)
         // ==========================================
         console.log('🎥 Scene 10: Tur Panduan Fitur Interaktif (2K)...');
         await zoomReset(page, 400);
-        await setCaption(
+        await startScene(
             page,
+            10,
             'Langkah 10 / 13',
             'Tur Fitur Interaktif Dashboard (Spotlight Onboarding)',
             'Panduan ramah pengguna untuk pengrajin marmer Campurdarat: sorotan terarah tanpa blur ke 5 modul utama dashboard.'
         );
-        // Click the "💡 Panduan Fitur" button in topbar
         await pointTo(page, '#btn-dashboard-tour', { zoom: 1, pause: 1200, click: true });
+        recordAudioEvent('sfx_pop');
         await page.click('#btn-dashboard-tour');
-        await sleep(2200);
+        await sleep(2000);
 
         // Step 1: Quick Actions
-        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1800, click: true });
+        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1400, click: true });
+        recordAudioEvent('sfx_pop');
         await page.click('#scm-tour-btn-next');
-        await sleep(2200);
+        await sleep(2000);
 
         // Step 2: 2-Gate SPK & Stock Alert
-        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1800, click: true });
+        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1400, click: true });
+        recordAudioEvent('sfx_pop');
         await page.click('#scm-tour-btn-next');
-        await sleep(2200);
+        await sleep(2000);
 
         // Step 3: 5 KPI Cards
-        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1800, click: true });
+        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1400, click: true });
+        recordAudioEvent('sfx_pop');
         await page.click('#scm-tour-btn-next');
-        await sleep(2200);
+        await sleep(2000);
 
         // Step 4: 8-Stage Flow
-        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1800, click: true });
+        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1400, click: true });
+        recordAudioEvent('sfx_pop');
         await page.click('#scm-tour-btn-next');
-        await sleep(2200);
+        await sleep(2000);
 
         // Step 5: Charts & Finish Tour
-        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1600, click: true });
+        await pointTo(page, '#scm-tour-btn-next', { zoom: 1, pause: 1400, click: true });
         await page.click('#scm-tour-btn-next');
         await sleep(1500);
         await zoomReset(page, 500);
+        await endScene(10);
 
         // ==========================================
         // SCENE 11: ORDERS MANAGEMENT & 2-GATE SPK
         // ==========================================
         console.log('🎥 Scene 11: Orders Management & 2-Gate SPK (2K)...');
-        await page.goto(`${BASE_URL}/orders`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/orders`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            11,
             'Langkah 11 / 13',
             'Manajemen Pesanan & Mekanisme 2-Gate SPK',
             'Mencegah pesanan palsu mencemari bengkel; dokumen SPK resmi hanya diterbitkan setelah pembayaran tervalidasi.'
         );
-        await pointTo(page, 'table tbody tr:first-child', { zoom: 1.15, pause: 2200 });
-        await pointTo(page, 'button:has-text("Verifikasi"), a:has-text("SPK")', { zoom: 1.22, pause: 2000 });
+        await pointTo(page, 'table tbody tr:first-child', { zoom: 1.15, pause: 2500 });
+        await pointTo(page, 'button:has-text("Verifikasi"), a:has-text("SPK")', { zoom: 1.22, pause: 2500 });
         await zoomReset(page, 500);
+        await endScene(11);
 
         // ==========================================
         // SCENE 12: PAPAN KANBAN PENJADWALAN
         // ==========================================
         console.log('🎥 Scene 12: Papan Kanban Produksi (2K)...');
-        await page.goto(`${BASE_URL}/production/kanban`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/production/kanban`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            12,
             'Langkah 12 / 13',
             'Papan Kanban Penjadwalan Produksi Digital',
             'Memantau kartu SPK di 5 stasiun kerja bengkel: Antrean, Potong Blok, Bubut/Pahat, Poles, dan Siap QC.'
         );
-        await pointTo(page, '.kanban-column, .grid-cols-5', { zoom: 1.14, pause: 2500 });
+        await pointTo(page, '.kanban-column, .grid-cols-5', { zoom: 1.14, pause: 3000 });
         await zoomReset(page, 500);
+        await endScene(12);
 
         // ==========================================
         // SCENE 13: PERAMALAN AI ARIMA(2,0,2)
         // ==========================================
         console.log('🎥 Scene 13: AI Demand Forecasting ARIMA(2,0,2) (2K)...');
-        await page.goto(`${BASE_URL}/forecasting`, { waitUntil: 'networkidle' });
+        await page.goto(`${BASE_URL}/forecasting`, { waitUntil: 'load' });
         await injectOverlayEngine(page);
-        await setCaption(
+        await startScene(
             page,
+            13,
             'Langkah 13 / 13',
             'Peramalan Permintaan AI ARIMA(2,0,2)',
             'Model time-series terbaik hasil riset empiris (MAPE 5.73%) untuk memproyeksikan kebutuhan bahan baku 3 bulan ke depan.'
         );
-        await pointTo(page, 'canvas, #forecastChart, .chart-container', { zoom: 1.18, pause: 2600 });
-        await pointTo(page, 'button:has-text("Hitung"), button:has-text("Forecast")', { zoom: 1.22, pause: 1800 });
-        await zoomReset(page, 800);
+        await pointTo(page, 'canvas, #forecastChart, .chart-container', { zoom: 1.18, pause: 3200 });
+        await pointTo(page, 'button:has-text("Hitung"), button:has-text("Forecast")', { zoom: 1.22, pause: 2400 });
+        await zoomReset(page, 1000);
+        await endScene(13);
 
         console.log('✅ All 13 High-Definition 2K Scenes Recorded Successfully!');
 
     } catch (err) {
         console.error('❌ Error during Cinematic Demo recording:', err);
     } finally {
-        console.log('🎬 Finalizing raw video recording...');
+        const totalDurationSec = (Date.now() - recordingStartTime) / 1000;
+        console.log(`🎬 Finalizing raw video recording (Total Duration: ${totalDurationSec.toFixed(2)}s)...`);
+        
+        // Save timeline events
+        const eventsPath = path.join(AUDIO_DIR, 'timeline_events.json');
+        fs.writeFileSync(eventsPath, JSON.stringify(timelineEvents, null, 4));
+        console.log(`📝 Audio timeline events saved to: ${eventsPath}`);
+
         await page.close();
         const video = page.video();
         let rawVideoPath = null;
@@ -546,39 +636,63 @@ async function recordCinematicDemo() {
 
         if (rawVideoPath && fs.existsSync(rawVideoPath)) {
             console.log(`🎞️ Raw video captured at: ${rawVideoPath}`);
+            const mixedAudioWav = path.join(AUDIO_DIR, 'master_walkthrough_audio.wav');
+            const walkthroughMp4 = path.join(ASSETS_DIR, 'walkthrough_2k.mp4');
+            const introMp4 = path.join(ASSETS_DIR, 'intro_2k.mp4');
+            
+            const targetMp4_VO_SFX = path.join(VIDEO_DIR, 'Demo_Sistem_ESCM_Marmer_2K_VO_SFX.mp4');
             const targetMp4_2K = path.join(VIDEO_DIR, 'Demo_Sistem_ESCM_Marmer_2K_60FPS.mp4');
             const targetMp4_Standard = path.join(VIDEO_DIR, 'Demo_Sistem_ESCM_Marmer.mp4');
             const targetWebm = path.join(VIDEO_DIR, 'Demo_Sistem_ESCM_Marmer.webm');
 
-            // Save raw webm as fallback
-            try {
-                if (fs.existsSync(targetWebm)) fs.unlinkSync(targetWebm);
-                fs.copyFileSync(rawVideoPath, targetWebm);
-            } catch (e) {}
+            // 1. Run Python audio mixing & ducking engine
+            console.log('🎛️ Running Python audio mixing & dynamic BGM ducking engine...');
+            const mixCmd = `python scripts/mix_demo_audio.py ${totalDurationSec.toFixed(2)}`;
+            execSync(mixCmd, { stdio: 'inherit' });
 
-            console.log('⚙️ Encoding video to 2K (2560x1440) 60 FPS MP4 with High Bitrate via FFmpeg...');
-            try {
-                // FFmpeg High Quality 2K 60FPS MP4 Encode
-                // -r 60: 60 FPS
-                // -c:v libx264 -preset slow -crf 17: Visually lossless quality
-                // -b:v 16M -maxrate 22M -bufsize 32M: High bitrate for ultra-crisp UI text
-                // -pix_fmt yuv420p: Universal compatibility across all players
-                const ffmpegCmd = `ffmpeg -y -i "${rawVideoPath}" -r 60 -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -b:v 16M -maxrate 22M -bufsize 32M "${targetMp4_2K}"`;
-                console.log(`Running: ${ffmpegCmd}`);
-                execSync(ffmpegCmd, { stdio: 'inherit' });
+            // 2. Mux raw video with mixed audio into walkthrough_2k.mp4
+            console.log('⚙️ Muxing Walkthrough Video with Master VO + SFX + BGM Audio...');
+            const muxCmd = `ffmpeg -y -i "${rawVideoPath}" -i "${mixedAudioWav}" -map 0:v -map 1:a -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -r 60 -c:a aac -b:a 256k -shortest "${walkthroughMp4}"`;
+            console.log(`Running: ${muxCmd}`);
+            execSync(muxCmd, { stdio: 'inherit' });
 
-                fs.copyFileSync(targetMp4_2K, targetMp4_Standard);
-                console.log(`🎉 2K 60FPS MP4 Video successfully created at: ${targetMp4_2K}`);
-                console.log(`🎉 Master MP4 Video available at: ${targetMp4_Standard}`);
-
-                // Clean up raw playwright temp file
-                try { fs.unlinkSync(rawVideoPath); } catch (e) {}
-            } catch (ffmpegErr) {
-                console.error('⚠️ FFmpeg encoding warning:', ffmpegErr.message);
-                if (!fs.existsSync(targetMp4_Standard)) {
-                    fs.renameSync(rawVideoPath, targetMp4_Standard);
-                }
+            // 3. Concatenate Intro + Walkthrough + Outro into Master Video
+            const outroMp4 = path.join(ASSETS_DIR, 'outro_2k.mp4');
+            const concatListPath = path.join(ASSETS_DIR, 'concat_list.txt');
+            let concatContent = '';
+            if (fs.existsSync(introMp4)) {
+                concatContent += `file '${introMp4.replace(/\\/g, '/')}'\n`;
             }
+            concatContent += `file '${walkthroughMp4.replace(/\\/g, '/')}'\n`;
+            if (fs.existsSync(outroMp4)) {
+                concatContent += `file '${outroMp4.replace(/\\/g, '/')}'\n`;
+            }
+            fs.writeFileSync(concatListPath, concatContent);
+
+            console.log('🎬 Concatenating Intro + Walkthrough + Outro into Master Video...');
+            const concatCmd = `ffmpeg -y -f concat -safe 0 -i "${concatListPath}" -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -r 60 -c:a aac -b:a 256k "${targetMp4_VO_SFX}"`;
+            console.log(`Running: ${concatCmd}`);
+            execSync(concatCmd, { stdio: 'inherit' });
+            try { fs.unlinkSync(concatListPath); } catch (e) {}
+
+            // 4. Update standard 2K and MP4 distributions
+            fs.copyFileSync(targetMp4_VO_SFX, targetMp4_2K);
+            fs.copyFileSync(targetMp4_VO_SFX, targetMp4_Standard);
+            console.log(`🎉 Master Video with VO & SFX ready at: ${targetMp4_VO_SFX}`);
+            console.log(`🎉 2K 60FPS Distribution updated at: ${targetMp4_2K}`);
+
+            // 5. Generate WebM version
+            console.log('🌐 Generating optimized WebM distribution...');
+            const webmCmd = `ffmpeg -y -i "${targetMp4_VO_SFX}" -c:v libvpx-vp9 -crf 32 -b:v 0 -row-mt 1 -threads 16 -cpu-used 4 -deadline realtime -c:a libopus -b:a 128k "${targetWebm}"`;
+            try {
+                execSync(webmCmd, { stdio: 'inherit' });
+                console.log(`🎉 WebM Master ready at: ${targetWebm}`);
+            } catch (webmErr) {
+                console.warn('⚠️ WebM encoding warning:', webmErr.message);
+            }
+
+            // Clean up raw playwright temp file
+            try { fs.unlinkSync(rawVideoPath); } catch (e) {}
         }
     }
 }

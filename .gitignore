@@ -43,6 +43,7 @@ forecasting_service/venv/
 forecasting_service/.venv/
 venv/
 .venv/
+.venv_media/
 ENV/
 env/
 __pycache__/
@@ -78,6 +79,7 @@ Bima2026.ipynb
 # -----------------------------------------------------------------------------
 /Docs/
 Docs/
+scripts/assets/
 *.heic
 *.HEIC
 *.mp4
