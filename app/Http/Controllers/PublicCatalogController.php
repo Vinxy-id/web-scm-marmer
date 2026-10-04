@@ -487,6 +487,7 @@ class PublicCatalogController extends Controller
     public function sitemap()
     {
         $baseUrl = rtrim(config('app.url', 'https://onyxtulungagung.id'), '/');
+        $baseUrl = preg_replace('/^http:\/\//i', 'https://', $baseUrl);
 
         try {
             $products = Product::select('id', 'name', 'updated_at')->orderBy('id', 'asc')->get();
