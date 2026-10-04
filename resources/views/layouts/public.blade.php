@@ -15,10 +15,10 @@
     <meta name="google-site-verification" content="google32f15ef73219ac0b">
 
     <!-- Canonical URL -->
-    @sectionMissing('canonical')
-    <link rel="canonical" href="{{ url()->current() }}">
+    @hasSection('no_canonical')
+    {{-- Canonical omitted intentionally for error pages --}}
     @else
-    @yield('canonical')
+    <link rel="canonical" href="{{ url()->current() }}">
     @endif
 
     <!-- Open Graph / Facebook / WhatsApp SEO -->

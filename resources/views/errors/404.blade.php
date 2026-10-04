@@ -7,9 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
 @endsection
 
-@section('canonical')
-    {{-- Error 404 pages must not have canonical tag --}}
-@endsection
+@section('no_canonical', 'true')
 
 @section('content')
 <div class="min-h-[70vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
