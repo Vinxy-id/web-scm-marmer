@@ -159,6 +159,47 @@ class CatalogCheckoutFlowTest extends TestCase
         $response->assertSee('404');
         $response->assertSee('Halaman atau Produk Tidak Ditemukan');
         $response->assertSee('Jelajahi Katalog Produk');
+        $response->assertSee('noindex, nofollow');
+        $response->assertDontSee('<link rel="canonical"');
+    }
+
+    public function test_non_existent_product_returns_404(): void
+    {
+        $response = $this->get('/katalog/99999');
+        $response->assertStatus(404);
+        $response->assertSee('404');
+        $response->assertSee('Halaman atau Produk Tidak Ditemukan');
+        $response->assertSee('noindex, nofollow');
+        $response->assertDontSee('<link rel="canonical"');
+
+        $jsonResponse = $this->get('/katalog/99999?json=1');
+        $jsonResponse->assertStatus(404);
+        $jsonResponse->assertJson([
+            'success' => false,
+            'message' => 'Produk tidak ditemukan.',
+        ]);
+    }
+
+    public function test_product_detail_has_rich_schema_org_markup(): void
+    {
+        $product = Product::first();
+
+        $response = $this->get('/katalog/' . $product->id);
+        $response->assertStatus(200);
+        $response->assertSee('"@type": "Product"', false);
+        $response->assertSee('"@type": "Offer"', false);
+        $response->assertSee('"@type": "BreadcrumbList"', false);
+    }
+
+    public function test_checkout_page_uses_local_leaflet_markers(): void
+    {
+        $product = Product::first();
+
+        $response = $this->get('/checkout/' . $product->id);
+        $response->assertStatus(200);
+        $response->assertSee('images/maps/marker-icon-2x-red.png', false);
+        $response->assertSee('images/maps/marker-shadow.png', false);
+        $response->assertDontSee('raw.githubusercontent.com', false);
     }
 }
 

@@ -3,6 +3,14 @@
 @section('title', '404 - Halaman Tidak Ditemukan | Onyx Tulungagung')
 @section('meta-description', 'Maaf, halaman atau produk kerajinan marmer yang Anda cari tidak dapat ditemukan. Silakan telusuri katalog produk kami.')
 
+@section('robots')
+    <meta name="robots" content="noindex, nofollow">
+@endsection
+
+@section('canonical')
+    {{-- Error 404 pages must not have canonical tag --}}
+@endsection
+
 @section('content')
 <div class="min-h-[70vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-xl w-full text-center space-y-8 bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-sm">

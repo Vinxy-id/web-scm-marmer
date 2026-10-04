@@ -7,6 +7,63 @@
     <link rel="preload" as="image" href="{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}" fetchpriority="high">
 @endsection
 
+@section('schema')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ e($product->name) }}",
+  "image": [
+    "{{ asset($product->image_path ?: 'images/products/wastafel-marmer-putih.svg') }}"
+  ],
+  "description": "{{ e($product->description ?? ('Kerajinan ' . $product->name . ' kualitas ekspor asli sentra batu Campurdarat Tulungagung oleh ' . ($artisan['name'] ?? 'Pengrajin IKM') . '.')) }}",
+  "sku": "{{ $product->product_code }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ e($artisan['name'] ?? 'Sentra Marmer Tulungagung') }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ url()->current() }}",
+    "priceCurrency": "IDR",
+    "price": "{{ (int) $product->selling_price }}",
+    "availability": "{{ $product->ready_stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder' }}",
+    "itemCondition": "https://schema.org/NewCondition",
+    "seller": {
+      "@type": "Organization",
+      "name": "{{ e($artisan['name'] ?? 'Sentra IKM Tulungagung') }}"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "{{ route('home') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Katalog Produk",
+      "item": "{{ route('catalog') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ e($product->name) }}",
+      "item": "{{ url()->current() }}"
+    }
+  ]
+}
+</script>
+@endsection
+
 @section('content')
 
 @php

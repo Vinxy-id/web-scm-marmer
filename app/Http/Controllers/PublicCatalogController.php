@@ -252,9 +252,25 @@ class PublicCatalogController extends Controller
     {
         try {
             $product = Product::with('category')->findOrFail($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            if ($request->wantsJson() || $request->ajax() || $request->has('json')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Produk tidak ditemukan.',
+                ], 404);
+            }
+            abort(404);
         } catch (\Throwable $e) {
-            $product = $this->getFallbackProducts()->firstWhere('id', (int) $id) 
-                       ?? $this->getFallbackProducts()->first();
+            $product = $this->getFallbackProducts()->firstWhere('id', (int) $id);
+            if (!$product) {
+                if ($request->wantsJson() || $request->ajax() || $request->has('json')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Produk tidak ditemukan.',
+                    ], 404);
+                }
+                abort(404);
+            }
         }
 
         // Determine Artisan Partner Info from Model Accessor
@@ -470,12 +486,16 @@ class PublicCatalogController extends Controller
                 'name' => 'UD Putra Abadi',
                 'owner' => 'Efri Saputra',
                 'phone' => '6281335022012',
+                'location' => 'Cerme, Gamping, Campurdarat, Tulungagung',
                 'badge' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                'badge_simple' => 'bg-emerald-100 text-emerald-800',
             ] : [
                 'name' => 'UD Cahaya Onix',
                 'owner' => 'M. Ilham Nur Amali',
                 'phone' => '6281340231737',
+                'location' => 'Jln. Raya Popoh, Campurdarat, Tulungagung',
                 'badge' => 'bg-blue-50 text-blue-700 border-blue-200',
+                'badge_simple' => 'bg-blue-100 text-blue-800',
             ];
             return $p;
         });

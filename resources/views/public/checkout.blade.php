@@ -476,10 +476,10 @@
         const mapContainer = document.getElementById('map-picker');
         if (!mapContainer) return;
 
-        // Custom red pin icon for marble cargo delivery
+        // Custom red pin icon for marble cargo delivery (Served locally for high reliability)
         const cargoIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconUrl: '{{ asset("images/maps/marker-icon-2x-red.png") }}',
+            shadowUrl: '{{ asset("images/maps/marker-shadow.png") }}',
             iconSize: [25, 41],
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
